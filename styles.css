@@ -276,6 +276,17 @@ a:hover {
     color: var(--bg-color);
 }
 
+.pill-btn.whatsapp {
+    background-color: transparent;
+    color: #25D366;
+    border-color: #25D366;
+}
+
+.pill-btn.whatsapp:hover {
+    background-color: #25D366;
+    color: #fff;
+}
+
 /* 6. About Card */
 .about-card {
     grid-column: 1 / 3;
@@ -483,6 +494,12 @@ a:hover {
     font-size: 1.5rem;
 }
 
+.contact-buttons {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
 .contact-btn {
     background-color: var(--accent);
     color: var(--bg-color);
@@ -490,6 +507,17 @@ a:hover {
     border-radius: 2rem;
     font-family: var(--font-mono);
     font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.contact-btn.whatsapp {
+    background-color: #25D366;
+    color: #fff;
+}
+
+.contact-btn.whatsapp:hover {
+    background-color: #1ebd5a;
 }
 
 .contact-btn:hover {
@@ -578,7 +606,16 @@ a:hover {
     
     .contact-card {
         flex-direction: column;
-        text-align: center;
+        align-items: flex-start;
         gap: 1.5rem;
+    }
+    
+    .contact-buttons {
+        width: 100%;
+    }
+    
+    .contact-btn {
+        width: 100%;
+        text-align: center;
     }
 }
