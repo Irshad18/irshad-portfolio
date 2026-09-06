@@ -4,274 +4,1221 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mohd Irshad - Portfolio</title>
+    <title>Mohd Irshad - RPA Developer Portfolio</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@400;500;600&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Inter:wght@400;500;600&family=Fira+Code:wght@400;600&display=swap"
         rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
     <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
-    <div class="bento-container">
-        <!-- 1. Top nav bar -->
-        <header class="card nav-bar">
-            <div class="logo">
-                <span class="dot"></span> Mohd Irshad
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-inner">
+            <a href="#" class="logo">
+                <span class="logo-icon"></span>
+                <span class="logo-text">Irshad.</span>
+            </a>
+            <div class="nav-links">
+                <a href="#about" class="nav-link active">HOME</a>
+                <a href="#experience" class="nav-link">EXPERIENCE</a>
+                <a href="#skills" class="nav-link">SKILLS</a>
+                <a href="#certifications" class="nav-link">CERTIFICATIONS</a>
+                <a href="#blog" class="nav-link">BLOG</a>
+                <a href="#contact" class="nav-link">CONTACT</a>
             </div>
-            <nav class="nav-links">
-                <a href="#about">Work</a>
-                <a href="Mohd_Irshad_RPA_Resume_1.pdf" target="_blank">Resume</a>
-                <a href="#contact">Contact</a>
-                <div class="theme-controls">
-                    <button class="color-btn active" data-color="#2ea043" data-glow="rgba(46, 160, 67, 0.3)" style="background: #2ea043;" aria-label="Green Accent"></button>
-                    <button class="color-btn" data-color="#3b82f6" data-glow="rgba(59, 130, 246, 0.3)" style="background: #3b82f6;" aria-label="Blue Accent"></button>
-                    <button class="color-btn" data-color="#a855f7" data-glow="rgba(168, 85, 247, 0.3)" style="background: #a855f7;" aria-label="Purple Accent"></button>
-                    <button class="color-btn" data-color="#f97316" data-glow="rgba(249, 115, 22, 0.3)" style="background: #f97316;" aria-label="Orange Accent"></button>
-                    <div class="theme-divider"></div>
-                    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle Theme">☀️</button>
-                </div>
-            </nav>
-        </header>
-
-        <!-- 2. Hero card (large) -->
-        <main class="card hero-card">
-            <h1>Hey, I'm Mohd Irshad</h1>
-            <p class="tagline">RPA Developer @ Oracle &rarr; transitioning into Data Science & AI</p>
-            <p class="location">📍 Bengaluru, India</p>
-        </main>
-
-        <!-- 3. Photo card (medium) -->
-        <div class="card photo-card">
-            <img src="avatar.jpg" alt="Mohd Irshad Avatar" class="avatar-image">
+            <a href="mailto:irshadkohli18@gmail.com" class="hire-btn">
+                CONTACT ME <span class="arrow-circle">→</span>
+            </a>
         </div>
+    </nav>
 
-        <!-- 4. Stat cards (small, 2x2 grid) -->
-        <div class="stats-container">
-            <div class="card stat-card">
-                <h2>4+</h2>
-                <p>Years in RPA</p>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-text">
+                <span class="badge"> WELCOME TO MY PORTFOLIO </span>
+                <h1>I'm Mohd Irshad<br>
+                    <em>RPA Developer</em><br>
+                    Based In India
+                </h1>
+                <p class="hero-desc">Building robust automations at Oracle India, transitioning into Data Science & AI.
+                    4+ years of delivering high-impact enterprise solutions.</p>
+                <a href="#about" class="cta-btn">
+                    <span>VIEW MY WORK</span>
+                    <span class="arrow-circle">→</span>
+                </a>
             </div>
-            <div class="card stat-card">
-                <h2>30+</h2>
-                <p>Production Bots Maintained</p>
-            </div>
-            <div class="card stat-card">
-                <h2>24x7</h2>
-                <p>Production Support</p>
-            </div>
-            <div class="card stat-card">
-                <h2>3+</h2>
-                <p>UiPath Certifications</p>
+            <div class="hero-image">
+                <div class="hero-circle"></div>
+                <img src="avatar.jpg" alt="Mohd Irshad" class="hero-photo" onerror="this.style.display='none'">
+                <div class="floating-tag tag-1">UiPath Expert</div>
+                <div class="floating-tag tag-2">30+ Bots</div>
+                <div class="floating-tag tag-3">Oracle India</div>
             </div>
         </div>
+    </section>
 
-        <!-- 5. Links card -->
-        <div class="card links-card">
-            <a href="https://github.com/Irshad18" target="_blank" rel="noopener noreferrer" class="pill-btn">GitHub
-                &nearr;</a>
-            <a href="https://www.linkedin.com/in/mohd-irshad-195368220/" target="_blank" rel="noopener noreferrer"
-                class="pill-btn">LinkedIn &nearr;</a>
-            <a href="Mohd_Irshad_RPA_Resume_1.pdf" target="_blank" class="pill-btn">Resume &darr;</a>
-            <a href="mailto:irshadkohli18@gmail.com" class="pill-btn accent">Email Me &nearr;</a>
-            <a href="https://wa.me/YOUR_PHONE_NUMBER_HERE" target="_blank" rel="noopener noreferrer" class="pill-btn whatsapp">WhatsApp &nearr;</a>
+    <!-- Stats Section -->
+    <section class="stats-section">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">4+</div>
+                    <div class="stat-label">Years RPA Experience</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">30+</div>
+                    <div class="stat-label">Production Bots Built</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">24x7</div>
+                    <div class="stat-label">Production Support</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">3+</div>
+                    <div class="stat-label">UiPath Certifications</div>
+                </div>
+            </div>
         </div>
+    </section>
 
-        <!-- 6. About card (wide) -->
-        <section id="about" class="card about-card">
-            <h2>About Me</h2>
-            <p>Application Solutions Developer at Oracle India, working functionally as a Senior RPA Developer. Builds
-                and maintains 30+ production bots in a 24x7 support environment, handling incident management, SLA/KPI
-                reporting, and business process automation using UiPath, Power Automate Desktop, and NetSuite
-                integrations. Currently pursuing an Executive PG Certification in Data Science & AI from IIT Roorkee and
-                an MCA from IFTM University, moving toward a career in data science and AI.</p>
-        </section>
-
-        <!-- 8. Experience list card -->
-        <section class="card experience-card">
-            <h2>Experience</h2>
-            <div class="experience-list">
-                <div class="experience-row">
-                    <div class="role">Application Solutions Developer 1 (Senior RPA Developer)</div>
-                    <div class="company">Oracle India Pvt. Ltd.</div>
-                    <div class="duration">2023 – Present</div>
-                </div>
-                <div class="experience-row">
-                    <div class="role">RPA Developer</div>
-                    <div class="company">Rapidflow Technologies</div>
-                    <div class="duration">2022 – 2023</div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Technical Skills card -->
-        <section class="card skills-card">
-            <h2>Technical Skills</h2>
-            <div class="skills-group">
-                <div class="skill-category">
-                    <h3>RPA Tools</h3>
-                    <div class="skill-tags">
-                        <span class="skill-tag" style="--percent: 95%;">UiPath <span class="pct">95%</span></span>
-                        <span class="skill-tag" style="--percent: 90%;">REFramework <span class="pct">90%</span></span>
-                        <span class="skill-tag" style="--percent: 85%;">Orchestrator <span class="pct">85%</span></span>
-                        <span class="skill-tag" style="--percent: 80%;">Queues <span class="pct">80%</span></span>
-                    </div>
-                </div>
-                <div class="skill-category">
-                    <h3>Programming & Query</h3>
-                    <div class="skill-tags">
-                        <span class="skill-tag highlight" style="--percent: 85%;">Python <span
-                                class="pct">85%</span></span>
-                        <span class="skill-tag highlight" style="--percent: 90%;">SQL <span
-                                class="pct">90%</span></span>
-                        <span class="skill-tag highlight" style="--percent: 80%;">APEX <span
-                                class="pct">80%</span></span>
-                    </div>
-                </div>
-                <div class="skill-category">
-                    <h3>Automation Expertise</h3>
-                    <div class="skill-tags">
-                        <span class="skill-tag" style="--percent: 90%;">Gmail & PDF <span class="pct">90%</span></span>
-                        <span class="skill-tag" style="--percent: 85%;">Excel Macros <span class="pct">85%</span></span>
-                        <span class="skill-tag" style="--percent: 80%;">Web Scraping <span class="pct">80%</span></span>
-                        <span class="skill-tag" style="--percent: 85%;">Desktop Automation <span
-                                class="pct">85%</span></span>
-                        <span class="skill-tag" style="--percent: 90%;">Data Entry <span class="pct">90%</span></span>
-                    </div>
-                </div>
-                <div class="skill-category">
-                    <h3>Integration & Systems</h3>
-                    <div class="skill-tags">
-                        <span class="skill-tag" style="--percent: 85%;">REST APIs <span class="pct">85%</span></span>
-                        <span class="skill-tag" style="--percent: 80%;">HTTPS Integration <span
-                                class="pct">80%</span></span>
-                        <span class="skill-tag" style="--percent: 75%;">NetSuite <span class="pct">75%</span></span>
-                    </div>
-                </div>
-                <div class="skill-category">
-                    <h3>Infrastructure & Ops</h3>
-                    <div class="skill-tags">
-                        <span class="skill-tag" style="--percent: 80%;">VM Management <span
-                                class="pct">80%</span></span>
-                        <span class="skill-tag" style="--percent: 85%;">Ticketing Tools <span
-                                class="pct">85%</span></span>
-                        <span class="skill-tag" style="--percent: 90%;">KPI Reporting <span
-                                class="pct">90%</span></span>
-                    </div>
-                </div>
-                <div class="skill-category">
-                    <h3>Domains</h3>
-                    <div class="skill-tags">
-                        <span class="skill-tag" style="--percent: 85%;">Finance <span class="pct">85%</span></span>
-                        <span class="skill-tag" style="--percent: 90%;">Customer Service <span
-                                class="pct">90%</span></span>
-                        <span class="skill-tag" style="--percent: 85%;">Supply Chain <span class="pct">85%</span></span>
-                    </div>
-                </div>
-                <div class="skill-category" style="grid-column: 1 / -1;">
-                    <h3>Process & Soft Skills</h3>
-                    <div class="skill-tags">
-                        <span class="skill-tag" style="--percent: 90%;">Requirement Gathering <span
-                                class="pct">90%</span></span>
-                        <span class="skill-tag" style="--percent: 85%;">Process Design <span
-                                class="pct">85%</span></span>
-                        <span class="skill-tag" style="--percent: 85%;">PDD & SDD Documentation <span
-                                class="pct">85%</span></span>
-                        <span class="skill-tag" style="--percent: 95%;">Stakeholder Communication <span
-                                class="pct">95%</span></span>
-                        <span class="skill-tag" style="--percent: 90%;">UAT Support <span class="pct">90%</span></span>
-                        <span class="skill-tag" style="--percent: 95%;">Problem Solving <span
-                                class="pct">95%</span></span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Education & Certs card -->
-        <section class="card edu-cert-card">
-            <h2>Education & Certifications</h2>
-            <div class="experience-list">
-                <div class="experience-row">
-                    <div class="role">Executive PG Cert: Data Science & AI</div>
-                    <div class="company">Intelipaat</div>
-                    <div class="duration">Ongoing</div>
-                </div>
-                <div class="experience-row">
-                    <div class="role">Python Programming</div>
-                    <div class="company">IIGHT, Gurgaon</div>
-                    <div class="duration">2022 – 2023</div>
-                </div>
-                <div class="experience-row">
-                    <div class="role">MCA & BCA</div>
-                    <div class="company">IFTM University</div>
-                    <div class="duration">2017 – 2022</div>
-                </div>
-                <div class="experience-row">
-                    <div class="role">UiPath Certifications</div>
-                    <div class="company">Foundation, FastStart, Document Understanding</div>
-                    <div class="duration">Completed</div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Awards card -->
-        <section class="card awards-card">
-            <h2>Awards & Recognitions</h2>
-            <div class="awards-list">
-                <div class="award-item">
-                    <div class="award-title">🏆 Star Performer Award (Q2 FY25)</div>
-                    <div class="award-desc">Honored for consistent excellence and high-impact automation delivery.</div>
-                </div>
-                <div class="award-item">
-                    <div class="award-title">🌟 YAR Award</div>
-                    <div class="award-desc">Recognized for innovation and process improvement in automation.</div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 7. Contact card (medium) -->
-        <section id="contact" class="card contact-card">
-            <div class="contact-text">
-                <h2>Have a project or opportunity in mind?</h2>
-                <p style="color: var(--text-secondary); margin-top: 0.5rem;">Reach out via email or send a direct message on WhatsApp!</p>
-            </div>
-            <div class="contact-buttons">
-                <a href="mailto:irshadkohli18@gmail.com" class="contact-btn">Email Me</a>
-                <a href="https://wa.me/YOUR_PHONE_NUMBER_HERE" class="contact-btn whatsapp" target="_blank" rel="noopener noreferrer">WhatsApp</a>
-            </div>
-        </section>
-
-        <!-- 9. Footer -->
-        <footer class="footer">
-            <p>Last updated: September 2026</p>
-            <a href="#">Mohd Irshad</a>
-        </footer>
+    <!-- Marquee Ticker (hidden)
+    <div class="marquee">
+        <div class="marquee-inner">
+            <span>RPA Development • UiPath • Python • SQL • Data Science • Process Automation • Bot Development • Oracle
+                • APEX • REFramework • </span>
+            <span>RPA Development • UiPath • Python • SQL • Data Science • Process Automation • Bot Development • Oracle
+                • APEX • REFramework • </span>
+        </div>
     </div>
-    
+    -->
+
+    <!-- About Section -->
+    <section id="about" class="about-section">
+        <div class="container">
+            <div class="about-grid">
+                <div class="about-left">
+                    <div class="about-image-wrapper">
+                        <img src="about-img.jpg" alt="RPA, Data Science & AI illustration" class="about-photo">
+                        <div class="about-floating-tag tag-a1">Automation</div>
+                        <div class="about-floating-tag tag-a2">Data Science</div>
+                        <div class="about-floating-tag tag-a3">AI / ML</div>
+                    </div>
+                </div>
+                <div class="about-right">
+                    <span class="badge">ABOUT ME</span>
+                    <h2>Who's Behind All This Great Work?</h2>
+                    <p>Application Solutions Developer at Oracle India, working functionally as a Senior RPA Developer.
+                        I build and maintain 30+ production bots in a 24x7 support environment, handling incident
+                        management, SLA/KPI reporting, and business process automation using UiPath, Power Automate
+                        Desktop, and NetSuite integrations.</p>
+                    <p>Currently pursuing an Executive PG Certification in Data Science & AI from IIT Roorkee and an MCA
+                        from IFTM University, moving toward a career in data science and AI.</p>
+                    <a href="Mohd_Irshad_RPA_Resume_1.pdf" target="_blank" class="cta-btn">
+                        <span>DOWNLOAD RESUME</span>
+                        <span class="arrow-circle">↓</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section id="experience" class="experience-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="badge">EXPERIENCE</span>
+                <h2>Professional Journey & Career Path</h2>
+                <p class="section-subtitle">
+                    4+ years of enterprise engineering experience building robust UiPath bots, maintaining 24x7 operations, and streamlining business workflows.
+                </p>
+            </div>
+
+            <!-- Career Highlights Bar -->
+            <div class="exp-stats-bar">
+                <div class="exp-stat-box">
+                    <span class="exp-stat-val">4+</span>
+                    <span class="exp-stat-text">Years in RPA</span>
+                </div>
+                <div class="exp-stat-sep"></div>
+                <div class="exp-stat-box">
+                    <span class="exp-stat-val">30+</span>
+                    <span class="exp-stat-text">Production Bots</span>
+                </div>
+                <div class="exp-stat-sep"></div>
+                <div class="exp-stat-box">
+                    <span class="exp-stat-val">24x7</span>
+                    <span class="exp-stat-text">Support Operations</span>
+                </div>
+                <div class="exp-stat-sep"></div>
+                <div class="exp-stat-box">
+                    <span class="exp-stat-val">2</span>
+                    <span class="exp-stat-text">Oracle Awards</span>
+                </div>
+            </div>
+
+            <div class="experience-grid">
+                <!-- Oracle Card -->
+                <div class="exp-card">
+                    <div class="exp-card-header">
+                        <div class="exp-company-brand">
+                            <div class="company-logo-box oracle-logo">
+                                <svg width="36" height="24" viewBox="0 0 100 65" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill="#C74634" d="M32.5 0C14.6 0 0 14.6 0 32.5S14.6 65 32.5 65h35C85.4 65 100 50.4 100 32.5S85.4 0 67.5 0h-35zm0 13h35c10.8 0 19.5 8.7 19.5 19.5S78.3 52 67.5 52h-35C21.7 52 13 43.3 13 32.5S21.7 13 32.5 13z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="exp-role-title">Application Solutions Developer 1</h3>
+                                <p class="exp-company-name">Oracle India Pvt. Ltd. &bull; Bengaluru</p>
+                            </div>
+                        </div>
+                        <div class="exp-status-wrapper">
+                            <span class="exp-pill current">Current Role</span>
+                            <span class="exp-time-range">2023 – Present</span>
+                        </div>
+                    </div>
+
+                    <div class="exp-card-body">
+                        <p class="exp-summary-lead">
+                            Serving functionally as a <strong>Senior RPA Developer</strong>, leading enterprise bot operations, SLA management, and process automation across global enterprise lines of business.
+                        </p>
+
+                        <ul class="exp-points-list">
+                            <li>
+                                <span class="point-icon">🤖</span>
+                                <div>
+                                    <strong>30+ Production Bots:</strong> Maintain and monitor large-scale unattended automations with proactive exception handling and auto-healing routines.
+                                </div>
+                            </li>
+                            <li>
+                                <span class="point-icon">⚡</span>
+                                <div>
+                                    <strong>Incident & SLA Leadership:</strong> Deliver 99%+ uptime SLAs through structured Root Cause Analysis (RCA) and round-the-clock bot health monitoring.
+                                </div>
+                            </li>
+                            <li>
+                                <span class="point-icon">🔄</span>
+                                <div>
+                                    <strong>ERP & Cloud Integrations:</strong> Seamlessly integrate UiPath, Power Automate Desktop, NetSuite ERP, and database pipelines.
+                                </div>
+                            </li>
+                            <li>
+                                <span class="point-icon">🏆</span>
+                                <div>
+                                    <strong>Recognition:</strong> Honored with the <em>Oracle Star Performer Award (Q2 FY25)</em> and <em>YAR Award</em> for automation excellence.
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="exp-card-footer">
+                        <span class="exp-tag">UiPath</span>
+                        <span class="exp-tag">REFramework</span>
+                        <span class="exp-tag">Power Automate</span>
+                        <span class="exp-tag">NetSuite ERP</span>
+                        <span class="exp-tag">24x7 Support</span>
+                        <span class="exp-tag">Python</span>
+                    </div>
+                </div>
+
+                <!-- Rapidflow Card -->
+                <div class="exp-card">
+                    <div class="exp-card-header">
+                        <div class="exp-company-brand">
+                            <div class="company-logo-box rapidflow-logo">
+                                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="exp-role-title">RPA Developer</h3>
+                                <p class="exp-company-name">Rapidflow Technologies &bull; Pune</p>
+                            </div>
+                        </div>
+                        <div class="exp-status-wrapper">
+                            <span class="exp-pill previous">Previous Role</span>
+                            <span class="exp-time-range">2022 – 2023</span>
+                        </div>
+                    </div>
+
+                    <div class="exp-card-body">
+                        <p class="exp-summary-lead">
+                            Designed, built, and deployed high-impact robotic automations for enterprise supply chain, logistics, and client operational workflows.
+                        </p>
+
+                        <ul class="exp-points-list">
+                            <li>
+                                <span class="point-icon">📦</span>
+                                <div>
+                                    <strong>Supply Chain Automation:</strong> Automated logistics tracking, cross-system invoice validation, reconciliation, and CRM data sync.
+                                </div>
+                            </li>
+                            <li>
+                                <span class="point-icon">⏱️</span>
+                                <div>
+                                    <strong>Turnaround Optimization:</strong> Streamlined multi-step repetitive tasks, slashing manual processing time by over 60%.
+                                </div>
+                            </li>
+                            <li>
+                                <span class="point-icon">📊</span>
+                                <div>
+                                    <strong>Modular Reusability:</strong> Developed reusable UiPath libraries, Excel VBA automation modules, and REST API connectors.
+                                </div>
+                            </li>
+                            <li>
+                                <span class="point-icon">🛡️</span>
+                                <div>
+                                    <strong>Exception Framework:</strong> Created custom error handlers with automated screenshot capture, retry loops, and instant alert dispatches.
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="exp-card-footer">
+                        <span class="exp-tag">UiPath Studio</span>
+                        <span class="exp-tag">Orchestrator</span>
+                        <span class="exp-tag">REST APIs</span>
+                        <span class="exp-tag">Excel Macros</span>
+                        <span class="exp-tag">Supply Chain</span>
+                        <span class="exp-tag">Process Automation</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section (Dark) -->
+    <section id="skills" class="skills-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="badge badge-dark">MY EXPERTISE</span>
+                <h2>Skills & Tools I Work With</h2>
+            </div>
+            <div class="skills-grid">
+                <div class="skill-card">
+                    <div class="skill-icon">
+                        <img src="https://cdn.worldvectorlogo.com/logos/uipath-2.svg" alt="UiPath" class="skill-logo">
+                    </div>
+                    <div class="skill-percent">95%</div>
+                    <div class="skill-name">UiPath</div>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg" alt="Python" class="skill-logo">
+                    </div>
+                    <div class="skill-percent">85%</div>
+                    <div class="skill-name">Python</div>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/azuresqldatabase/azuresqldatabase-original.svg" alt="SQL" class="skill-logo">
+                    </div>
+                    <div class="skill-percent">90%</div>
+                    <div class="skill-name">SQL</div>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">
+                        <svg class="skill-logo skill-logo-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 15.5A3.5 3.5 0 0 1 8.5 12 3.5 3.5 0 0 1 12 8.5a3.5 3.5 0 0 1 3.5 3.5 3.5 3.5 0 0 1-3.5 3.5m7.43-2.53c.04-.32.07-.64.07-.97s-.03-.66-.07-1l2.11-1.63c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64L4.57 11c-.04.34-.07.67-.07 1s.03.65.07.97l-2.11 1.66c-.19.15-.25.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1.01c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.58 1.69-.98l2.49 1.01c.22.08.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64L19.43 12.97z" fill="#FA4616"/>
+                        </svg>
+                    </div>
+                    <div class="skill-percent">90%</div>
+                    <div class="skill-name">REFramework</div>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/oracle/oracle-original.svg" alt="Oracle APEX" class="skill-logo">
+                    </div>
+                    <div class="skill-percent">80%</div>
+                    <div class="skill-name">APEX</div>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">
+                        <svg class="skill-logo skill-logo-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M7.5 4C5.57 4 4 5.57 4 7.5S5.57 11 7.5 11H10V7.5C10 5.57 8.43 4 7.5 4zM7.5 9.5C6.4 9.5 5.5 8.6 5.5 7.5S6.4 5.5 7.5 5.5 9.5 6.4 9.5 7.5 8.6 9.5 7.5 9.5z" fill="#4DB33D"/>
+                            <path d="M16.5 4C14.57 4 13 5.57 13 7.5V11h2.5C17.43 11 19 9.43 19 7.5S17.43 4 16.5 4zM16.5 9.5H14.5V7.5C14.5 6.4 15.4 5.5 16.5 5.5S18.5 6.4 18.5 7.5 17.6 9.5 16.5 9.5z" fill="#4DB33D"/>
+                            <path d="M7.5 13H10v2.5C10 17.43 8.43 19 7.5 19S4 17.43 4 16.5 5.57 13 7.5 13zM7.5 17.5c1.1 0 2-.9 2-2V13.5H7.5c-1.1 0-2 .9-2 2s.9 2 2 2z" fill="#4DB33D"/>
+                            <path d="M13 16.5V13h2.5c1.93 0 3.5 1.57 3.5 3.5S17.43 20 16.5 20 13 18.43 13 16.5zM16.5 18.5c1.1 0 2-.9 2-2s-.9-2-2-2H14.5v2c0 1.1.9 2 2 2z" fill="#4DB33D"/>
+                            <circle cx="12" cy="12" r="1.5" fill="#4DB33D"/>
+                        </svg>
+                    </div>
+                    <div class="skill-percent">85%</div>
+                    <div class="skill-name">REST APIs</div>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">
+                        <svg class="skill-logo skill-logo-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="3" y="3" width="7" height="7" rx="1.5" fill="#FA4616"/>
+                            <rect x="14" y="3" width="7" height="7" rx="1.5" fill="#FA4616" opacity="0.7"/>
+                            <rect x="3" y="14" width="7" height="7" rx="1.5" fill="#FA4616" opacity="0.7"/>
+                            <rect x="14" y="14" width="7" height="7" rx="1.5" fill="#FA4616" opacity="0.5"/>
+                            <line x1="10" y1="6.5" x2="14" y2="6.5" stroke="#FA4616" stroke-width="1.5"/>
+                            <line x1="6.5" y1="10" x2="6.5" y2="14" stroke="#FA4616" stroke-width="1.5"/>
+                            <line x1="17.5" y1="10" x2="17.5" y2="14" stroke="#FA4616" stroke-width="1.5" opacity="0.6"/>
+                            <line x1="10" y1="17.5" x2="14" y2="17.5" stroke="#FA4616" stroke-width="1.5" opacity="0.6"/>
+                        </svg>
+                    </div>
+                    <div class="skill-percent">85%</div>
+                    <div class="skill-name">Orchestrator</div>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">
+                        <svg class="skill-logo skill-logo-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M2 6.5V18a1 1 0 001 1h18a1 1 0 001-1V6.5l-10 6.5L2 6.5z" fill="#D44638"/>
+                            <path d="M22 5.5a1 1 0 00-1-1H3a1 1 0 00-1 1l10 6.5 10-6.5z" fill="#EA4335"/>
+                        </svg>
+                    </div>
+                    <div class="skill-percent">90%</div>
+                    <div class="skill-name">Gmail & PDF</div>
+                </div>
+            </div>
+            <div class="skills-extra">
+                <h3>More Skills</h3>
+                <div class="skills-tags-row">
+                    <span class="stag">Excel Macros</span>
+                    <span class="stag">Web Scraping</span>
+                    <span class="stag">Desktop Automation</span>
+                    <span class="stag">Data Entry</span>
+                    <span class="stag">HTTPS Integration</span>
+                    <span class="stag">NetSuite</span>
+                    <span class="stag">VM Management</span>
+                    <span class="stag">Ticketing Tools</span>
+                    <span class="stag">KPI Reporting</span>
+                    <span class="stag">Queues</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Education & Specialization -->
+    <section class="edu-section" id="education">
+        <div class="container">
+            <div class="edu-grid">
+                <div class="edu-left">
+                    <span class="badge">ACADEMIC BACKGROUND</span>
+                    <h2>Education & Specialization</h2>
+                    <p class="edu-left-desc">
+                        A solid computer science foundation spanning Bachelor's and Master's degrees in Computer Applications, complemented by advanced postgraduate specialization in Data Science & Artificial Intelligence.
+                    </p>
+
+                    <div class="edu-highlight-box">
+                        <div class="edu-highlight-item">
+                            <div class="edu-hl-icon">🎓</div>
+                            <div class="edu-hl-text">
+                                <h4>Master of Computer Applications</h4>
+                                <p>Advanced computing, software systems, and data structures from IFTM University.</p>
+                            </div>
+                        </div>
+                        <div class="edu-highlight-item">
+                            <div class="edu-hl-icon">🔬</div>
+                            <div class="edu-hl-text">
+                                <h4>Data Science & AI Specialization</h4>
+                                <p>Executive postgraduate program in collaboration with IIT Roorkee & Intelipaat.</p>
+                            </div>
+                        </div>
+                        <div class="edu-highlight-item">
+                            <div class="edu-hl-icon">⚙️</div>
+                            <div class="edu-hl-text">
+                                <h4>Applied Enterprise Engineering</h4>
+                                <p>Bridging academic rigor with 4+ years of production automation at Oracle.</p>
+                            </div>
+                        </div>
+                        <a href="Mohd_Irshad_RPA_Resume_1.pdf" target="_blank" class="edu-resume-btn">
+                            <span>View Full Resume</span>
+                            <span class="arrow-circle">→</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="edu-right">
+                    <div class="edu-cards-list">
+                        <!-- Education Card 1 -->
+                        <div class="edu-card">
+                            <div class="edu-card-top">
+                                <span class="edu-card-badge ongoing">Ongoing</span>
+                                <span class="edu-card-years">2025 – 2026</span>
+                            </div>
+                            <div class="edu-card-body">
+                                <h3>Executive PG Certification in Data Science & AI</h3>
+                                <div class="edu-card-institution">
+                                    <span class="inst-icon">🏛️</span>
+                                    <span>Intelipaat &bull; In Collaboration with IIT Roorkee</span>
+                                </div>
+                                <p class="edu-card-desc">
+                                    Comprehensive curriculum spanning Machine Learning algorithms, Deep Learning, Python Data Stack (NumPy, Pandas, Scikit-Learn), NLP, and predictive enterprise analytics.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Education Card 2 -->
+                        <div class="edu-card">
+                            <div class="edu-card-top">
+                                <span class="edu-card-badge completed">Completed</span>
+                                <span class="edu-card-years">2020 – 2022</span>
+                            </div>
+                            <div class="edu-card-body">
+                                <h3>Master of Computer Applications (MCA)</h3>
+                                <div class="edu-card-institution">
+                                    <span class="inst-icon">🎓</span>
+                                    <span>IFTM University, Moradabad</span>
+                                </div>
+                                <p class="edu-card-desc">
+                                    Postgraduate studies focusing on Advanced Software Engineering, Database Architecture (DBMS/SQL), Algorithm Design, Distributed Systems, and Web Technologies.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Education Card 3 -->
+                        <div class="edu-card">
+                            <div class="edu-card-top">
+                                <span class="edu-card-badge completed">Completed</span>
+                                <span class="edu-card-years">2017 – 2020</span>
+                            </div>
+                            <div class="edu-card-body">
+                                <h3>Bachelor of Computer Applications (BCA)</h3>
+                                <div class="edu-card-institution">
+                                    <span class="inst-icon">📜</span>
+                                    <span>IFTM University, Moradabad</span>
+                                </div>
+                                <p class="edu-card-desc">
+                                    Foundational degree in Computer Science covering Object-Oriented Programming (C++, Java), Data Structures, Operating Systems, Computer Networks, and Relational Databases.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Education Card 4 -->
+                        <div class="edu-card">
+                            <div class="edu-card-top">
+                                <span class="edu-card-badge certified">Certified</span>
+                                <span class="edu-card-years">2022 – 2023</span>
+                            </div>
+                            <div class="edu-card-body">
+                                <h3>Python Programming & Automation</h3>
+                                <div class="edu-card-institution">
+                                    <span class="inst-icon">💻</span>
+                                    <span>IIGHT, Gurgaon</span>
+                                </div>
+                                <p class="edu-card-desc">
+                                    Practical engineering training in Python OOP, modular automation scripts, REST API integrations, Web Scraping (BeautifulSoup/Selenium), and ETL pipelines.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Awards Section -->
+    <section class="awards-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="badge">RECOGNITION</span>
+                <h2>Awards & Achievements</h2>
+            </div>
+            <div class="awards-grid">
+                <div class="award-card">
+                    <div class="award-icon">🏆</div>
+                    <h3>Star Performer Award</h3>
+                    <p class="award-period">Q2 FY25</p>
+                    <p>Honored for consistent excellence and high-impact automation delivery at Oracle.</p>
+                </div>
+                <div class="award-card">
+                    <div class="award-icon">🌟</div>
+                    <h3>YAR Award</h3>
+                    <p class="award-period">Oracle India</p>
+                    <p>Recognized for innovation and process improvement in automation.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Certifications Section -->
+    <section id="certifications" class="certifications-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="badge">CREDENTIALS</span>
+                <h2>Certifications & Credentials</h2>
+            </div>
+            <div class="cert-grid">
+                <div class="cert-card">
+                    <div class="cert-logo">
+                        <img src="https://cdn.worldvectorlogo.com/logos/uipath-2.svg" alt="UiPath" class="cert-logo-img">
+                    </div>
+                    <div class="cert-info">
+                        <h3>UiPath Certified RPA Associate</h3>
+                        <p class="cert-issuer">UiPath</p>
+                        <p class="cert-desc">Foundation-level certification validating core RPA development skills with UiPath Studio and Orchestrator.</p>
+                    </div>
+                    <div class="cert-badge-tag">Verified</div>
+                </div>
+                <div class="cert-card">
+                    <div class="cert-logo">
+                        <img src="https://cdn.worldvectorlogo.com/logos/uipath-2.svg" alt="UiPath" class="cert-logo-img">
+                    </div>
+                    <div class="cert-info">
+                        <h3>UiPath Advanced RPA Developer</h3>
+                        <p class="cert-issuer">UiPath</p>
+                        <p class="cert-desc">Advanced certification covering REFramework, error handling, and enterprise-grade automation design patterns.</p>
+                    </div>
+                    <div class="cert-badge-tag">Verified</div>
+                </div>
+                <div class="cert-card">
+                    <div class="cert-logo">
+                        <img src="https://cdn.worldvectorlogo.com/logos/uipath-2.svg" alt="UiPath" class="cert-logo-img">
+                    </div>
+                    <div class="cert-info">
+                        <h3>Document Understanding</h3>
+                        <p class="cert-issuer">UiPath</p>
+                        <p class="cert-desc">Specialized certification in intelligent document processing, OCR, and AI-powered data extraction.</p>
+                    </div>
+                    <div class="cert-badge-tag">Verified</div>
+                </div>
+                <div class="cert-card">
+                    <div class="cert-logo">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg" alt="Python" class="cert-logo-img">
+                    </div>
+                    <div class="cert-info">
+                        <h3>Python Programming</h3>
+                        <p class="cert-issuer">IIGHT, Gurgaon</p>
+                        <p class="cert-desc">Comprehensive Python programming course covering OOP, data structures, automation scripting, and web scraping.</p>
+                    </div>
+                    <div class="cert-badge-tag">Completed</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog Section -->
+    <section id="blog" class="blog-section">
+        <div class="container">
+            <div class="blog-header-wrapper">
+                <div class="section-header" style="margin-bottom: 0;">
+                    <span class="badge badge-dark">INSIGHTS</span>
+                    <h2>Blog & Articles</h2>
+                    <p class="blog-section-subtitle">Articles on RPA architecture, bot design, Python scripting, and AI workflows.</p>
+                </div>
+                <div class="blog-actions">
+                    <button class="blog-author-btn" id="blogAuthorToggleBtn" type="button">
+                        <span>✍️</span>
+                        <span id="authorBtnLabel">Author Studio</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Author Control Bar (Shown when unlocked) -->
+            <div class="blog-author-bar" id="blogAuthorBar" style="display: none;">
+                <div class="author-status">
+                    <span class="status-dot"></span>
+                    <span>Author Studio Active — <strong>Mohd Irshad</strong></span>
+                </div>
+                <div class="author-controls">
+                    <button class="btn-author-action" id="openNewPostModalBtn" type="button">➕ Write New Post</button>
+                    <button class="btn-author-action-secondary" id="changePinBtn" type="button">🔑 Change PIN</button>
+                    <button class="btn-author-action-secondary" id="exportPostsBtn" type="button">📥 Export</button>
+                    <button class="btn-author-action-danger" id="lockAuthorBtn" type="button">🔒 Lock</button>
+                </div>
+            </div>
+
+            <div class="blog-grid" id="blogGrid">
+                <!-- Blog cards rendered dynamically via JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="badge badge-dark">GET IN TOUCH</span>
+                <h2>Have a Project or Opportunity?</h2>
+                <p class="contact-subtitle">Feel free to reach out via email or send a direct message on WhatsApp!</p>
+            </div>
+            <div class="contact-links">
+                <a href="mailto:irshadkohli18@gmail.com" class="contact-link-card">
+                    <span class="cl-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20 18h-2V9.25L12 13 6 9.25V18H4V6h1.2l6.8 4.25L18.8 6H20m0-2H4c-1.11 0-2 .89-2 2v12a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2z" fill="currentColor"/>
+                        </svg>
+                    </span>
+                    <span class="cl-label">Email</span>
+                    <span class="cl-value">irshadkohli18@gmail.com</span>
+                    <span class="cl-arrow">→</span>
+                </a>
+                <a href="https://wa.me/YOUR_PHONE_NUMBER_HERE" target="_blank" class="contact-link-card">
+                    <span class="cl-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" fill="#25D366"/>
+                        </svg>
+                    </span>
+                    <span class="cl-label">WhatsApp</span>
+                    <span class="cl-value">Send a message</span>
+                    <span class="cl-arrow">→</span>
+                </a>
+                <a href="https://www.linkedin.com/in/mohd-irshad-195368220/" target="_blank" class="contact-link-card">
+                    <span class="cl-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" fill="#0A66C2"/>
+                        </svg>
+                    </span>
+                    <span class="cl-label">LinkedIn</span>
+                    <span class="cl-value">Connect with me</span>
+                    <span class="cl-arrow">→</span>
+                </a>
+                <a href="https://github.com/Irshad18" target="_blank" class="contact-link-card">
+                    <span class="cl-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" fill="currentColor"/>
+                        </svg>
+                    </span>
+                    <span class="cl-label">GitHub</span>
+                    <span class="cl-value">View my repositories</span>
+                    <span class="cl-arrow">→</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-inner">
+                <p>&copy; 2026 Mohd Irshad. All rights reserved.</p>
+                <div class="footer-links">
+                    <a href="https://github.com/Irshad18" target="_blank">GitHub</a>
+                    <a href="https://www.linkedin.com/in/mohd-irshad-195368220/" target="_blank">LinkedIn</a>
+                    <a href="Mohd_Irshad_RPA_Resume_1.pdf" target="_blank">Resume</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scroll to top -->
+    <button class="scroll-top" id="scrollTop" aria-label="Scroll to top">↑</button>
+
     <script>
-        // Accent Color Switching
-        const colorBtns = document.querySelectorAll('.color-btn');
-        colorBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.documentElement.style.setProperty('--accent', btn.dataset.color);
-                document.documentElement.style.setProperty('--accent-glow', btn.dataset.glow);
-                
-                colorBtns.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
             });
         });
 
-        // Light/Dark Theme Toggling
-        const themeToggle = document.getElementById('theme-toggle');
-        themeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('light-theme');
-            if (document.body.classList.contains('light-theme')) {
-                themeToggle.textContent = '🌙';
+        // Scroll to top button
+        const scrollBtn = document.getElementById('scrollTop');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 400) {
+                scrollBtn.classList.add('visible');
             } else {
-                themeToggle.textContent = '☀️';
+                scrollBtn.classList.remove('visible');
             }
         });
+        scrollBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Navbar active link
+        const sections = document.querySelectorAll('section[id]');
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                if (scrollY >= sectionTop) {
+                    current = section.getAttribute('id');
+                }
+            });
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+
+    <!-- ============================================
+         BLOG MODALS & AUTHOR ENGINE
+         ============================================ -->
+
+    <!-- PIN Access Modal -->
+    <div class="custom-modal-overlay" id="authorPinModal">
+        <div class="custom-modal custom-modal-sm">
+            <div class="modal-header">
+                <h3>🔐 Author Access</h3>
+                <button class="modal-close-btn" type="button" onclick="closeModal('authorPinModal')">&times;</button>
+            </div>
+            <form id="authorPinForm">
+                <div class="modal-body">
+                    <p class="pin-note">
+                        <strong>Private Author Studio:</strong> Only Mohd Irshad has write access to create, edit, or delete blog articles.
+                    </p>
+                    <div class="form-group">
+                        <label for="authorPinInput">Enter Author PIN</label>
+                        <input type="password" id="authorPinInput" placeholder="Enter PIN (Default: 1818)" autocomplete="off" required>
+                        <p class="form-hint">Default PIN is <strong>1818</strong>. You can change it once logged in.</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="modal-btn-cancel" onclick="closeModal('authorPinModal')">Cancel</button>
+                    <button type="submit" class="modal-btn-primary">Unlock Studio</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Change PIN Modal -->
+    <div class="custom-modal-overlay" id="changePinModal">
+        <div class="custom-modal custom-modal-sm">
+            <div class="modal-header">
+                <h3>🔑 Change Author PIN</h3>
+                <button class="modal-close-btn" type="button" onclick="closeModal('changePinModal')">&times;</button>
+            </div>
+            <form id="changePinForm">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="currentPinInput">Current PIN</label>
+                        <input type="password" id="currentPinInput" placeholder="Enter current PIN" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newPinInput">New PIN</label>
+                        <input type="password" id="newPinInput" placeholder="Enter new PIN" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="modal-btn-cancel" onclick="closeModal('changePinModal')">Cancel</button>
+                    <button type="submit" class="modal-btn-primary">Save New PIN</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Write / Edit Blog Post Modal -->
+    <div class="custom-modal-overlay" id="blogEditorModal">
+        <div class="custom-modal custom-modal-lg">
+            <div class="modal-header">
+                <h3 id="editorModalTitle">✍️ Create New Blog Post</h3>
+                <button class="modal-close-btn" type="button" onclick="closeModal('blogEditorModal')">&times;</button>
+            </div>
+            <form id="blogEditorForm">
+                <input type="hidden" id="editorPostId">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="postTitle">Article Title *</label>
+                        <input type="text" id="postTitle" placeholder="e.g. How I Optimized UiPath Queue Processing by 40%" required>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label for="postCategory">Category / Tag *</label>
+                            <input type="text" id="postCategory" placeholder="e.g. RPA, UiPath, Python, AI" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="postReadTime">Estimated Read Time</label>
+                            <input type="text" id="postReadTime" placeholder="e.g. 5 min read">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="postExcerpt">Short Excerpt (Displayed on card) *</label>
+                        <textarea id="postExcerpt" rows="2" placeholder="Brief summary of what this article is about..." required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="postContent">Full Article Content *</label>
+                        <textarea id="postContent" rows="10" placeholder="Write whatever you want! You can write full paragraphs, code examples, bullet points, tips, etc." required></textarea>
+                        <p class="form-hint">Tip: Separate paragraphs with blank lines. Paste code or insights freely.</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="modal-btn-cancel" onclick="closeModal('blogEditorModal')">Cancel</button>
+                    <button type="submit" class="modal-btn-primary" id="savePostBtn">Publish Article</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Article Reader Modal -->
+    <div class="custom-modal-overlay" id="blogReaderModal">
+        <div class="custom-modal custom-modal-lg">
+            <div class="modal-header">
+                <span class="reader-article-tag" id="readerTag">RPA</span>
+                <button class="modal-close-btn" type="button" onclick="closeModal('blogReaderModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <h2 class="reader-article-title" id="readerTitle">Article Title</h2>
+                <div class="reader-article-meta">
+                    <span>By <strong>Mohd Irshad</strong></span> &bull;
+                    <span id="readerDate">March 2026</span> &bull;
+                    <span id="readerReadTime">5 min read</span>
+                </div>
+                <div class="reader-article-body" id="readerBody">
+                    <!-- Formatted article content -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="modal-btn-primary" onclick="closeModal('blogReaderModal')">Done Reading</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* ============================================
+           BLOG & AUTHOR STUDIO JAVASCRIPT ENGINE
+           ============================================ */
+        const STORAGE_KEY = 'irshad_portfolio_blog_posts';
+        const PIN_KEY = 'irshad_author_pin';
+        const SESSION_AUTH_KEY = 'irshad_author_session_active';
+        const DEFAULT_PIN = '1818';
+
+        const SEED_POSTS = [
+            {
+                id: 'post-1',
+                tag: 'RPA',
+                title: 'Getting Started with UiPath REFramework: Enterprise Best Practices',
+                excerpt: 'A comprehensive guide to building enterprise-grade automations using UiPath Robotic Enterprise Framework with robust state machine logic.',
+                content: `Robotic Enterprise Framework (REFramework) is the gold standard template in UiPath Studio for building reliable, unattended enterprise automations.\n\nIn enterprise deployments, bots fail not because the happy path was incomplete, but because edge cases and system exceptions were unhandled. REFramework solves this by implementing a State Machine architecture:\n\n1. Init State:\nLoads configuration from Orchestrator Assets and Config.xlsx, reads credentials safely, and initializes all desktop/web applications.\n\n2. Get Transaction Data:\nRetrieves queue items from UiPath Orchestrator or local datasets one at a time.\n\n3. Process Transaction:\nExecutes the automation logic for the specific item. If an error occurs, it classifies it as either a Business Rule Exception (no retry) or an Application Exception (automatic retry with screenshot capture).\n\n4. End Process:\nSafely closes all applications, kills lingering processes, and logs performance metrics.\n\nBy standardizing our automations on REFramework at Oracle, we reduced bot downtime by over 70% and achieved predictable exception handling.`,
+                date: 'March 2026',
+                readTime: '5 min read'
+            },
+            {
+                id: 'post-2',
+                tag: 'Automation',
+                title: 'Production Bot Support: 5 Rules for 24x7 Enterprise Stability',
+                excerpt: 'Lessons learned from managing 30+ production bots in a round-the-clock enterprise support environment at Oracle.',
+                content: `Managing 30+ production bots running 24x7 across multiple global regions requires proactive monitoring and quick incident resolution. Here are the 5 core rules I rely on every day:\n\nRule 1: Never Trust UI Selectors Blindly\nUI updates and browser patches can break fragile selectors. Always combine fuzzy selectors, visual anchors, and API fallback endpoints wherever possible.\n\nRule 2: Centralize Configuration\nHardcoded paths and credentials belong nowhere in production. Use UiPath Orchestrator Assets and Credential Stores for seamless credential rotation.\n\nRule 3: Structured Logging is Your Best Friend\nEvery transaction should log state transitions with transaction IDs. When a bot fails at 3:00 AM, logs should tell you the exact step and screenshot within 30 seconds.\n\nRule 4: Implement Auto-Healing and Process Kills\nIn the Init and End states, ensure stale browser and Excel processes are forcefully terminated to avoid memory leaks.\n\nRule 5: Maintain a Live Bot Health Dashboard\nTrack success rate, average handle time (AHT), and exception spikes daily to catch degradation before business stakeholders report issues.`,
+                date: 'February 2026',
+                readTime: '7 min read'
+            },
+            {
+                id: 'post-3',
+                tag: 'Data Science',
+                title: 'From RPA to Data Science: My Transition Journey',
+                excerpt: 'How I am leveraging my automation background to transition into Data Science and AI with IIT Roorkee.',
+                content: `For the past 4+ years, my work has focused on building RPA bots that execute deterministic business logic at scale. But the future of automation is combining rule-based bots with machine learning and predictive models.\n\nWhy RPA Developers Have an Edge in Data Science:\n\n1. Deep Understanding of Enterprise Data Flow:\nBefore you can train a model, you need to understand how enterprise ERP, CRM, and SQL databases connect. RPA developers work with these raw business pipelines daily.\n\n2. Automation of Data Cleaning:\nFeature engineering and data preparation often consume 80% of a data scientist's time. With Python scripts and automation tools, we can streamline data pipelines rapidly.\n\n3. Intelligent Document Processing (IDP):\nBy combining UiPath Document Understanding with Python ML libraries, we can classify unstructured invoices, extract line items, and feed predictions into downstream systems.\n\nCurrently pursuing advanced Data Science & AI coursework with IIT Roorkee, I am eager to build systems where AI makes the decision and bots execute the action.`,
+                date: 'January 2026',
+                readTime: '6 min read'
+            }
+        ];
+
+        // State variables
+        let isAuthorMode = sessionStorage.getItem(SESSION_AUTH_KEY) === 'true';
+
+        function getStoredPosts() {
+            try {
+                const stored = localStorage.getItem(STORAGE_KEY);
+                if (stored) {
+                    const parsed = JSON.parse(stored);
+                    if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+                }
+            } catch (e) {
+                console.error('Error reading posts from storage:', e);
+            }
+            // If empty, seed with initial posts and persist
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(SEED_POSTS));
+            return SEED_POSTS;
+        }
+
+        function saveStoredPosts(posts) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
+        }
+
+        function getStoredPin() {
+            return localStorage.getItem(PIN_KEY) || DEFAULT_PIN;
+        }
+
+        function setStoredPin(newPin) {
+            localStorage.setItem(PIN_KEY, newPin);
+        }
+
+        // Render blog cards
+        function renderBlogCards() {
+            const grid = document.getElementById('blogGrid');
+            if (!grid) return;
+            const posts = getStoredPosts();
+
+            grid.innerHTML = posts.map(post => {
+                const safeTag = escapeHtml(post.tag || 'Article');
+                const safeTitle = escapeHtml(post.title || 'Untitled');
+                const safeExcerpt = escapeHtml(post.excerpt || '');
+                const safeDate = escapeHtml(post.date || 'Recent');
+                const safeReadTime = escapeHtml(post.readTime || '3 min read');
+
+                return `
+                    <article class="blog-card" onclick="handleCardClick(event, '${post.id}')">
+                        ${isAuthorMode ? `
+                            <div class="blog-card-actions" onclick="event.stopPropagation()">
+                                <button class="card-action-btn" title="Edit Article" onclick="openEditPostModal('${post.id}')">✏️</button>
+                                <button class="card-action-btn delete-btn" title="Delete Article" onclick="deletePost('${post.id}')">🗑️</button>
+                            </div>
+                        ` : ''}
+                        <div class="blog-tag">${safeTag}</div>
+                        <h3>${safeTitle}</h3>
+                        <p>${safeExcerpt}</p>
+                        <div class="blog-meta">
+                            <span class="blog-date">${safeDate}</span>
+                            <span class="blog-read">${safeReadTime}</span>
+                        </div>
+                        <span class="blog-read-more">Read article &rarr;</span>
+                    </article>
+                `;
+            }).join('');
+
+            updateAuthorUI();
+        }
+
+        function updateAuthorUI() {
+            const authorBar = document.getElementById('blogAuthorBar');
+            const authorBtn = document.getElementById('blogAuthorToggleBtn');
+            const authorBtnLabel = document.getElementById('authorBtnLabel');
+
+            if (isAuthorMode) {
+                if (authorBar) authorBar.style.display = 'flex';
+                if (authorBtnLabel) authorBtnLabel.textContent = '➕ Write Post';
+                if (authorBtn) authorBtn.onclick = () => openCreatePostModal();
+            } else {
+                if (authorBar) authorBar.style.display = 'none';
+                if (authorBtnLabel) authorBtnLabel.textContent = 'Author Studio';
+                if (authorBtn) authorBtn.onclick = () => openModal('authorPinModal');
+            }
+        }
+
+        // Card click handler opens Reader Modal
+        function handleCardClick(event, postId) {
+            const posts = getStoredPosts();
+            const post = posts.find(p => p.id === postId);
+            if (!post) return;
+
+            document.getElementById('readerTag').textContent = post.tag || 'Article';
+            document.getElementById('readerTitle').textContent = post.title || 'Untitled';
+            document.getElementById('readerDate').textContent = post.date || 'Recent';
+            document.getElementById('readerReadTime').textContent = post.readTime || '3 min read';
+
+            // Format body content
+            const content = post.content || post.excerpt || 'No content provided.';
+            const paragraphs = content.split(/\n\s*\n/).map(p => {
+                const trimmed = p.trim();
+                if (!trimmed) return '';
+                // Simple code block detection
+                if (trimmed.startsWith('```') && trimmed.endsWith('```')) {
+                    const code = trimmed.replace(/^```[a-z]*\n?/, '').replace(/```$/, '');
+                    return `<pre><code>${escapeHtml(code)}</code></pre>`;
+                }
+                return `<p>${escapeHtml(trimmed).replace(/\n/g, '<br>')}</p>`;
+            }).join('');
+
+            document.getElementById('readerBody').innerHTML = paragraphs;
+            openModal('blogReaderModal');
+        }
+
+        // Modal Open / Close Helpers
+        function openModal(id) {
+            const modal = document.getElementById(id);
+            if (modal) {
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeModal(id) {
+            const modal = document.getElementById(id);
+            if (modal) {
+                modal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+
+        // Close on overlay click
+        document.querySelectorAll('.custom-modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) {
+                    closeModal(overlay.id);
+                }
+            });
+        });
+
+        // Close on Escape key
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.custom-modal-overlay.active').forEach(m => closeModal(m.id));
+            }
+        });
+
+        // PIN Verification Form
+        document.getElementById('authorPinForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const input = document.getElementById('authorPinInput');
+            const pin = input.value.trim();
+            const correctPin = getStoredPin();
+
+            if (pin === correctPin) {
+                isAuthorMode = true;
+                sessionStorage.setItem(SESSION_AUTH_KEY, 'true');
+                input.value = '';
+                closeModal('authorPinModal');
+                renderBlogCards();
+                // Smooth scroll to blog section
+                document.getElementById('blog')?.scrollIntoView({ behavior: 'smooth' });
+            } else {
+                alert('Incorrect PIN. Please try again or use default PIN: 1818');
+                input.focus();
+                input.select();
+            }
+        });
+
+        // Lock Author Studio
+        document.getElementById('lockAuthorBtn').addEventListener('click', function() {
+            isAuthorMode = false;
+            sessionStorage.removeItem(SESSION_AUTH_KEY);
+            renderBlogCards();
+        });
+
+        // Open Modal to Create New Post
+        function openCreatePostModal() {
+            document.getElementById('editorModalTitle').textContent = '✍️ Create New Blog Post';
+            document.getElementById('savePostBtn').textContent = 'Publish Article';
+            document.getElementById('editorPostId').value = '';
+            document.getElementById('postTitle').value = '';
+            document.getElementById('postCategory').value = 'RPA';
+            document.getElementById('postReadTime').value = '5 min read';
+            document.getElementById('postExcerpt').value = '';
+            document.getElementById('postContent').value = '';
+            openModal('blogEditorModal');
+        }
+
+        // Open Modal to Edit Post
+        function openEditPostModal(postId) {
+            const posts = getStoredPosts();
+            const post = posts.find(p => p.id === postId);
+            if (!post) return;
+
+            document.getElementById('editorModalTitle').textContent = '✏️ Edit Blog Post';
+            document.getElementById('savePostBtn').textContent = 'Save Changes';
+            document.getElementById('editorPostId').value = post.id;
+            document.getElementById('postTitle').value = post.title || '';
+            document.getElementById('postCategory').value = post.tag || '';
+            document.getElementById('postReadTime').value = post.readTime || '';
+            document.getElementById('postExcerpt').value = post.excerpt || '';
+            document.getElementById('postContent').value = post.content || '';
+            openModal('blogEditorModal');
+        }
+
+        // Save (Create or Update) Post
+        document.getElementById('blogEditorForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const id = document.getElementById('editorPostId').value;
+            const title = document.getElementById('postTitle').value.trim();
+            const tag = document.getElementById('postCategory').value.trim() || 'RPA';
+            const readTime = document.getElementById('postReadTime').value.trim() || '5 min read';
+            const excerpt = document.getElementById('postExcerpt').value.trim();
+            const content = document.getElementById('postContent').value.trim();
+
+            if (!title || !content) {
+                alert('Please provide at least a title and content.');
+                return;
+            }
+
+            let posts = getStoredPosts();
+            const currentDate = new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric' }).format(new Date());
+
+            if (id) {
+                // Update existing
+                const index = posts.findIndex(p => p.id === id);
+                if (index !== -1) {
+                    posts[index] = {
+                        ...posts[index],
+                        title,
+                        tag,
+                        readTime,
+                        excerpt,
+                        content,
+                        lastModified: currentDate
+                    };
+                }
+            } else {
+                // Create new post at the top!
+                const newPost = {
+                    id: 'post-' + Date.now(),
+                    title,
+                    tag,
+                    readTime,
+                    excerpt,
+                    content,
+                    date: currentDate
+                };
+                posts.unshift(newPost);
+            }
+
+            saveStoredPosts(posts);
+            closeModal('blogEditorModal');
+            renderBlogCards();
+        });
+
+        // Delete Post
+        function deletePost(postId) {
+            if (!confirm('Are you sure you want to delete this article?')) return;
+            let posts = getStoredPosts();
+            posts = posts.filter(p => p.id !== postId);
+            saveStoredPosts(posts);
+            renderBlogCards();
+        }
+
+        // Change PIN Modal
+        document.getElementById('changePinBtn').addEventListener('click', () => {
+            document.getElementById('currentPinInput').value = '';
+            document.getElementById('newPinInput').value = '';
+            openModal('changePinModal');
+        });
+
+        document.getElementById('changePinForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const cur = document.getElementById('currentPinInput').value.trim();
+            const newP = document.getElementById('newPinInput').value.trim();
+
+            if (cur !== getStoredPin()) {
+                alert('Current PIN is incorrect.');
+                return;
+            }
+            if (newP.length < 3) {
+                alert('New PIN must be at least 3 characters.');
+                return;
+            }
+
+            setStoredPin(newP);
+            closeModal('changePinModal');
+            alert('PIN successfully updated! Remember your new PIN: ' + newP);
+        });
+
+        // Export / Backup Posts as JSON
+        document.getElementById('exportPostsBtn').addEventListener('click', () => {
+            const posts = getStoredPosts();
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(posts, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", "mohd_irshad_blog_posts.json");
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        });
+
+        // HTML escaping utility to prevent XSS
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        // Initial setup
+        document.getElementById('openNewPostModalBtn')?.addEventListener('click', openCreatePostModal);
+        renderBlogCards();
     </script>
 </body>
 
