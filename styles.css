@@ -1677,6 +1677,231 @@ img {
 }
 
 /* ============================================
+   1:1 MENTORSHIP & GUIDANCE SECTION
+   ============================================ */
+.mentorship-section {
+    padding: 6rem 0;
+    background-color: var(--offwhite);
+}
+
+.mentor-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    max-width: 1150px;
+    margin: 3rem auto 3.5rem;
+}
+
+.mentor-card {
+    background: var(--white);
+    border: 1px solid rgba(35, 55, 41, 0.08);
+    border-radius: var(--radius);
+    padding: 2rem 1.75rem;
+    display: flex;
+    flex-direction: column;
+    transition: var(--transition);
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.02);
+    position: relative;
+}
+
+.mentor-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 16px 36px rgba(35, 55, 41, 0.08);
+    border-color: rgba(230, 175, 46, 0.45);
+}
+
+.mentor-card-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: rgba(35, 55, 41, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin-bottom: 1.25rem;
+    border: 1px solid rgba(35, 55, 41, 0.08);
+}
+
+.mentor-tag {
+    display: inline-block;
+    background: rgba(230, 175, 46, 0.15);
+    color: var(--amber-dark);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--radius-pill);
+    margin-bottom: 0.85rem;
+    width: fit-content;
+}
+
+.mentor-card h3 {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--green);
+    margin-bottom: 0.65rem;
+    line-height: 1.35;
+}
+
+.mentor-card p {
+    font-size: 0.88rem;
+    color: var(--text-light);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+.mentor-card-bullets {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    padding-top: 1.15rem;
+    border-top: 1px solid rgba(35, 55, 41, 0.06);
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--green);
+}
+
+/* 1:1 Booking Banner */
+.mentor-cta-banner {
+    background: #17241c;
+    color: var(--white);
+    border-radius: var(--radius);
+    padding: 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2.5rem;
+    max-width: 1150px;
+    margin: 0 auto;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.mentor-avatar-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 0.85rem;
+    background: rgba(230, 175, 46, 0.12);
+    padding: 0.35rem 0.95rem;
+    border-radius: var(--radius-pill);
+    border: 1px solid rgba(230, 175, 46, 0.25);
+}
+
+.mentor-live-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #4ade80;
+    box-shadow: 0 0 10px #4ade80;
+}
+
+.mentor-cta-info h3 {
+    font-family: var(--font-display);
+    font-size: 1.85rem;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 0.65rem;
+    line-height: 1.25;
+}
+
+.mentor-cta-info p {
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 0.95rem;
+    line-height: 1.65;
+    max-width: 620px;
+    margin-bottom: 1.25rem;
+}
+
+.mentor-perks {
+    display: flex;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 600;
+}
+
+.mentor-cta-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    flex-shrink: 0;
+    min-width: 260px;
+}
+
+.mentor-book-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--amber);
+    color: var(--green);
+    padding: 0.9rem 1.6rem;
+    border-radius: var(--radius-pill);
+    font-weight: 700;
+    font-size: 0.95rem;
+    border: none;
+    cursor: pointer;
+    transition: var(--transition);
+    font-family: inherit;
+    width: 100%;
+}
+
+.mentor-book-btn:hover {
+    background: var(--white);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(230, 175, 46, 0.35);
+}
+
+.mentor-book-btn .arrow-circle {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: rgba(35, 55, 41, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+}
+
+.mentor-wa-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.65rem;
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--white);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 0.85rem 1.6rem;
+    border-radius: var(--radius-pill);
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: var(--transition);
+    width: 100%;
+}
+
+.mentor-wa-btn svg {
+    flex-shrink: 0;
+}
+
+.mentor-wa-btn:hover {
+    background: rgba(37, 211, 102, 0.2);
+    border-color: #25D366;
+    color: #25D366;
+    transform: translateY(-2px);
+}
+
+/* ============================================
    CONTACT SECTION (DARK)
    ============================================ */
 .contact-section {
@@ -1699,8 +1924,15 @@ img {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 1.25rem;
-    max-width: 800px;
+    max-width: 880px;
     margin: 0 auto;
+}
+
+.contact-links .contact-link-card:last-child {
+    grid-column: span 2;
+    max-width: 430px;
+    margin: 0 auto;
+    width: 100%;
 }
 
 .contact-link-card {
@@ -1858,6 +2090,20 @@ img {
     .blog-grid {
         grid-template-columns: repeat(2, 1fr);
     }
+
+    .mentor-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .mentor-cta-banner {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 2.25rem;
+    }
+
+    .mentor-cta-actions {
+        width: 100%;
+    }
 }
 
 @media (max-width: 768px) {
@@ -1917,6 +2163,11 @@ img {
         grid-template-columns: 1fr;
     }
 
+    .contact-links .contact-link-card:last-child {
+        grid-column: span 1;
+        max-width: 100%;
+    }
+
     .awards-grid {
         grid-template-columns: 1fr;
     }
@@ -1926,6 +2177,10 @@ img {
     }
 
     .blog-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .mentor-grid {
         grid-template-columns: 1fr;
     }
 
