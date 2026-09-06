@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mohd Irshad - Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="bento-container">
+        <!-- 1. Top nav bar -->
+        <header class="card nav-bar">
+            <div class="logo">
+                <span class="dot"></span> Mohd Irshad
+            </div>
+            <nav class="nav-links">
+                <a href="#about">Work</a>
+                <a href="Mohd_Irshad_RPA_Resume_1.pdf" target="_blank">Resume</a>
+                <a href="#contact">Contact</a>
+                <div class="theme-controls">
+                    <button class="color-btn active" data-color="#2ea043" data-glow="rgba(46, 160, 67, 0.3)" style="background: #2ea043;" aria-label="Green Accent"></button>
+                    <button class="color-btn" data-color="#3b82f6" data-glow="rgba(59, 130, 246, 0.3)" style="background: #3b82f6;" aria-label="Blue Accent"></button>
+                    <button class="color-btn" data-color="#a855f7" data-glow="rgba(168, 85, 247, 0.3)" style="background: #a855f7;" aria-label="Purple Accent"></button>
+                    <button class="color-btn" data-color="#f97316" data-glow="rgba(249, 115, 22, 0.3)" style="background: #f97316;" aria-label="Orange Accent"></button>
+                    <div class="theme-divider"></div>
+                    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle Theme">☀️</button>
+                </div>
+            </nav>
+        </header>
+
+        <!-- 2. Hero card (large) -->
+        <main class="card hero-card">
+            <h1>Hey, I'm Mohd Irshad</h1>
+            <p class="tagline">RPA Developer @ Oracle &rarr; transitioning into Data Science & AI</p>
+            <p class="location">📍 Bengaluru, India</p>
+        </main>
+
+        <!-- 3. Photo card (medium) -->
+        <div class="card photo-card">
+            <img src="avatar.jpg" alt="Mohd Irshad Avatar" class="avatar-image">
+        </div>
+
+        <!-- 4. Stat cards (small, 2x2 grid) -->
+        <div class="stats-container">
+            <div class="card stat-card">
+                <h2>4+</h2>
+                <p>Years in RPA</p>
+            </div>
+            <div class="card stat-card">
+                <h2>30+</h2>
+                <p>Production Bots Maintained</p>
+            </div>
+            <div class="card stat-card">
+                <h2>24x7</h2>
+                <p>Production Support</p>
+            </div>
+            <div class="card stat-card">
+                <h2>3+</h2>
+                <p>UiPath Certifications</p>
+            </div>
+        </div>
+
+        <!-- 5. Links card -->
+        <div class="card links-card">
+            <a href="https://github.com/Irshad18" target="_blank" rel="noopener noreferrer" class="pill-btn">GitHub
+                &nearr;</a>
+            <a href="https://www.linkedin.com/in/mohd-irshad-195368220/" target="_blank" rel="noopener noreferrer"
+                class="pill-btn">LinkedIn &nearr;</a>
+            <a href="Mohd_Irshad_RPA_Resume_1.pdf" target="_blank" class="pill-btn">Resume &darr;</a>
+            <a href="mailto:irshadkohli18@gmail.com" class="pill-btn accent">Email Me &nearr;</a>
+        </div>
+
+        <!-- 6. About card (wide) -->
+        <section id="about" class="card about-card">
+            <h2>About Me</h2>
+            <p>Application Solutions Developer at Oracle India, working functionally as a Senior RPA Developer. Builds
+                and maintains 30+ production bots in a 24x7 support environment, handling incident management, SLA/KPI
+                reporting, and business process automation using UiPath, Power Automate Desktop, and NetSuite
+                integrations. Currently pursuing an Executive PG Certification in Data Science & AI from IIT Roorkee and
+                an MCA from IFTM University, moving toward a career in data science and AI.</p>
+        </section>
+
+        <!-- 8. Experience list card -->
+        <section class="card experience-card">
+            <h2>Experience</h2>
+            <div class="experience-list">
+                <div class="experience-row">
+                    <div class="role">Application Solutions Developer 1 (Senior RPA Developer)</div>
+                    <div class="company">Oracle India Pvt. Ltd.</div>
+                    <div class="duration">2023 – Present</div>
+                </div>
+                <div class="experience-row">
+                    <div class="role">RPA Developer</div>
+                    <div class="company">Rapidflow Technologies</div>
+                    <div class="duration">2022 – 2023</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Technical Skills card -->
+        <section class="card skills-card">
+            <h2>Technical Skills</h2>
+            <div class="skills-group">
+                <div class="skill-category">
+                    <h3>RPA Tools</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag" style="--percent: 95%;">UiPath <span class="pct">95%</span></span>
+                        <span class="skill-tag" style="--percent: 90%;">REFramework <span class="pct">90%</span></span>
+                        <span class="skill-tag" style="--percent: 85%;">Orchestrator <span class="pct">85%</span></span>
+                        <span class="skill-tag" style="--percent: 80%;">Queues <span class="pct">80%</span></span>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3>Programming & Query</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag highlight" style="--percent: 85%;">Python <span
+                                class="pct">85%</span></span>
+                        <span class="skill-tag highlight" style="--percent: 90%;">SQL <span
+                                class="pct">90%</span></span>
+                        <span class="skill-tag highlight" style="--percent: 80%;">APEX <span
+                                class="pct">80%</span></span>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3>Automation Expertise</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag" style="--percent: 90%;">Gmail & PDF <span class="pct">90%</span></span>
+                        <span class="skill-tag" style="--percent: 85%;">Excel Macros <span class="pct">85%</span></span>
+                        <span class="skill-tag" style="--percent: 80%;">Web Scraping <span class="pct">80%</span></span>
+                        <span class="skill-tag" style="--percent: 85%;">Desktop Automation <span
+                                class="pct">85%</span></span>
+                        <span class="skill-tag" style="--percent: 90%;">Data Entry <span class="pct">90%</span></span>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3>Integration & Systems</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag" style="--percent: 85%;">REST APIs <span class="pct">85%</span></span>
+                        <span class="skill-tag" style="--percent: 80%;">HTTPS Integration <span
+                                class="pct">80%</span></span>
+                        <span class="skill-tag" style="--percent: 75%;">NetSuite <span class="pct">75%</span></span>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3>Infrastructure & Ops</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag" style="--percent: 80%;">VM Management <span
+                                class="pct">80%</span></span>
+                        <span class="skill-tag" style="--percent: 85%;">Ticketing Tools <span
+                                class="pct">85%</span></span>
+                        <span class="skill-tag" style="--percent: 90%;">KPI Reporting <span
+                                class="pct">90%</span></span>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3>Domains</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag" style="--percent: 85%;">Finance <span class="pct">85%</span></span>
+                        <span class="skill-tag" style="--percent: 90%;">Customer Service <span
+                                class="pct">90%</span></span>
+                        <span class="skill-tag" style="--percent: 85%;">Supply Chain <span class="pct">85%</span></span>
+                    </div>
+                </div>
+                <div class="skill-category" style="grid-column: 1 / -1;">
+                    <h3>Process & Soft Skills</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag" style="--percent: 90%;">Requirement Gathering <span
+                                class="pct">90%</span></span>
+                        <span class="skill-tag" style="--percent: 85%;">Process Design <span
+                                class="pct">85%</span></span>
+                        <span class="skill-tag" style="--percent: 85%;">PDD & SDD Documentation <span
+                                class="pct">85%</span></span>
+                        <span class="skill-tag" style="--percent: 95%;">Stakeholder Communication <span
+                                class="pct">95%</span></span>
+                        <span class="skill-tag" style="--percent: 90%;">UAT Support <span class="pct">90%</span></span>
+                        <span class="skill-tag" style="--percent: 95%;">Problem Solving <span
+                                class="pct">95%</span></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Education & Certs card -->
+        <section class="card edu-cert-card">
+            <h2>Education & Certifications</h2>
+            <div class="experience-list">
+                <div class="experience-row">
+                    <div class="role">Executive PG Cert: Data Science & AI</div>
+                    <div class="company">Intelipaat</div>
+                    <div class="duration">Ongoing</div>
+                </div>
+                <div class="experience-row">
+                    <div class="role">Python Programming</div>
+                    <div class="company">IIGHT, Gurgaon</div>
+                    <div class="duration">2022 – 2023</div>
+                </div>
+                <div class="experience-row">
+                    <div class="role">MCA & BCA</div>
+                    <div class="company">IFTM University</div>
+                    <div class="duration">2017 – 2022</div>
+                </div>
+                <div class="experience-row">
+                    <div class="role">UiPath Certifications</div>
+                    <div class="company">Foundation, FastStart, Document Understanding</div>
+                    <div class="duration">Completed</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Awards card -->
+        <section class="card awards-card">
+            <h2>Awards & Recognitions</h2>
+            <div class="awards-list">
+                <div class="award-item">
+                    <div class="award-title">🏆 Star Performer Award (Q2 FY25)</div>
+                    <div class="award-desc">Honored for consistent excellence and high-impact automation delivery.</div>
+                </div>
+                <div class="award-item">
+                    <div class="award-title">🌟 YAR Award</div>
+                    <div class="award-desc">Recognized for innovation and process improvement in automation.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. Contact card (medium) -->
+        <section id="contact" class="card contact-card">
+            <h2>Have a project or opportunity in mind?</h2>
+            <a href="mailto:irshadkohli18@gmail.com" class="contact-btn">Let's talk &rarr;</a>
+        </section>
+
+        <!-- 9. Footer -->
+        <footer class="footer">
+            <p>Last updated: September 2026</p>
+            <a href="#">Mohd Irshad</a>
+        </footer>
+    </div>
+    
+    <script>
+        // Accent Color Switching
+        const colorBtns = document.querySelectorAll('.color-btn');
+        colorBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.documentElement.style.setProperty('--accent', btn.dataset.color);
+                document.documentElement.style.setProperty('--accent-glow', btn.dataset.glow);
+                
+                colorBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
+        });
+
+        // Light/Dark Theme Toggling
+        const themeToggle = document.getElementById('theme-toggle');
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('light-theme');
+            if (document.body.classList.contains('light-theme')) {
+                themeToggle.textContent = '🌙';
+            } else {
+                themeToggle.textContent = '☀️';
+            }
+        });
+    </script>
+</body>
+
+</html>
