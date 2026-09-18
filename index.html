@@ -26,6 +26,7 @@
                 <a href="#about" class="nav-link active">HOME</a>
                 <a href="#experience" class="nav-link">EXPERIENCE</a>
                 <a href="#skills" class="nav-link">SKILLS</a>
+                <a href="#presentation" class="nav-link">TOWNHALL</a>
                 <a href="#certifications" class="nav-link">CERTIFICATIONS</a>
                 <a href="#blog" class="nav-link">BLOG</a>
                 <a href="#mentorship" class="nav-link">1:1 SESSIONS</a>
@@ -42,7 +43,7 @@
         <div class="hero-content">
             <div class="hero-text">
                 <span class="badge"> WELCOME TO MY PORTFOLIO </span>
-                <h1>I'm Mohd Irshad<br>
+                <h1>I'm Swatiiiii Irshad<br>
                     <em>RPA Developer</em><br>
                     Based In India
                 </h1>
@@ -533,6 +534,93 @@
                     <h3>YAR Award</h3>
                     <p class="award-period">Oracle India</p>
                     <p>Recognized for innovation and process improvement in automation.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Town Hall Presentation Spotlight Section -->
+    <section id="presentation" class="presentation-section">
+        <div class="container">
+            <div class="presentation-header-wrapper">
+                <div class="section-header" style="margin-bottom: 0;">
+                    <span class="badge">ORACLE ALL-HANDS & TOWNHALL</span>
+                    <h2>Office Town Hall Presentation</h2>
+                    <p class="presentation-section-subtitle">
+                        Live 2-minute spotlight presentation to leadership & global engineering teams showcasing production bot impact, stability metrics, and automation scalability.
+                    </p>
+                </div>
+                <div class="presentation-actions">
+                    <!-- Author Control Button (PIN-Protected) -->
+                    <button class="townhall-author-btn" id="townhallAuthorBtn" type="button" onclick="handleTownhallAuthorClick()">
+                        <span id="townhallAuthorBtnIcon">🔒</span>
+                        <span id="townhallAuthorBtnText">Author Upload</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Main Presentation Container Grid -->
+            <div class="presentation-grid">
+                <!-- Left: Video Player Card -->
+                <div class="video-card">
+                    <div class="video-container" id="townhallVideoContainer">
+                        <!-- Dynamic Player rendered via JavaScript -->
+                    </div>
+                    <div class="video-footer-bar">
+                        <div class="video-tags-cluster">
+                            <span class="vtag vtag-live"><span class="live-dot"></span> Live Stage Demo</span>
+                            <span class="vtag" id="displayVideoDuration">⏱️ 2 Mins Presentation</span>
+                            <span class="vtag" id="displayVideoCompany">🏢 Oracle India</span>
+                        </div>
+                        <div class="video-action-links" id="videoExternalLinkWrap" style="display: none;">
+                            <a href="#" id="videoExternalLink" target="_blank" class="vlink-btn">External Link ↗</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Presentation Highlights & Context Panel -->
+                <div class="presentation-info-card">
+                    <div class="pinfo-header">
+                        <div class="pinfo-event-badge" id="displayEventBadge">ORACLE ALL-HANDS</div>
+                        <h3 id="displayPresentationTitle">Enterprise Automation & Bot Scalability Showcase</h3>
+                        <p class="pinfo-role" id="displayPresenterRole">Presented by Mohd Irshad • Senior RPA Developer</p>
+                    </div>
+
+                    <p class="pinfo-summary" id="displayPresentationSummary">
+                        Selected to present high-impact enterprise automations at the Oracle Office Town Hall. Delivered a fast-paced 2-minute live demo and executive briefing covering unattended bot architecture, proactive exception handling, and quantifiable business ROI.
+                    </p>
+
+                    <div class="pinfo-highlights">
+                        <h4>Key Presentation Highlights</h4>
+                        <ul class="highlight-list" id="displayHighlightsList">
+                            <!-- Populated dynamically via JS -->
+                        </ul>
+                    </div>
+
+                    <div class="pinfo-metrics-row">
+                        <div class="pmetric-box">
+                            <span class="pmetric-val">~2 Mnt</span>
+                            <span class="pmetric-lbl">Presentation Time</span>
+                        </div>
+                        <div class="pmetric-box">
+                            <span class="pmetric-val">30+</span>
+                            <span class="pmetric-lbl">Bots Featured</span>
+                        </div>
+                        <div class="pmetric-box">
+                            <span class="pmetric-val">Executive</span>
+                            <span class="pmetric-lbl">Audience Level</span>
+                        </div>
+                    </div>
+
+                    <div class="pinfo-cta">
+                        <a href="#contact" class="btn-townhall-contact">
+                            <span>Discuss Automation Solutions</span>
+                            <span class="arrow-circle">→</span>
+                        </a>
+                        <button type="button" class="btn-townhall-secondary" id="townhallEditShortcutBtn" onclick="openTownhallEditorModal()" style="display: none;">
+                            <span>✏️ Edit Video & Content</span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1037,6 +1125,116 @@
         </div>
     </div>
 
+    <!-- Author-Only Town Hall Video & Presentation Manager Modal -->
+    <div class="custom-modal-overlay" id="townhallVideoModal">
+        <div class="custom-modal custom-modal-lg">
+            <div class="modal-header">
+                <h3>🎥 Manage Town Hall Presentation & Video</h3>
+                <button class="modal-close-btn" type="button" onclick="closeModal('townhallVideoModal')">&times;</button>
+            </div>
+            <form id="townhallVideoForm">
+                <div class="modal-body">
+                    <p class="pin-note" style="margin-bottom: 1.25rem;">
+                        <strong>Author Restricted Area:</strong> Only you can upload, edit, or configure this presentation. Changes take effect immediately on your live website.
+                    </p>
+
+                    <!-- Source Selection Tabs -->
+                    <div class="form-group">
+                        <label>Video Source Mode</label>
+                        <div class="source-toggle-group">
+                            <button type="button" class="source-toggle-btn active" id="srcModeFileBtn" onclick="setVideoSourceMode('file')">📁 Upload Video File (Mac)</button>
+                            <button type="button" class="source-toggle-btn" id="srcModePathBtn" onclick="setVideoSourceMode('path')">💻 Local File in Folder</button>
+                            <button type="button" class="source-toggle-btn" id="srcModeUrlBtn" onclick="setVideoSourceMode('url')">🔗 External Link (YouTube / Drive)</button>
+                        </div>
+                    </div>
+
+                    <!-- Mode 1: File Upload (drag & drop / input) -->
+                    <div id="videoSourceFileArea" class="video-source-box">
+                        <label for="townhallFileInput">Choose Video from your Mac (MP4, MOV, WebM)</label>
+                        <div class="file-dropzone" id="videoDropzone">
+                            <div class="dropzone-icon">📹</div>
+                            <p class="dropzone-text" id="dropzoneMainText">Click or drag & drop your presentation video here</p>
+                            <span class="dropzone-sub">Supports 2-minute MP4, MOV, or WebM clips</span>
+                            <input type="file" id="townhallFileInput" accept="video/mp4,video/webm,video/quicktime,video/*" style="display: none;">
+                            <button type="button" class="btn-browse-file" onclick="document.getElementById('townhallFileInput').click()">Browse Video File</button>
+                        </div>
+                        <div id="fileUploadStatus" class="file-upload-status" style="display: none;"></div>
+                    </div>
+
+                    <!-- Mode 2: Local Project File Name -->
+                    <div id="videoSourcePathArea" class="video-source-box" style="display: none;">
+                        <div class="form-group">
+                            <label for="townhallLocalPath">Local File Name in Project Directory</label>
+                            <input type="text" id="townhallLocalPath" placeholder="townhall-presentation.mp4" value="townhall-presentation.mp4">
+                            <small class="field-hint">Tip: Simply copy your 2-minute video into this project folder as <code>townhall-presentation.mp4</code>. This is 100% permanent and ready for Git commit and GitHub Pages.</small>
+                        </div>
+                    </div>
+
+                    <!-- Mode 3: Video URL / Embed -->
+                    <div id="videoSourceUrlArea" class="video-source-box" style="display: none;">
+                        <div class="form-group">
+                            <label for="townhallVideoUrl">Video Embed or Playback URL</label>
+                            <input type="url" id="townhallVideoUrl" placeholder="https://www.youtube.com/embed/... or LinkedIn / Drive / Loom URL">
+                            <small class="field-hint">Supports YouTube embeds, Vimeo, Loom, or Google Drive preview links.</small>
+                        </div>
+                    </div>
+
+                    <!-- Presentation Metadata Fields -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+                        <div class="form-group">
+                            <label for="townhallEventTitle">Event / Platform *</label>
+                            <input type="text" id="townhallEventTitle" placeholder="Oracle India Office Town Hall" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="townhallDuration">Duration Tag *</label>
+                            <input type="text" id="townhallDuration" placeholder="2 Mins Presentation" required>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label for="townhallTitle">Presentation Title *</label>
+                            <input type="text" id="townhallTitle" placeholder="Enterprise Automation & Bot Scalability Showcase" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="townhallPresenter">Presenter Line *</label>
+                            <input type="text" id="townhallPresenter" placeholder="Presented by Mohd Irshad • Senior RPA Developer" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="townhallAudience">Audience & Scope</label>
+                        <input type="text" id="townhallAudience" placeholder="Senior Engineering Leadership & Global Operations">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="townhallSummary">Presentation Summary *</label>
+                        <textarea id="townhallSummary" rows="3" placeholder="Describe the focus of your presentation and why you were invited to speak..." required></textarea>
+                    </div>
+
+                    <!-- Key Takeaways -->
+                    <div class="form-group">
+                        <label for="townhallHighlights">Key Highlights / Takeaways (One per line)</label>
+                        <textarea id="townhallHighlights" rows="4" placeholder="• Demonstrated high-impact RPA bots saving 1,000+ business hours&#10;• Articulated REFramework error-handling resilience&#10;• Answered live questions from engineering directors"></textarea>
+                        <small class="field-hint">Enter each bullet point on a new line.</small>
+                    </div>
+
+                    <!-- Optional Poster Image -->
+                    <div class="form-group">
+                        <label for="townhallPoster">Poster / Thumbnail Image URL (Optional)</label>
+                        <input type="text" id="townhallPoster" placeholder="about-img.jpg or custom image path">
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="modal-btn-cancel" onclick="closeModal('townhallVideoModal')">Cancel</button>
+                    <button type="button" class="modal-btn-secondary" onclick="resetTownhallDefaults()">Reset Defaults</button>
+                    <button type="submit" class="modal-btn-primary">Save & Publish Video →</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
         /* ============================================
            BLOG & AUTHOR STUDIO JAVASCRIPT ENGINE
@@ -1147,14 +1345,33 @@
             const authorBtn = document.getElementById('blogAuthorToggleBtn');
             const authorBtnLabel = document.getElementById('authorBtnLabel');
 
+            const townhallAuthorBtn = document.getElementById('townhallAuthorBtn');
+            const townhallAuthorBtnIcon = document.getElementById('townhallAuthorBtnIcon');
+            const townhallAuthorBtnText = document.getElementById('townhallAuthorBtnText');
+            const townhallEditShortcut = document.getElementById('townhallEditShortcutBtn');
+
             if (isAuthorMode) {
                 if (authorBar) authorBar.style.display = 'flex';
                 if (authorBtnLabel) authorBtnLabel.textContent = '➕ Write Post';
                 if (authorBtn) authorBtn.onclick = () => openCreatePostModal();
+
+                if (townhallAuthorBtn) {
+                    townhallAuthorBtn.classList.add('active-author');
+                    if (townhallAuthorBtnIcon) townhallAuthorBtnIcon.textContent = '🎥';
+                    if (townhallAuthorBtnText) townhallAuthorBtnText.textContent = 'Manage Video';
+                }
+                if (townhallEditShortcut) townhallEditShortcut.style.display = 'inline-flex';
             } else {
                 if (authorBar) authorBar.style.display = 'none';
                 if (authorBtnLabel) authorBtnLabel.textContent = 'Author Studio';
                 if (authorBtn) authorBtn.onclick = () => openModal('authorPinModal');
+
+                if (townhallAuthorBtn) {
+                    townhallAuthorBtn.classList.remove('active-author');
+                    if (townhallAuthorBtnIcon) townhallAuthorBtnIcon.textContent = '🔒';
+                    if (townhallAuthorBtnText) townhallAuthorBtnText.textContent = 'Author Upload';
+                }
+                if (townhallEditShortcut) townhallEditShortcut.style.display = 'none';
             }
         }
 
@@ -1232,8 +1449,15 @@
                 input.value = '';
                 closeModal('authorPinModal');
                 renderBlogCards();
-                // Smooth scroll to blog section
-                document.getElementById('blog')?.scrollIntoView({ behavior: 'smooth' });
+                renderTownhallSection();
+                updateAuthorUI();
+                
+                if (window.pendingAuthorAction === 'townhall') {
+                    window.pendingAuthorAction = null;
+                    openTownhallEditorModal();
+                } else {
+                    document.getElementById('blog')?.scrollIntoView({ behavior: 'smooth' });
+                }
             } else {
                 alert('Incorrect PIN. Please try again or use default PIN: 1818');
                 input.focus();
@@ -1246,6 +1470,8 @@
             isAuthorMode = false;
             sessionStorage.removeItem(SESSION_AUTH_KEY);
             renderBlogCards();
+            renderTownhallSection();
+            updateAuthorUI();
         });
 
         // Open Modal to Create New Post
@@ -1445,9 +1671,429 @@
             }
         });
 
+        /* ============================================
+           TOWNHALL PRESENTATION & VIDEO STUDIO ENGINE
+           ============================================ */
+        const TOWNHALL_STORAGE_KEY = 'irshad_townhall_presentation_data';
+        const IDB_NAME = 'irshad_portfolio_media';
+        const IDB_STORE = 'videos';
+
+        const DEFAULT_TOWNHALL_DATA = {
+            event: 'Oracle India Office Town Hall',
+            duration: '2 Mins Presentation',
+            title: 'Enterprise Automation & Bot Scalability Showcase',
+            presenter: 'Presented by Mohd Irshad • Senior RPA Developer',
+            audience: 'Senior Engineering Leadership & Global Operations',
+            summary: 'Selected to present high-impact enterprise automations at the Oracle Office Town Hall. Delivered a fast-paced 2-minute live demo and executive briefing covering unattended bot architecture, proactive exception handling, and quantifiable business ROI.',
+            highlights: [
+                'Demonstrated production bots saving 1,000+ enterprise manual hours across global finance & operations',
+                'Showcased UiPath REFramework state machine architecture & self-healing exception handling',
+                'Addressed live queries from leadership on scaling automation across cloud & on-premise systems'
+            ],
+            sourceType: 'path', // 'file', 'path', 'url'
+            localPath: 'townhall-presentation.mp4',
+            externalUrl: '',
+            poster: 'about-img.jpg',
+            uploadedFileName: ''
+        };
+
+        // IndexedDB for storing offline video file blob without quota errors
+        function openMediaDB() {
+            return new Promise((resolve, reject) => {
+                if (!window.indexedDB) {
+                    reject(new Error('IndexedDB not supported'));
+                    return;
+                }
+                const req = indexedDB.open(IDB_NAME, 1);
+                req.onupgradeneeded = (e) => {
+                    const db = e.target.result;
+                    if (!db.objectStoreNames.contains(IDB_STORE)) {
+                        db.createObjectStore(IDB_STORE);
+                    }
+                };
+                req.onsuccess = () => resolve(req.result);
+                req.onerror = () => reject(req.error);
+            });
+        }
+
+        async function saveVideoBlob(blob) {
+            try {
+                const db = await openMediaDB();
+                return new Promise((resolve, reject) => {
+                    const tx = db.transaction(IDB_STORE, 'readwrite');
+                    const store = tx.objectStore(IDB_STORE);
+                    const putReq = store.put(blob, 'townhall_video');
+                    putReq.onsuccess = () => resolve(true);
+                    putReq.onerror = () => reject(putReq.error);
+                });
+            } catch (err) {
+                console.warn('Could not save blob in IndexedDB:', err);
+                return false;
+            }
+        }
+
+        async function getVideoBlob() {
+            try {
+                const db = await openMediaDB();
+                return new Promise((resolve) => {
+                    const tx = db.transaction(IDB_STORE, 'readonly');
+                    const store = tx.objectStore(IDB_STORE);
+                    const req = store.get('townhall_video');
+                    req.onsuccess = () => resolve(req.result || null);
+                    req.onerror = () => resolve(null);
+                });
+            } catch (err) {
+                return null;
+            }
+        }
+
+        async function clearVideoBlob() {
+            try {
+                const db = await openMediaDB();
+                return new Promise((resolve) => {
+                    const tx = db.transaction(IDB_STORE, 'readwrite');
+                    const store = tx.objectStore(IDB_STORE);
+                    const req = store.delete('townhall_video');
+                    req.onsuccess = () => resolve(true);
+                    req.onerror = () => resolve(false);
+                });
+            } catch (e) {
+                return false;
+            }
+        }
+
+        function getTownhallData() {
+            try {
+                const raw = localStorage.getItem(TOWNHALL_STORAGE_KEY);
+                if (raw) {
+                    const parsed = JSON.parse(raw);
+                    return { ...DEFAULT_TOWNHALL_DATA, ...parsed };
+                }
+            } catch (e) {
+                console.error('Error reading townhall data:', e);
+            }
+            return DEFAULT_TOWNHALL_DATA;
+        }
+
+        function saveTownhallData(data) {
+            localStorage.setItem(TOWNHALL_STORAGE_KEY, JSON.stringify(data));
+        }
+
+        let currentActiveBlobUrl = null;
+
+        async function renderTownhallSection() {
+            const data = getTownhallData();
+            
+            // Text fields
+            const eventBadge = document.getElementById('displayEventBadge');
+            const titleEl = document.getElementById('displayPresentationTitle');
+            const roleEl = document.getElementById('displayPresenterRole');
+            const summaryEl = document.getElementById('displayPresentationSummary');
+            const durationEl = document.getElementById('displayVideoDuration');
+            const companyEl = document.getElementById('displayVideoCompany');
+            const highlightsList = document.getElementById('displayHighlightsList');
+            const videoContainer = document.getElementById('townhallVideoContainer');
+            const externalLinkWrap = document.getElementById('videoExternalLinkWrap');
+            const externalLink = document.getElementById('videoExternalLink');
+
+            if (eventBadge) eventBadge.textContent = (data.event || 'ORACLE ALL-HANDS').toUpperCase();
+            if (titleEl) titleEl.textContent = data.title || 'Enterprise Automation & Bot Scalability Showcase';
+            if (roleEl) roleEl.textContent = data.presenter || 'Presented by Mohd Irshad • Senior RPA Developer';
+            if (summaryEl) summaryEl.textContent = data.summary || '';
+            if (durationEl) durationEl.textContent = `⏱️ ${data.duration || '2 Mins'}`;
+            if (companyEl) companyEl.textContent = `🏢 ${data.event && data.event.includes('Oracle') ? 'Oracle India' : (data.event || 'Oracle India')}`;
+
+            // Highlights
+            if (highlightsList) {
+                const items = Array.isArray(data.highlights) ? data.highlights : [];
+                highlightsList.innerHTML = items.map(h => `
+                    <li>
+                        <span class="hl-check">✓</span>
+                        <span>${escapeHtml(h)}</span>
+                    </li>
+                `).join('');
+            }
+
+            // External link wrap
+            if (externalLinkWrap && externalLink) {
+                if (data.sourceType === 'url' && data.externalUrl) {
+                    externalLinkWrap.style.display = 'block';
+                    externalLink.href = data.externalUrl;
+                } else {
+                    externalLinkWrap.style.display = 'none';
+                }
+            }
+
+            // Render Video Container
+            if (!videoContainer) return;
+
+            if (data.sourceType === 'url' && data.externalUrl) {
+                const ytMatch = data.externalUrl.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
+                if (ytMatch && ytMatch[1]) {
+                    videoContainer.innerHTML = `
+                        <iframe class="video-player-frame" src="https://www.youtube.com/embed/${ytMatch[1]}?rel=0" allowfullscreen title="${escapeHtml(data.title)}"></iframe>
+                    `;
+                } else {
+                    videoContainer.innerHTML = `
+                        <video class="video-player-elem" controls poster="${escapeHtml(data.poster || 'about-img.jpg')}">
+                            <source src="${escapeHtml(data.externalUrl)}">
+                            Your browser does not support HTML5 video.
+                        </video>
+                    `;
+                }
+            } else if (data.sourceType === 'file') {
+                const blob = await getVideoBlob();
+                if (blob) {
+                    if (currentActiveBlobUrl) URL.revokeObjectURL(currentActiveBlobUrl);
+                    currentActiveBlobUrl = URL.createObjectURL(blob);
+                    videoContainer.innerHTML = `
+                        <video class="video-player-elem" controls poster="${escapeHtml(data.poster || 'about-img.jpg')}" playsinline>
+                            <source src="${currentActiveBlobUrl}" type="${blob.type || 'video/mp4'}">
+                            Your browser does not support HTML5 video.
+                        </video>
+                    `;
+                } else {
+                    renderVideoFallback(videoContainer, data);
+                }
+            } else {
+                renderVideoFallback(videoContainer, data);
+            }
+        }
+
+        function renderVideoFallback(container, data) {
+            const videoSrc = escapeHtml(data.localPath || 'townhall-presentation.mp4');
+            const posterSrc = escapeHtml(data.poster || 'about-img.jpg');
+
+            container.innerHTML = `
+                <video class="video-player-elem" id="townhallNativeVideo" controls poster="${posterSrc}" playsinline>
+                    <source src="${videoSrc}" type="video/mp4">
+                    <source src="${videoSrc}" type="video/quicktime">
+                    <source src="${videoSrc}" type="video/webm">
+                </video>
+                <div class="video-overlay-preview" id="videoOverlayPreview" onclick="handlePlayClick()">
+                    <div class="voverlay-bg" style="background-image: url('${posterSrc}');"></div>
+                    <div class="voverlay-scrim"></div>
+                    <div class="voverlay-content">
+                        <div class="vplay-badge">⏱️ 2-Min Live Spotlight Demo</div>
+                        <button type="button" class="vplay-btn" aria-label="Play Video">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M8 5v14l11-7z"/>
+                            </svg>
+                        </button>
+                        <div class="vplay-title">${escapeHtml(data.title)}</div>
+                        <div class="vplay-sub">${escapeHtml(data.event)}</div>
+                    </div>
+                </div>
+            `;
+
+            const videoElem = document.getElementById('townhallNativeVideo');
+            const overlay = document.getElementById('videoOverlayPreview');
+            if (videoElem && overlay) {
+                videoElem.addEventListener('play', () => {
+                    overlay.classList.add('hide');
+                });
+                videoElem.addEventListener('error', () => {
+                    overlay.classList.remove('hide');
+                    const playTitle = overlay.querySelector('.vplay-title');
+                    const playSub = overlay.querySelector('.vplay-sub');
+                    if (playTitle) playTitle.innerHTML = `${escapeHtml(data.title)} <br><span style="font-size:0.85rem; font-weight:500; color:var(--amber);">File: <code>${videoSrc}</code></span>`;
+                    if (playSub) playSub.innerHTML = isAuthorMode 
+                        ? `Click <strong>Manage Video</strong> above to select video from Mac or place in project folder.`
+                        : `Enterprise Town Hall Presentation • Mohd Irshad`;
+                });
+            }
+        }
+
+        function handlePlayClick() {
+            const videoElem = document.getElementById('townhallNativeVideo');
+            const overlay = document.getElementById('videoOverlayPreview');
+            if (videoElem) {
+                videoElem.play().then(() => {
+                    if (overlay) overlay.classList.add('hide');
+                }).catch(() => {
+                    if (isAuthorMode) {
+                        openTownhallEditorModal();
+                    } else {
+                        alert('Presentation preview: Mohd Irshad presenting at Oracle Town Hall (~2 min demo). If you are Irshad, click "Author Upload" to select the video file directly from your computer!');
+                    }
+                });
+            }
+        }
+
+        function handleTownhallAuthorClick() {
+            if (isAuthorMode) {
+                openTownhallEditorModal();
+            } else {
+                window.pendingAuthorAction = 'townhall';
+                openModal('authorPinModal');
+            }
+        }
+
+        function setVideoSourceMode(mode) {
+            const btnFile = document.getElementById('srcModeFileBtn');
+            const btnPath = document.getElementById('srcModePathBtn');
+            const btnUrl = document.getElementById('srcModeUrlBtn');
+
+            const areaFile = document.getElementById('videoSourceFileArea');
+            const areaPath = document.getElementById('videoSourcePathArea');
+            const areaUrl = document.getElementById('videoSourceUrlArea');
+
+            [btnFile, btnPath, btnUrl].forEach(b => b?.classList.remove('active'));
+            [areaFile, areaPath, areaUrl].forEach(a => { if (a) a.style.display = 'none'; });
+
+            if (mode === 'file') {
+                btnFile?.classList.add('active');
+                if (areaFile) areaFile.style.display = 'block';
+            } else if (mode === 'path') {
+                btnPath?.classList.add('active');
+                if (areaPath) areaPath.style.display = 'block';
+            } else {
+                btnUrl?.classList.add('active');
+                if (areaUrl) areaUrl.style.display = 'block';
+            }
+            window.currentVideoSourceMode = mode;
+        }
+
+        let pendingVideoFileBlob = null;
+
+        function openTownhallEditorModal() {
+            const data = getTownhallData();
+            document.getElementById('townhallEventTitle').value = data.event || '';
+            document.getElementById('townhallDuration').value = data.duration || '';
+            document.getElementById('townhallTitle').value = data.title || '';
+            document.getElementById('townhallPresenter').value = data.presenter || '';
+            document.getElementById('townhallAudience').value = data.audience || '';
+            document.getElementById('townhallSummary').value = data.summary || '';
+            document.getElementById('townhallHighlights').value = (data.highlights || []).join('\n');
+            document.getElementById('townhallLocalPath').value = data.localPath || 'townhall-presentation.mp4';
+            document.getElementById('townhallVideoUrl').value = data.externalUrl || '';
+            document.getElementById('townhallPoster').value = data.poster || 'about-img.jpg';
+
+            const statusEl = document.getElementById('fileUploadStatus');
+            if (statusEl) {
+                if (data.uploadedFileName) {
+                    statusEl.style.display = 'block';
+                    statusEl.innerHTML = `✅ Currently loaded video: <strong>${escapeHtml(data.uploadedFileName)}</strong>`;
+                } else {
+                    statusEl.style.display = 'none';
+                }
+            }
+
+            setVideoSourceMode(data.sourceType || 'path');
+            openModal('townhallVideoModal');
+        }
+
+        function resetTownhallDefaults() {
+            if (!confirm('Reset presentation details back to initial default showcase?')) return;
+            saveTownhallData(DEFAULT_TOWNHALL_DATA);
+            clearVideoBlob();
+            openTownhallEditorModal();
+            renderTownhallSection();
+        }
+
+        // File dropzone & input handling
+        const fileInput = document.getElementById('townhallFileInput');
+        const dropzone = document.getElementById('videoDropzone');
+        const dropzoneText = document.getElementById('dropzoneMainText');
+        const statusEl = document.getElementById('fileUploadStatus');
+
+        if (fileInput) {
+            fileInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) handleVideoFileSelection(file);
+            });
+        }
+
+        if (dropzone) {
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropzone.addEventListener(eventName, (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    dropzone.classList.add('drag-over');
+                });
+            });
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropzone.addEventListener(eventName, (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    dropzone.classList.remove('drag-over');
+                });
+            });
+            dropzone.addEventListener('drop', (e) => {
+                const dt = e.dataTransfer;
+                const file = dt.files[0];
+                if (file && file.type.startsWith('video/')) {
+                    handleVideoFileSelection(file);
+                } else {
+                    alert('Please drop a valid video file (MP4, MOV, WebM).');
+                }
+            });
+        }
+
+        function handleVideoFileSelection(file) {
+            pendingVideoFileBlob = file;
+            if (dropzoneText) {
+                dropzoneText.innerHTML = `Selected: <strong>${escapeHtml(file.name)}</strong> (${(file.size / (1024 * 1024)).toFixed(1)} MB)`;
+            }
+            if (statusEl) {
+                statusEl.style.display = 'block';
+                statusEl.innerHTML = `🎬 Video selected: <strong>${escapeHtml(file.name)}</strong> ready to be saved!`;
+            }
+        }
+
+        // Form Submit
+        document.getElementById('townhallVideoForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const eventVal = document.getElementById('townhallEventTitle').value.trim();
+            const durationVal = document.getElementById('townhallDuration').value.trim();
+            const titleVal = document.getElementById('townhallTitle').value.trim();
+            const presenterVal = document.getElementById('townhallPresenter').value.trim();
+            const audienceVal = document.getElementById('townhallAudience').value.trim();
+            const summaryVal = document.getElementById('townhallSummary').value.trim();
+            const highlightsRaw = document.getElementById('townhallHighlights').value.trim();
+            const localPathVal = document.getElementById('townhallLocalPath').value.trim();
+            const externalUrlVal = document.getElementById('townhallVideoUrl').value.trim();
+            const posterVal = document.getElementById('townhallPoster').value.trim();
+
+            const highlightsArr = highlightsRaw.split('\n')
+                .map(l => l.replace(/^[•\-\*]\s*/, '').trim())
+                .filter(l => l.length > 0);
+
+            let uploadedName = getTownhallData().uploadedFileName;
+
+            if (pendingVideoFileBlob) {
+                await saveVideoBlob(pendingVideoFileBlob);
+                uploadedName = pendingVideoFileBlob.name;
+                pendingVideoFileBlob = null;
+            }
+
+            const updatedData = {
+                event: eventVal || DEFAULT_TOWNHALL_DATA.event,
+                duration: durationVal || DEFAULT_TOWNHALL_DATA.duration,
+                title: titleVal || DEFAULT_TOWNHALL_DATA.title,
+                presenter: presenterVal || DEFAULT_TOWNHALL_DATA.presenter,
+                audience: audienceVal,
+                summary: summaryVal,
+                highlights: highlightsArr.length > 0 ? highlightsArr : DEFAULT_TOWNHALL_DATA.highlights,
+                sourceType: window.currentVideoSourceMode || 'file',
+                localPath: localPathVal || 'townhall-presentation.mp4',
+                externalUrl: externalUrlVal,
+                poster: posterVal || 'about-img.jpg',
+                uploadedFileName: uploadedName
+            };
+
+            saveTownhallData(updatedData);
+            closeModal('townhallVideoModal');
+            await renderTownhallSection();
+            alert('🎉 Town Hall presentation & video updated successfully!');
+            document.getElementById('presentation')?.scrollIntoView({ behavior: 'smooth' });
+        });
+
         // Initial setup
         document.getElementById('openNewPostModalBtn')?.addEventListener('click', openCreatePostModal);
         renderBlogCards();
+        renderTownhallSection();
+        updateAuthorUI();
     </script>
 </body>
 
