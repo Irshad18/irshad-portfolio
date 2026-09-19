@@ -13,6 +13,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Optional local development configuration (gitignored, never committed) -->
+    <script src="supabase-config.js" onerror="/* optional local config */"></script>
     <script src="seed-topics-data.js"></script>
     <script src="supabase-client.js"></script>
     <script src="career-os-data.js"></script>
@@ -424,6 +426,17 @@
                         <button class="btn-cos-auth" id="cosAuthBtn" onclick="openCareerOsAuthModal()" type="button">
                             <span>🔐 Author Login</span>
                         </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Connection Error Alert Banner (Hidden when Supabase Cloud is active) -->
+            <div id="cosConnectionBanner" class="cos-connection-banner" style="display: none;">
+                <div class="cos-conn-banner-inner">
+                    <span class="cos-conn-icon">⚠️</span>
+                    <div class="cos-conn-text">
+                        <strong>Supabase Cloud Connection Required:</strong>
+                        <span id="cosConnectionErrorMsg">Unable to connect to Supabase Cloud PostgreSQL database. Verify SUPABASE_URL and SUPABASE_ANON_KEY in Vercel environment variables.</span>
                     </div>
                 </div>
             </div>
@@ -973,7 +986,7 @@
                             </div>
                             <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
                                 <button type="submit" class="btn-save-next-focus">Save Cloud Configuration</button>
-                                <button type="button" class="btn-seed-db" onclick="handleSeedDatabaseClick()">🌱 Seed Database with 100+ Topics & Projects</button>
+                                <button type="button" class="btn-seed-db" id="btnSeedDb" disabled style="opacity: 0.65; cursor: not-allowed; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: var(--text-muted);" onclick="handleSeedDatabaseClick()">🌱 Curriculum Seeded (25 Skills · 430 Topics)</button>
                             </div>
                         </form>
                     </div>
@@ -3084,8 +3097,8 @@
                     statusText.textContent = 'SYSTEM: SUPABASE CLOUD ACTIVE';
                     statusText.style.color = '#4ade80';
                 } else {
-                    statusText.textContent = 'SYSTEM: LOCAL REACTIVE MODE';
-                    statusText.style.color = 'var(--amber)';
+                    statusText.textContent = 'SYSTEM: SUPABASE DISCONNECTED';
+                    statusText.style.color = '#ef4444';
                 }
             }
 
@@ -4219,26 +4232,8 @@
             }
         }
 
-        async function handleSeedDatabaseClick() {
-            if (!window.careerOsEngine) return;
-            if (!window.careerOsEngine.isConnected) {
-                alert('⚡ Please connect your Supabase Project URL and Public Anon Key above before seeding the cloud database.');
-                return;
-            }
-            if (!window.careerOsEngine.isAuthenticated()) {
-                openCareerOsAuthModal();
-                return;
-            }
-
-            if (confirm('🌱 This will seed your Supabase PostgreSQL database with all 100+ topics, skills, and projects from seed-topics-data.js. Continue?')) {
-                try {
-                    await window.careerOsEngine.seedSupabaseDatabase();
-                    alert('✅ Supabase database successfully seeded with all 100+ topics, skills, and projects!');
-                    refreshAllCosData();
-                } catch (err) {
-                    alert('Seeding error: ' + err.message);
-                }
-            }
+        function handleSeedDatabaseClick() {
+            alert('🔒 Curriculum already seeded with all 25 skills and 430 topics in Supabase Cloud PostgreSQL. Database re-seeding is permanently locked to prevent data duplication.');
         }
 
         function handleAddSkillSubmit(e) {

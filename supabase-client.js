@@ -1,20 +1,26 @@
 /**
- * CAREER OS 2.0: SUPABASE CLIENT & STATE ENGINE
+ * CAREER OS 2.0: PRODUCTION SUPABASE CLIENT & CLOUD STATE ENGINE
  * 
- * Manages Supabase PostgreSQL persistence, Supabase Auth, Supabase Realtime,
- * automatic topic-based progress calculation, true streak calculation,
- * and local offline fallback mode.
+ * Target Architecture:
+ * Vercel Production → Supabase JS Client → Existing Supabase Project → PostgreSQL → Career OS persistent data
+ * 
+ * Strict Cloud-First Rules:
+ * - Production uses real Supabase Cloud PostgreSQL database.
+ * - Credentials resolved from Vercel Environment Variables (/api/config) or window.SUPABASE_CONFIG.
+ * - ZERO credentials hardcoded in source files.
+ * - NO silent fallback to localStorage in production.
+ * - Shows explicit connection error if Supabase Cloud is unreachable.
+ * - Guarded against curriculum duplication (seed locked).
+ * - Implements evidence-based Current Skill Level calculation:
+ *     Current Skill Level = (Topic Mastery × 0.50) + (Assessment × 0.20) + (Project Evidence × 0.30)
  */
 
 (function(window) {
     'use strict';
 
     const CONFIG_STORAGE_KEY = 'career_os_supabase_config_v2';
-    const LOCAL_PROGRESS_KEY = 'career_os_local_progress_v2';
-    const LOCAL_SESSIONS_KEY = 'career_os_local_sessions_v2';
-    const LOCAL_GOAL_KEY = 'career_os_local_goal_v2';
-    const LOCAL_PROJECTS_KEY = 'career_os_local_projects_v2';
     const LOCAL_ASSESSMENTS_KEY = 'career_os_local_assessments_v2';
+    const LOCAL_GOAL_KEY = 'career_os_local_goal_v2';
 
     // Timezone-safe local calendar date formatter (YYYY-MM-DD)
     function formatLocalYMD(d) {
@@ -30,37 +36,90 @@
     }
     window.formatLocalYMD = formatLocalYMD;
 
-    // Default configuration (can be updated via Management UI or window.SUPABASE_CONFIG)
-    const defaultConfig = {
-        supabaseUrl: (window.SUPABASE_CONFIG && window.SUPABASE_CONFIG.url) || '',
-        supabaseAnonKey: (window.SUPABASE_CONFIG && window.SUPABASE_CONFIG.anonKey) || ''
-    };
-
     class CareerOsEngine {
         constructor() {
-            this.config = this.loadConfig();
+            this.config = {
+                supabaseUrl: (window.SUPABASE_CONFIG && window.SUPABASE_CONFIG.url) || '',
+                supabaseAnonKey: (window.SUPABASE_CONFIG && window.SUPABASE_CONFIG.anonKey) || ''
+            };
             this.client = null;
             this.currentUser = null;
             this.isConnected = false;
+            this.connectionError = null;
             this.realtimeChannel = null;
             this.listeners = [];
-
-            this.initClient();
+            
+            // Asynchronously resolve configuration and connect to Supabase Cloud
+            this.readyPromise = this.init();
         }
 
-        loadConfig() {
+        async init() {
+            try {
+                this.config = await this.resolveConfig();
+                await this.initClient();
+            } catch (err) {
+                console.error('Career OS initialization error:', err);
+                this.isConnected = false;
+                this.connectionError = err.message || 'Initialization failed';
+                this.updateConnectionUI();
+            }
+            return this.isConnected;
+        }
+
+        async ensureInitialized() {
+            if (this.readyPromise) {
+                await this.readyPromise;
+            }
+        }
+
+        async resolveConfig() {
+            // Priority 1: In-memory window.SUPABASE_CONFIG (e.g. from local gitignored supabase-config.js)
+            if (window.SUPABASE_CONFIG && window.SUPABASE_CONFIG.url && window.SUPABASE_CONFIG.anonKey) {
+                return {
+                    supabaseUrl: window.SUPABASE_CONFIG.url.trim(),
+                    supabaseAnonKey: window.SUPABASE_CONFIG.anonKey.trim()
+                };
+            }
+
+            // Priority 2: Vercel Serverless Function endpoint /api/config
+            try {
+                const res = await fetch('/api/config');
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data && data.supabaseUrl && data.supabaseAnonKey) {
+                        return {
+                            supabaseUrl: data.supabaseUrl.trim(),
+                            supabaseAnonKey: data.supabaseAnonKey.trim()
+                        };
+                    }
+                }
+            } catch (e) {
+                // Fetch may fail in purely static local environment; proceed to fallback check
+            }
+
+            // Priority 3: Browser stored configuration from Management UI
             try {
                 const stored = localStorage.getItem(CONFIG_STORAGE_KEY);
                 if (stored) {
-                    return { ...defaultConfig, ...JSON.parse(stored) };
+                    const parsed = JSON.parse(stored);
+                    if (parsed && parsed.supabaseUrl && parsed.supabaseAnonKey) {
+                        return {
+                            supabaseUrl: parsed.supabaseUrl.trim(),
+                            supabaseAnonKey: parsed.supabaseAnonKey.trim()
+                        };
+                    }
                 }
             } catch (e) {
                 console.warn('Failed to parse stored Supabase config:', e);
             }
-            return { ...defaultConfig };
+
+            return {
+                supabaseUrl: '',
+                supabaseAnonKey: ''
+            };
         }
 
-        saveConfig(url, key) {
+        async saveConfig(url, key) {
             this.config = {
                 supabaseUrl: (url || '').trim(),
                 supabaseAnonKey: (key || '').trim()
@@ -68,13 +127,13 @@
             try {
                 localStorage.setItem(CONFIG_STORAGE_KEY, JSON.stringify(this.config));
             } catch (e) {
-                console.warn('Failed to save Supabase config:', e);
+                console.warn('Failed to save Supabase config to storage:', e);
             }
-            this.initClient();
+            await this.initClient();
             this.notifyChange('config');
         }
 
-        initClient() {
+        async initClient() {
             if (window.supabase && this.config.supabaseUrl && this.config.supabaseAnonKey) {
                 try {
                     this.client = window.supabase.createClient(this.config.supabaseUrl, this.config.supabaseAnonKey, {
@@ -83,19 +142,76 @@
                             autoRefreshToken: true
                         }
                     });
-                    this.isConnected = true;
-                    this.checkSession();
-                    this.setupRealtime();
-                    console.log('🚀 Career OS: Connected to Supabase Cloud Database');
+
+                    // Perform a live probe to verify real cloud connectivity
+                    const { error } = await this.client.from('skills').select('id', { count: 'exact', head: true });
+                    if (error) {
+                        console.error('Supabase Cloud Connection Probe Failed:', error);
+                        this.isConnected = false;
+                        this.connectionError = `Supabase Cloud Connection Error: ${error.message || 'Unable to query skills table'}`;
+                    } else {
+                        this.isConnected = true;
+                        this.connectionError = null;
+                        await this.checkSession();
+                        this.setupRealtime();
+                        console.log('🚀 Career OS: Successfully Connected to Supabase Cloud PostgreSQL Database');
+                    }
                 } catch (err) {
-                    console.error('Failed to init Supabase client:', err);
+                    console.error('Failed to instantiate Supabase client:', err);
                     this.client = null;
                     this.isConnected = false;
+                    this.connectionError = `Initialization Error: ${err.message || err}`;
                 }
             } else {
                 this.client = null;
                 this.isConnected = false;
-                console.log('⚡ Career OS: Operating in Offline/Demo Reactive Mode');
+                this.connectionError = 'Supabase Cloud credentials not configured. Please set SUPABASE_URL and SUPABASE_ANON_KEY in Vercel environment variables.';
+                console.warn('⚠️ Career OS: Supabase Cloud credentials missing. Offline fallback is disabled in production.');
+            }
+
+            this.updateConnectionUI();
+        }
+
+        updateConnectionUI() {
+            if (typeof document === 'undefined') return;
+
+            // 1. Connection Error Alert Banner
+            const banner = document.getElementById('cosConnectionBanner');
+            const msgEl = document.getElementById('cosConnectionErrorMsg');
+            if (banner) {
+                if (this.isConnected) {
+                    banner.style.display = 'none';
+                } else {
+                    banner.style.display = 'block';
+                    if (msgEl) {
+                        msgEl.textContent = this.connectionError || 'Supabase Cloud Database connection required.';
+                    }
+                }
+            }
+
+            // 2. Terminal Bar Status Text
+            const statusText = document.getElementById('cosStatusText');
+            if (statusText) {
+                if (this.isConnected) {
+                    statusText.textContent = 'SYSTEM: SUPABASE CLOUD ACTIVE';
+                    statusText.style.color = '#4ade80';
+                } else {
+                    statusText.textContent = 'SYSTEM: SUPABASE DISCONNECTED';
+                    statusText.style.color = '#ef4444';
+                }
+            }
+
+            // 3. Management UI Status Chip
+            const manageDbText = document.getElementById('manageDbStatusText');
+            const manageDbChip = document.getElementById('manageDbStatusChip');
+            if (manageDbText) {
+                if (this.isConnected) {
+                    manageDbText.textContent = 'CONNECTED TO SUPABASE CLOUD';
+                    if (manageDbChip) manageDbChip.style.borderColor = 'rgba(74, 222, 128, 0.4)';
+                } else {
+                    manageDbText.textContent = 'DISCONNECTED: SUPABASE REQUIRED';
+                    if (manageDbChip) manageDbChip.style.borderColor = 'rgba(239, 68, 68, 0.4)';
+                }
             }
         }
 
@@ -148,35 +264,28 @@
         // AUTHENTICATION
         // ----------------------------------------------------
         async signIn(email, password) {
-            if (this.client) {
-                const { data, error } = await this.client.auth.signInWithPassword({ email, password });
-                if (error) throw error;
-                this.currentUser = data.user;
-                this.notifyChange('auth');
-                return data.user;
-            } else {
-                // Offline demo login fallback
-                if (password === '1818' || email) {
-                    this.currentUser = { id: 'demo-user-1', email: email || 'irshad@example.com', role: 'authenticated' };
-                    this.notifyChange('auth');
-                    return this.currentUser;
-                }
-                throw new Error('Invalid credentials');
+            await this.ensureInitialized();
+            if (!this.client || !this.isConnected) {
+                throw new Error('Cannot sign in: Supabase Cloud Database is not connected.');
             }
+            const { data, error } = await this.client.auth.signInWithPassword({ email, password });
+            if (error) throw error;
+            this.currentUser = data.user;
+            this.notifyChange('auth');
+            this.updateConnectionUI();
+            return data.user;
         }
 
         async signUp(email, password) {
-            if (this.client) {
-                const { data, error } = await this.client.auth.signUp({ email, password });
-                if (error) throw error;
-                this.currentUser = data.user;
-                this.notifyChange('auth');
-                return data.user;
-            } else {
-                this.currentUser = { id: 'demo-user-1', email, role: 'authenticated' };
-                this.notifyChange('auth');
-                return this.currentUser;
+            await this.ensureInitialized();
+            if (!this.client || !this.isConnected) {
+                throw new Error('Cannot sign up: Supabase Cloud Database is not connected.');
             }
+            const { data, error } = await this.client.auth.signUp({ email, password });
+            if (error) throw error;
+            this.currentUser = data.user;
+            this.notifyChange('auth');
+            return data.user;
         }
 
         async signOut() {
@@ -185,61 +294,11 @@
             }
             this.currentUser = null;
             this.notifyChange('auth');
+            this.updateConnectionUI();
         }
 
         isAuthenticated() {
             return !!this.currentUser;
-        }
-
-        // ----------------------------------------------------
-        // LOCAL FALLBACK STORAGE HELPERS
-        // ----------------------------------------------------
-        getLocalProgress() {
-            let current = {};
-            try {
-                const raw = localStorage.getItem(LOCAL_PROGRESS_KEY);
-                if (raw) current = JSON.parse(raw) || {};
-            } catch (e) {}
-
-            // Merge with SEED_TOPICS to ensure all 25 skills and 430 topics exist
-            // while strictly preserving any existing user modifications
-            if (window.SEED_TOPICS) {
-                Object.keys(window.SEED_TOPICS).forEach(skillId => {
-                    window.SEED_TOPICS[skillId].forEach((topic, idx) => {
-                        const key = `${skillId}_${idx}`;
-                        if (current[key] === undefined) {
-                            current[key] = {
-                                topic_id: key,
-                                skill_id: skillId,
-                                title: topic.title,
-                                completed: !!topic.completed,
-                                completed_at: topic.completed ? (topic.completed_at || new Date().toISOString()) : null
-                            };
-                        }
-                    });
-                });
-            }
-            return current;
-        }
-
-        setLocalProgress(progress) {
-            try {
-                localStorage.setItem(LOCAL_PROGRESS_KEY, JSON.stringify(progress));
-            } catch (e) {}
-        }
-
-        getLocalSessions() {
-            try {
-                const raw = localStorage.getItem(LOCAL_SESSIONS_KEY);
-                if (raw) return JSON.parse(raw);
-            } catch (e) {}
-            return [];
-        }
-
-        setLocalSessions(sessions) {
-            try {
-                localStorage.setItem(LOCAL_SESSIONS_KEY, JSON.stringify(sessions));
-            } catch (e) {}
         }
 
         // ----------------------------------------------------
@@ -328,101 +387,23 @@
         // DATA ACCESS: SKILLS & AUTOMATIC TOPIC PROGRESS
         // ----------------------------------------------------
         async getSkillsWithProgress() {
+            await this.ensureInitialized();
+
             const [projectsMap, assessments] = await Promise.all([
                 this.getProjectEvidenceMap(),
                 Promise.resolve(this.getSkillAssessments())
             ]);
 
-            if (this.client) {
-                try {
-                    const { data: skills, error: err1 } = await this.client
-                        .from('skills')
-                        .select('*')
-                        .order('name');
-                    if (err1) throw err1;
+            if (!this.client || !this.isConnected) {
+                // If Supabase Cloud is unavailable, show explicit connection error.
+                // DO NOT silently fall back to localStorage as source of truth.
+                this.updateConnectionUI();
 
-                    const { data: topics, error: err2 } = await this.client
-                        .from('skill_topics')
-                        .select('*')
-                        .order('sequence');
-                    if (err2) throw err2;
-
-                    let userProgress = [];
-                    if (this.currentUser) {
-                        const { data: prog, error: err3 } = await this.client
-                            .from('topic_progress')
-                            .select('*')
-                            .eq('user_id', this.currentUser.id);
-                        if (!err3 && prog) userProgress = prog;
-                    }
-
-                    const progressMap = new Map();
-                    userProgress.forEach(p => {
-                        progressMap.set(p.topic_id, p);
-                    });
-
-                    // Build aggregated skills with evidence-based Current Skill Level
-                    return skills.map(skill => {
-                        const skillTopics = topics.filter(t => t.skill_id === skill.id);
-                        const totalTopics = skillTopics.length;
-                        const completedTopics = skillTopics.filter(t => {
-                            const p = progressMap.get(t.id);
-                            return p && p.completed;
-                        }).length;
-
-                        // Signal 1: Topic Mastery (50%)
-                        const topicMasteryPct = totalTopics > 0 ? (completedTopics / totalTopics) * 100 : 0;
-
-                        // Signal 2: Assessment Score (20%)
-                        const assessmentEntry = assessments[skill.id];
-                        const assessmentPct = (assessmentEntry && typeof assessmentEntry.score === 'number')
-                            ? Math.min(100, Math.max(0, assessmentEntry.score))
-                            : 0;
-
-                        // Signal 3: Project Evidence (30%)
-                        const projData = projectsMap[skill.id] || { total: 0, completed: 0 };
-                        const projectEvidencePct = projData.total > 0 ? (projData.completed / projData.total) * 100 : 0;
-
-                        // EVIDENCE-BASED CURRENT SKILL LEVEL
-                        const calculatedLevel = this.calculateSkillLevel(topicMasteryPct, assessmentPct, projectEvidencePct);
-                        const skillGap = Math.max(0, (skill.target_level || 85) - calculatedLevel);
-
-                        return {
-                            ...skill,
-                            topics: skillTopics.map(t => {
-                                const p = progressMap.get(t.id);
-                                return {
-                                    ...t,
-                                    completed: p ? p.completed : false,
-                                    completed_at: p ? p.completed_at : null
-                                };
-                            }),
-                            total_topics: totalTopics,
-                            completed_topics: completedTopics,
-                            topic_mastery_pct: Math.round(topicMasteryPct),
-                            topic_progress_pct: Math.round(topicMasteryPct),
-                            assessment_score_pct: Math.round(assessmentPct),
-                            project_evidence_pct: Math.round(projectEvidencePct),
-                            current_level: calculatedLevel,
-                            calculated_level: calculatedLevel,
-                            skill_gap: skillGap
-                        };
-                    });
-                } catch (err) {
-                    console.warn('Supabase fetch failed, using fallback:', err);
-                }
-            }
-
-            // Fallback: build from seed-topics-data.js + local storage
-            const progress = this.getLocalProgress();
-            const skills = (window.SEED_SKILLS || []).map(skill => {
-                const topicList = (window.SEED_TOPICS && window.SEED_TOPICS[skill.id]) || [];
-                const topicsWithState = topicList.map((t, idx) => {
-                    const key = `${skill.id}_${idx}`;
-                    const prog = progress[key];
-                    const isCompleted = prog !== undefined ? !!prog.completed : !!t.completed;
-                    return {
-                        id: key,
+                // Return baseline curriculum structure with 0% progress so page layout does not crash
+                return (window.SEED_SKILLS || []).map(skill => {
+                    const topicList = (window.SEED_TOPICS && window.SEED_TOPICS[skill.id]) || [];
+                    const topicsWithState = topicList.map((t, idx) => ({
+                        id: `${skill.id}_${idx}`,
                         skill_id: skill.id,
                         title: t.title,
                         description: t.description,
@@ -430,219 +411,269 @@
                         sequence: t.sequence,
                         priority: t.priority || skill.priority,
                         required: t.required !== undefined ? t.required : true,
-                        completed: isCompleted,
-                        completed_at: prog ? prog.completed_at : (t.completed ? (t.completed_at || new Date().toISOString()) : null)
+                        completed: false,
+                        completed_at: null
+                    }));
+
+                    return {
+                        ...skill,
+                        topics: topicsWithState,
+                        total_topics: topicsWithState.length,
+                        completed_topics: 0,
+                        topic_mastery_pct: 0,
+                        topic_progress_pct: 0,
+                        assessment_score_pct: 0,
+                        project_evidence_pct: 0,
+                        current_level: 0,
+                        calculated_level: 0,
+                        skill_gap: skill.target_level || 85
                     };
                 });
+            }
 
-                const totalTopics = topicsWithState.length;
-                const completedTopics = topicsWithState.filter(t => t.completed).length;
-                const topicMasteryPct = totalTopics > 0 ? (completedTopics / totalTopics) * 100 : 0;
+            // Real Cloud Path: Query PostgreSQL directly
+            try {
+                const { data: skills, error: err1 } = await this.client
+                    .from('skills')
+                    .select('*')
+                    .order('name');
+                if (err1) throw err1;
 
-                // Signal 2: Assessment Score (20%)
-                const assessmentEntry = assessments[skill.id];
-                const assessmentPct = (assessmentEntry && typeof assessmentEntry.score === 'number')
-                    ? Math.min(100, Math.max(0, assessmentEntry.score))
-                    : 0;
+                const { data: topics, error: err2 } = await this.client
+                    .from('skill_topics')
+                    .select('*')
+                    .order('sequence');
+                if (err2) throw err2;
 
-                // Signal 3: Project Evidence (30%)
-                const projData = projectsMap[skill.id] || { total: 0, completed: 0 };
-                const projectEvidencePct = projData.total > 0 ? (projData.completed / projData.total) * 100 : 0;
+                let userProgress = [];
+                let progQuery = this.client.from('topic_progress').select('*');
+                if (this.currentUser) {
+                    progQuery = progQuery.eq('user_id', this.currentUser.id);
+                }
+                const { data: prog, error: err3 } = await progQuery;
+                if (!err3 && prog) userProgress = prog;
 
-                // EVIDENCE-BASED CURRENT SKILL LEVEL
-                const calculatedLevel = this.calculateSkillLevel(topicMasteryPct, assessmentPct, projectEvidencePct);
-                const skillGap = Math.max(0, (skill.target_level || 85) - calculatedLevel);
+                const progressMap = new Map();
+                userProgress.forEach(p => {
+                    progressMap.set(p.topic_id, p);
+                });
 
-                return {
-                    ...skill,
-                    topics: topicsWithState,
-                    total_topics: totalTopics,
-                    completed_topics: completedTopics,
-                    topic_mastery_pct: Math.round(topicMasteryPct),
-                    topic_progress_pct: Math.round(topicMasteryPct),
-                    assessment_score_pct: Math.round(assessmentPct),
-                    project_evidence_pct: Math.round(projectEvidencePct),
-                    current_level: calculatedLevel,
-                    calculated_level: calculatedLevel,
-                    skill_gap: skillGap
-                };
-            });
+                // Build aggregated skills with evidence-based Current Skill Level
+                return skills.map(skill => {
+                    const skillTopics = topics.filter(t => t.skill_id === skill.id);
+                    const totalTopics = skillTopics.length;
+                    const completedTopics = skillTopics.filter(t => {
+                        const p = progressMap.get(t.id);
+                        return p && p.completed;
+                    }).length;
 
-            return skills;
+                    // Signal 1: Topic Mastery (50%)
+                    const topicMasteryPct = totalTopics > 0 ? (completedTopics / totalTopics) * 100 : 0;
+
+                    // Signal 2: Assessment Score (20%)
+                    const assessmentEntry = assessments[skill.id];
+                    const assessmentPct = (assessmentEntry && typeof assessmentEntry.score === 'number')
+                        ? Math.min(100, Math.max(0, assessmentEntry.score))
+                        : 0;
+
+                    // Signal 3: Project Evidence (30%)
+                    const projData = projectsMap[skill.id] || { total: 0, completed: 0 };
+                    const projectEvidencePct = projData.total > 0 ? (projData.completed / projData.total) * 100 : 0;
+
+                    // EVIDENCE-BASED CURRENT SKILL LEVEL
+                    const calculatedLevel = this.calculateSkillLevel(topicMasteryPct, assessmentPct, projectEvidencePct);
+                    const skillGap = Math.max(0, (skill.target_level || 85) - calculatedLevel);
+
+                    return {
+                        ...skill,
+                        topics: skillTopics.map(t => {
+                            const p = progressMap.get(t.id);
+                            return {
+                                ...t,
+                                completed: p ? p.completed : false,
+                                completed_at: p ? p.completed_at : null
+                            };
+                        }),
+                        total_topics: totalTopics,
+                        completed_topics: completedTopics,
+                        topic_mastery_pct: Math.round(topicMasteryPct),
+                        topic_progress_pct: Math.round(topicMasteryPct),
+                        assessment_score_pct: Math.round(assessmentPct),
+                        project_evidence_pct: Math.round(projectEvidencePct),
+                        current_level: calculatedLevel,
+                        calculated_level: calculatedLevel,
+                        skill_gap: skillGap
+                    };
+                });
+            } catch (err) {
+                console.error('Supabase query failed in getSkillsWithProgress:', err);
+                this.connectionError = `Supabase Query Error: ${err.message || err}`;
+                this.updateConnectionUI();
+                throw err;
+            }
         }
 
         async toggleTopicCompletion(topicId, completed, notes = '') {
-            if (this.client && this.currentUser) {
-                try {
-                    const { error } = await this.client
-                        .from('topic_progress')
-                        .upsert({
-                            user_id: this.currentUser.id,
-                            topic_id: topicId,
-                            completed: completed,
-                            completed_at: completed ? new Date().toISOString() : null,
-                            notes: notes,
-                            updated_at: new Date().toISOString()
-                        }, { onConflict: 'user_id,topic_id' });
-                    if (error) throw error;
-                    this.notifyChange('progress');
-                    return true;
-                } catch (err) {
-                    console.error('Failed to toggle topic in Supabase:', err);
-                }
+            await this.ensureInitialized();
+            if (!this.client || !this.isConnected) {
+                const errMsg = 'Supabase Cloud Database connection required. Cannot persist topic completion.';
+                this.connectionError = errMsg;
+                this.updateConnectionUI();
+                throw new Error(errMsg);
+            }
+            if (!this.currentUser) {
+                const errMsg = 'Author authentication required to persist topic progress to Supabase Cloud.';
+                throw new Error(errMsg);
             }
 
-            // Fallback to local progress
-            const progress = this.getLocalProgress();
-            progress[topicId] = {
-                topic_id: topicId,
-                completed: completed,
-                completed_at: completed ? new Date().toISOString() : null,
-                notes: notes,
-                updated_at: new Date().toISOString()
-            };
-            this.setLocalProgress(progress);
+            const { error } = await this.client
+                .from('topic_progress')
+                .upsert({
+                    user_id: this.currentUser.id,
+                    topic_id: topicId,
+                    completed: completed,
+                    completed_at: completed ? new Date().toISOString() : null,
+                    notes: notes,
+                    updated_at: new Date().toISOString()
+                }, { onConflict: 'user_id,topic_id' });
+
+            if (error) {
+                console.error('Failed to toggle topic in Supabase:', error);
+                throw error;
+            }
+
             this.notifyChange('progress');
             return true;
         }
 
         // ----------------------------------------------------
-        // LEARNING SESSIONS LOGGER & CRUD
+        // LEARNING SESSIONS LOGGER & CRUD (PERSISTED IN SUPABASE)
         // ----------------------------------------------------
         async logLearningSession({ skillId, topicTitle, topicId, date, durationMinutes, activityType, notes }) {
+            await this.ensureInitialized();
+            if (!this.client || !this.isConnected) {
+                const errMsg = 'Supabase Cloud Database connection required. Cannot log learning session.';
+                this.connectionError = errMsg;
+                this.updateConnectionUI();
+                throw new Error(errMsg);
+            }
+            if (!this.currentUser) {
+                const errMsg = 'Author authentication required to log learning sessions to Supabase Cloud.';
+                throw new Error(errMsg);
+            }
+
             const parsedDuration = parseInt(durationMinutes, 10) || 30;
             const sessionDate = date ? formatLocalYMD(date) : formatLocalYMD(new Date());
 
-            if (this.client && this.currentUser) {
-                try {
-                    const insertPayload = {
-                        user_id: this.currentUser.id,
-                        skill_id: skillId,
-                        topic_title: topicTitle || '',
-                        date: sessionDate,
-                        duration_minutes: parsedDuration,
-                        activity_type: activityType || 'Learning',
-                        notes: notes || ''
-                    };
-                    if (topicId && typeof topicId === 'string' && topicId.includes('-')) {
-                        insertPayload.topic_id = topicId;
-                    }
-
-                    const { data, error } = await this.client
-                        .from('learning_sessions')
-                        .insert([insertPayload])
-                        .select();
-                    if (error) throw error;
-                    this.notifyChange('sessions');
-                    return data;
-                } catch (err) {
-                    console.error('Failed to save session to Supabase:', err);
-                }
-            }
-
-            // Fallback local storage
-            const sessions = this.getLocalSessions();
-            const newSession = {
-                id: 'sess_' + Date.now(),
+            const insertPayload = {
+                user_id: this.currentUser.id,
                 skill_id: skillId,
-                topic_title: topicTitle || 'Core Focus Practice',
-                topic_id: topicId || null,
+                topic_title: topicTitle || '',
                 date: sessionDate,
                 duration_minutes: parsedDuration,
                 activity_type: activityType || 'Learning',
-                notes: notes || '',
-                created_at: new Date().toISOString()
+                notes: notes || ''
             };
-            sessions.unshift(newSession);
-            this.setLocalSessions(sessions);
+            if (topicId && typeof topicId === 'string' && topicId.includes('-')) {
+                insertPayload.topic_id = topicId;
+            }
+
+            const { data, error } = await this.client
+                .from('learning_sessions')
+                .insert([insertPayload])
+                .select();
+
+            if (error) {
+                console.error('Failed to save session to Supabase:', error);
+                throw error;
+            }
+
             this.notifyChange('sessions');
-            return newSession;
+            return data;
         }
 
         async updateLearningSession(id, { skillId, topicTitle, date, durationMinutes, activityType, notes }) {
+            await this.ensureInitialized();
+            if (!this.client || !this.isConnected) {
+                const errMsg = 'Supabase Cloud Database connection required. Cannot update session.';
+                this.connectionError = errMsg;
+                this.updateConnectionUI();
+                throw new Error(errMsg);
+            }
+
             const parsedDuration = parseInt(durationMinutes, 10) || 30;
             const sessionDate = date ? formatLocalYMD(date) : formatLocalYMD(new Date());
 
-            if (this.client && this.currentUser) {
-                try {
-                    const { data, error } = await this.client
-                        .from('learning_sessions')
-                        .update({
-                            skill_id: skillId,
-                            topic_title: topicTitle,
-                            date: sessionDate,
-                            duration_minutes: parsedDuration,
-                            activity_type: activityType || 'Learning',
-                            notes: notes || ''
-                        })
-                        .eq('id', id)
-                        .select();
-                    if (error) throw error;
-                    this.notifyChange('sessions');
-                    return data;
-                } catch (err) {
-                    console.error('Failed to update session in Supabase:', err);
-                }
-            }
-
-            // Fallback local storage
-            const sessions = this.getLocalSessions();
-            const idx = sessions.findIndex(s => s.id === id);
-            if (idx !== -1) {
-                sessions[idx] = {
-                    ...sessions[idx],
+            const { data, error } = await this.client
+                .from('learning_sessions')
+                .update({
                     skill_id: skillId,
                     topic_title: topicTitle,
                     date: sessionDate,
                     duration_minutes: parsedDuration,
                     activity_type: activityType || 'Learning',
                     notes: notes || ''
-                };
-                this.setLocalSessions(sessions);
-                this.notifyChange('sessions');
-                return sessions[idx];
+                })
+                .eq('id', id)
+                .select();
+
+            if (error) {
+                console.error('Failed to update session in Supabase:', error);
+                throw error;
             }
-            return null;
+
+            this.notifyChange('sessions');
+            return data;
         }
 
         async deleteLearningSession(id) {
-            if (this.client && this.currentUser) {
-                try {
-                    const { error } = await this.client
-                        .from('learning_sessions')
-                        .delete()
-                        .eq('id', id);
-                    if (error) throw error;
-                    this.notifyChange('sessions');
-                    return true;
-                } catch (err) {
-                    console.error('Failed to delete session in Supabase:', err);
-                }
+            await this.ensureInitialized();
+            if (!this.client || !this.isConnected) {
+                const errMsg = 'Supabase Cloud Database connection required. Cannot delete session.';
+                this.connectionError = errMsg;
+                this.updateConnectionUI();
+                throw new Error(errMsg);
             }
 
-            // Fallback local storage
-            let sessions = this.getLocalSessions();
-            sessions = sessions.filter(s => s.id !== id);
-            this.setLocalSessions(sessions);
+            const { error } = await this.client
+                .from('learning_sessions')
+                .delete()
+                .eq('id', id);
+
+            if (error) {
+                console.error('Failed to delete session in Supabase:', error);
+                throw error;
+            }
+
             this.notifyChange('sessions');
             return true;
         }
 
         async getLearningSessions(limit = 50) {
-            if (this.client && this.currentUser) {
-                try {
-                    const { data, error } = await this.client
-                        .from('learning_sessions')
-                        .select('*, skills(name)')
-                        .order('date', { ascending: false })
-                        .order('created_at', { ascending: false })
-                        .limit(limit);
-                    if (!error && data) return data;
-                } catch (err) {
-                    console.warn('Failed to load sessions from Supabase:', err);
-                }
+            await this.ensureInitialized();
+            if (!this.client || !this.isConnected) {
+                return [];
             }
-            return this.getLocalSessions().slice(0, limit);
+
+            try {
+                let query = this.client
+                    .from('learning_sessions')
+                    .select('*, skills(name)')
+                    .order('date', { ascending: false })
+                    .order('created_at', { ascending: false })
+                    .limit(limit);
+
+                if (this.currentUser) {
+                    query = query.eq('user_id', this.currentUser.id);
+                }
+
+                const { data, error } = await query;
+                if (error) throw error;
+                return data || [];
+            } catch (err) {
+                console.error('Failed to load sessions from Supabase:', err);
+                throw err;
+            }
         }
 
         // ----------------------------------------------------
@@ -669,53 +700,41 @@
         }
 
         // ----------------------------------------------------
-        // TRUE STREAK CALCULATION (SESSIONS + TOPIC PROGRESS)
+        // TRUE STREAK CALCULATION (DIRECT FROM SUPABASE)
         // ----------------------------------------------------
         async calculateStreak() {
+            await this.ensureInitialized();
+            if (!this.client || !this.isConnected) {
+                return { currentStreak: 0, longestStreak: 0 };
+            }
+
             let dates = [];
 
             // 1. Gather dates from learning_sessions in Supabase
-            if (this.client && this.currentUser) {
-                try {
-                    const { data: sessions } = await this.client
-                        .from('learning_sessions')
-                        .select('date')
-                        .order('date', { ascending: false });
-                    if (sessions) {
-                        sessions.forEach(s => { if (s.date) dates.push(s.date); });
-                    }
-                } catch (e) {}
+            try {
+                let sQuery = this.client.from('learning_sessions').select('date').order('date', { ascending: false });
+                if (this.currentUser) sQuery = sQuery.eq('user_id', this.currentUser.id);
+                const { data: sessions } = await sQuery;
+                if (sessions) {
+                    sessions.forEach(s => { if (s.date) dates.push(s.date); });
+                }
 
-                // Gather dates from completed topic_progress in Supabase
-                try {
-                    const { data: topics } = await this.client
-                        .from('topic_progress')
-                        .select('completed_at')
-                        .eq('completed', true);
-                    if (topics) {
-                        topics.forEach(t => {
-                            if (t.completed_at) {
-                                dates.push(t.completed_at.split('T')[0]);
-                            }
-                        });
-                    }
-                } catch (e) {}
+                // 2. Gather dates from completed topic_progress in Supabase
+                let tQuery = this.client.from('topic_progress').select('completed_at').eq('completed', true);
+                if (this.currentUser) tQuery = tQuery.eq('user_id', this.currentUser.id);
+                const { data: topics } = await tQuery;
+                if (topics) {
+                    topics.forEach(t => {
+                        if (t.completed_at) {
+                            dates.push(t.completed_at.split('T')[0]);
+                        }
+                    });
+                }
+            } catch (e) {
+                console.warn('Error reading streak dates from Supabase:', e);
             }
 
-            if (dates.length === 0) {
-                // Fallback: Gather from local sessions + local topic progress
-                this.getLocalSessions().forEach(s => { if (s.date) dates.push(s.date); });
-                const localProg = this.getLocalProgress();
-                Object.values(localProg).forEach(p => {
-                    if (p.completed && p.completed_at) {
-                        dates.push(p.completed_at.split('T')[0]);
-                    }
-                });
-            }
-
-            // Deduplicate and sort dates descending
             const uniqueDates = Array.from(new Set(dates)).filter(Boolean).sort().reverse();
-
             if (uniqueDates.length === 0) {
                 return { currentStreak: 0, longestStreak: 0 };
             }
@@ -730,7 +749,6 @@
             let currentStreak = 0;
             let checkDate = null;
 
-            // Check if user has logged today or yesterday
             if (uniqueDates[0] === todayStr) {
                 checkDate = new Date(today);
             } else if (uniqueDates[0] === yesterdayStr) {
@@ -745,7 +763,6 @@
                 }
             }
 
-            // Calculate Longest Streak
             let longestStreak = 0;
             let currentRun = 0;
             let previousDate = null;
@@ -768,15 +785,16 @@
             });
 
             return {
-                currentStreak: currentStreak,
-                longestStreak: longestStreak
+                currentStreak,
+                longestStreak
             };
         }
 
         // ----------------------------------------------------
-        // TODAY DASHBOARD METRICS
+        // TODAY DASHBOARD METRICS (AGGREGATED FROM CLOUD)
         // ----------------------------------------------------
         async getTodayMetrics() {
+            await this.ensureInitialized();
             const todayStr = formatLocalYMD(new Date());
             const sessions = await this.getLearningSessions(100);
             const todaySessions = sessions.filter(s => s.date === todayStr);
@@ -797,16 +815,15 @@
             const streak = await this.calculateStreak();
             const skills = await this.getSkillsWithProgress();
 
-            // Daily goal: 2h = 120 mins
             const targetMins = 120;
             const goalPct = Math.min(100, Math.round((totalMinutes / targetMins) * 100));
 
-            // Calculate recommended focus (data-driven: priority * 4 + skill gap + incomplete topics)
-            const activeSkills = skills.filter(s => s.active !== false);
+            // Calculate recommended focus (data-driven)
+            const activeSkills = (skills || []).filter(s => s.active !== false);
             activeSkills.sort((a, b) => {
                 const prioScore = (s) => (s.priority.includes('P0') ? 40 : s.priority.includes('P1') ? 25 : 10);
-                const scoreA = prioScore(a) + a.skill_gap + (a.total_topics - a.completed_topics);
-                const scoreB = prioScore(b) + b.skill_gap + (b.total_topics - b.completed_topics);
+                const scoreA = prioScore(a) + (a.skill_gap || 0) + ((a.total_topics || 0) - (a.completed_topics || 0));
+                const scoreB = prioScore(b) + (b.skill_gap || 0) + ((b.total_topics || 0) - (b.completed_topics || 0));
                 return scoreB - scoreA;
             });
 
@@ -850,13 +867,13 @@
         }
 
         // ----------------------------------------------------
-        // WEEKLY DASHBOARD METRICS
+        // WEEKLY DASHBOARD METRICS (AGGREGATED FROM CLOUD)
         // ----------------------------------------------------
         async getWeeklyMetrics(daysRange = 7) {
+            await this.ensureInitialized();
             const sessions = await this.getLearningSessions(150);
             const now = new Date();
 
-            // Build daily buckets
             const daysMap = new Map();
             for (let i = daysRange - 1; i >= 0; i--) {
                 const d = new Date(now);
@@ -877,7 +894,6 @@
             const dailyData = Array.from(daysMap.values());
             const totalWeekMinutes = dailyData.reduce((acc, d) => acc + d.minutes, 0);
 
-            // Get weekly target hours
             const targetHours = this.getWeeklyGoal();
             const targetMinutes = targetHours * 60;
 
@@ -886,7 +902,6 @@
             const actualStr = totalHours > 0 ? `${totalHours}h ${totalMins > 0 ? totalMins + 'm' : ''}` : `${totalMins}m`;
             const completionPct = Math.min(100, Math.round((totalWeekMinutes / targetMinutes) * 100));
 
-            // Distinct skills and projects worked on
             const skillsWorked = Array.from(new Set(sessions.slice(0, 20).map(s => (s.skills && s.skills.name) || s.skill_id))).filter(Boolean);
             const streak = await this.calculateStreak();
 
@@ -899,18 +914,19 @@
                 targetHours,
                 targetMinutes,
                 completionPct,
-                topicsCompletedCount: Math.max(sessions.length, 6),
-                skillsWorkedOn: skillsWorked.length > 0 ? skillsWorked : ['Python', 'SQL', 'FastAPI', 'REST APIs'],
+                topicsCompletedCount: sessions.length,
+                skillsWorkedOn: skillsWorked.length > 0 ? skillsWorked : ['Python', 'UiPath', 'SQL'],
                 projectsWorkedOn: ['Python Automation Toolkit', 'RPA Control Tower'],
                 currentStreak: streak.currentStreak
             };
         }
 
         // ----------------------------------------------------
-        // PROJECTS & TASKS
+        // PROJECTS & TASKS (PERSISTED IN SUPABASE)
         // ----------------------------------------------------
         async getProjectsWithTasks() {
-            if (this.client) {
+            await this.ensureInitialized();
+            if (this.client && this.isConnected) {
                 try {
                     const { data: projects, error: err1 } = await this.client
                         .from('projects')
@@ -942,12 +958,7 @@
                 }
             }
 
-            // Local fallback
-            try {
-                const stored = localStorage.getItem(LOCAL_PROJECTS_KEY);
-                if (stored) return JSON.parse(stored);
-            } catch (e) {}
-
+            // Fallback to static catalog definitions if projects table is empty
             return (window.SEED_PROJECTS || []).map(p => {
                 const total = p.tasks.length;
                 const done = p.tasks.filter(t => t.completed).length;
@@ -961,8 +972,8 @@
         }
 
         async toggleProjectTask(projectId, taskIdx, completed) {
-            if (this.client && this.currentUser) {
-                // If using Supabase, update project_tasks
+            await this.ensureInitialized();
+            if (this.client && this.isConnected && this.currentUser) {
                 try {
                     await this.client
                         .from('project_tasks')
@@ -972,105 +983,26 @@
                     return true;
                 } catch (e) {
                     console.warn('Failed to update project task in Supabase:', e);
+                    throw e;
                 }
-            }
-
-            // Local fallback
-            const projects = await this.getProjectsWithTasks();
-            const proj = projects.find(p => p.id === projectId);
-            if (proj && proj.tasks && proj.tasks[taskIdx]) {
-                proj.tasks[taskIdx].completed = completed;
-                const done = proj.tasks.filter(t => t.completed).length;
-                proj.progress = Math.round((done / proj.tasks.length) * 100);
-                try {
-                    localStorage.setItem(LOCAL_PROJECTS_KEY, JSON.stringify(projects));
-                } catch (e) {}
-                this.notifyChange('projects');
+            } else if (!this.isConnected) {
+                const errMsg = 'Supabase Cloud Database connection required. Cannot update project task.';
+                this.showConnectionError(errMsg);
+                throw new Error(errMsg);
             }
             return true;
         }
 
         // ----------------------------------------------------
-        // ONE-CLICK SEED MIGRATION TO SUPABASE
+        // SEED GUARD: PERMANENTLY LOCKED AGAINST DUPLICATION
         // ----------------------------------------------------
         async seedSupabaseDatabase() {
-            if (!this.client || !this.currentUser) {
-                throw new Error('Must be connected to Supabase and signed in as Author to seed database.');
-            }
-
-            console.log('🌱 Seeding Supabase database with Career OS catalog...');
-            const skills = window.SEED_SKILLS || [];
-            const topicsMap = window.SEED_TOPICS || {};
-            const projects = window.SEED_PROJECTS || [];
-
-            // 1. Insert Skills
-            for (const skill of skills) {
-                await this.client.from('skills').upsert({
-                    id: skill.id,
-                    name: skill.name,
-                    category: skill.category,
-                    description: skill.description,
-                    priority: skill.priority,
-                    current_level: skill.current_level,
-                    target_level: skill.target_level,
-                    active: true,
-                    updated_at: new Date().toISOString()
-                });
-
-                // 2. Insert Topics for this skill
-                const topics = topicsMap[skill.id] || [];
-                for (const t of topics) {
-                    const { data: insertedTopic } = await this.client.from('skill_topics').upsert({
-                        skill_id: skill.id,
-                        title: t.title,
-                        description: t.description,
-                        sequence: t.sequence,
-                        difficulty: t.difficulty,
-                        required: t.required
-                    }).select();
-
-                    // If completed in seed, record initial progress
-                    if (t.completed && insertedTopic && insertedTopic[0]) {
-                        await this.client.from('topic_progress').upsert({
-                            user_id: this.currentUser.id,
-                            topic_id: insertedTopic[0].id,
-                            completed: true,
-                            completed_at: new Date().toISOString()
-                        }, { onConflict: 'user_id,topic_id' });
-                    }
-                }
-            }
-
-            // 3. Insert Projects and Tasks
-            for (const proj of projects) {
-                await this.client.from('projects').upsert({
-                    id: proj.id,
-                    name: proj.name,
-                    description: proj.description,
-                    status: proj.status,
-                    priority: proj.priority,
-                    progress: proj.progress,
-                    github_url: proj.github_url,
-                    live_url: proj.live_url
-                });
-
-                for (const task of (proj.tasks || [])) {
-                    await this.client.from('project_tasks').upsert({
-                        project_id: proj.id,
-                        title: task.title,
-                        sequence: task.sequence,
-                        completed: task.completed
-                    });
-                }
-            }
-
-            this.notifyChange('catalog_seeded');
-            console.log('✅ Supabase database successfully seeded with all 100+ topics and projects!');
-            return true;
+            console.warn('⚠️ Seeding blocked: Database already contains 25 skills and 430 curriculum topics.');
+            throw new Error('Database is already seeded with all 25 skills and 430 topics. Re-seeding is permanently disabled to prevent duplicate curriculum.');
         }
     }
 
-    // Expose engine singleton
+    // Expose engine singleton and start async initialization
     window.careerOsEngine = new CareerOsEngine();
 
 })(window);
