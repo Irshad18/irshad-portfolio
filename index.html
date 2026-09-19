@@ -3862,12 +3862,24 @@
             }
 
             if (projEl) {
-                projEl.innerHTML = `
-                    <div class="m-proj-tag">
-                        <span class="m-proj-bullet">🛠️</span>
-                        <span>Connected Project: Python Automation Toolkit</span>
-                    </div>
-                `;
+                const projs = (window.SEED_PROJECTS || []).filter(p => {
+                    return (p.primary_skills || []).includes(skill.id);
+                });
+                if (projs.length > 0) {
+                    projEl.innerHTML = projs.map(p => `
+                        <div class="m-proj-tag">
+                            <span class="m-proj-bullet">🛠️</span>
+                            <span>Connected Project: ${escapeHtml(p.name)}</span>
+                        </div>
+                    `).join('');
+                } else {
+                    projEl.innerHTML = `
+                        <div class="m-proj-tag">
+                            <span class="m-proj-bullet">📚</span>
+                            <span>Direct Learning Track</span>
+                        </div>
+                    `;
+                }
             }
 
             if (nextEl) {

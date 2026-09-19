@@ -100,19 +100,15 @@ const CAREER_OS_DATA = {
     // 2B. TODAY'S ACTIVITY & LEARNING STREAK ("WHAT I DID")
     // ----------------------------------------------------
     todayActivity: {
-        date: "SEPTEMBER 19, 2026",
-        timeSpent: "1h 35m",
-        topicsCount: 3,
-        streakDays: 7,
-        goalPercent: 80,
-        goalCurrent: "2h",
-        goalTarget: "2h 30m",
-        topics: [
-            "Python OOP: Inheritance, Encapsulation & Dunder Methods",
-            "FastAPI Request Validation with Pydantic v2 Models",
-            "Asyncio Event Loops & Concurrent HTTP Requests (httpx)"
-        ],
-        notes: "Focused 2-hour sprint logged. Refactored Python Automation Toolkit modular CLI and added async rate limiting."
+        date: "SEPTEMBER 20, 2026",
+        timeSpent: "0m",
+        topicsCount: 0,
+        streakDays: 0,
+        goalPercent: 0,
+        goalCurrent: "0m",
+        goalTarget: "2h",
+        topics: [],
+        notes: "Ready to log your first personal learning session."
     },
 
     // ----------------------------------------------------
@@ -126,11 +122,12 @@ const CAREER_OS_DATA = {
         { id: "oracle", name: "Oracle Ecosystem" },
         { id: "backend", name: "APIs & Backend" },
         { id: "genai", name: "Generative AI" },
-        { id: "ai_eng", name: "AI Engineering" },
+        { id: "rag", name: "RAG" },
+        { id: "ai_agents", name: "AI Agents" },
+        { id: "software_eng", name: "Software Engineering" },
         { id: "devops", name: "DevOps & Cloud" },
         { id: "datascience", name: "Data Science" },
-        { id: "software_eng", name: "Software Engineering" },
-        { id: "professional", name: "Professional Skills" }
+        { id: "ai_security", name: "AI Security" }
     ],
 
     // Priority definitions
@@ -197,8 +194,8 @@ const CAREER_OS_DATA = {
             priority: "P0",
             status: "Active Focus",
             checklist: [
-                { done: true, text: "Python fundamentals & control flow" },
-                { done: true, text: "Data structures (lists, dicts, sets, tuples)" },
+                { done: false, text: "Python fundamentals & control flow" },
+                { done: false, text: "Data structures (lists, dicts, sets, tuples)" },
                 { done: false, text: "Object-Oriented Programming (OOP) & Classes" },
                 { done: false, text: "Advanced Python (Decorators, Generators, Context Managers)" },
                 { done: false, text: "REST API Clients (requests, httpx)" },
@@ -221,13 +218,13 @@ const CAREER_OS_DATA = {
             name: "SQL",
             categoryId: "databases",
             categoryName: "Databases",
-            current: 60,
+            current: 70,
             target: 90,
             priority: "P0",
             status: "In Progress",
             checklist: [
-                { done: true, text: "Complex SELECT queries, multi-table JOINs, subqueries" },
-                { done: true, text: "Data aggregation, grouping, window functions" },
+                { done: false, text: "Complex SELECT queries, multi-table JOINs, subqueries" },
+                { done: false, text: "Data aggregation, grouping, window functions" },
                 { done: false, text: "Query execution plan analysis & index optimization" },
                 { done: false, text: "Transactions (ACID), isolation levels, locks" },
                 { done: false, text: "Database schema normalization & migrations" }
@@ -241,12 +238,12 @@ const CAREER_OS_DATA = {
             name: "PostgreSQL",
             categoryId: "databases",
             categoryName: "Databases",
-            current: 10,
+            current: 35,
             target: 75,
             priority: "P1",
             status: "Learning",
             checklist: [
-                { done: true, text: "PostgreSQL installation & psql CLI basics" },
+                { done: false, text: "PostgreSQL installation & psql CLI basics" },
                 { done: false, text: "JSONB queries and indexing" },
                 { done: false, text: "pgvector extension for AI vector search" },
                 { done: false, text: "Connection pooling & async drivers (asyncpg)" },
@@ -268,8 +265,8 @@ const CAREER_OS_DATA = {
             priority: "P1",
             status: "Enterprise Core",
             checklist: [
-                { done: true, text: "Oracle database queries & enterprise data views" },
-                { done: true, text: "Analytical functions (ROW_NUMBER, RANK, DENSE_RANK)" },
+                { done: false, text: "Oracle database queries & enterprise data views" },
+                { done: false, text: "Analytical functions (ROW_NUMBER, RANK, DENSE_RANK)" },
                 { done: false, text: "Oracle performance tuning & explain plan" },
                 { done: false, text: "Materialized views & partitioning" }
             ],
@@ -282,13 +279,13 @@ const CAREER_OS_DATA = {
             name: "PL/SQL",
             categoryId: "oracle",
             categoryName: "Oracle Ecosystem",
-            current: 25,
+            current: 60,
             target: 75,
             priority: "P1",
             status: "In Progress",
             checklist: [
-                { done: true, text: "Anonymous blocks, variables, control statements" },
-                { done: true, text: "Stored procedures & simple functions" },
+                { done: false, text: "Anonymous blocks, variables, control statements" },
+                { done: false, text: "Stored procedures & simple functions" },
                 { done: false, text: "Packages, cursor handling, exception handling" },
                 { done: false, text: "Triggers & bulk collect (FORALL)" }
             ],
@@ -301,13 +298,13 @@ const CAREER_OS_DATA = {
             name: "Oracle APEX",
             categoryId: "oracle",
             categoryName: "Oracle Ecosystem",
-            current: 30,
+            current: 45,
             target: 75,
             priority: "P1",
             status: "In Progress",
             checklist: [
-                { done: true, text: "Interactive Grids & Custom Form pages" },
-                { done: true, text: "Dynamic Actions & Client Validations" },
+                { done: false, text: "Interactive Grids & Custom Form pages" },
+                { done: false, text: "Dynamic Actions & Client Validations" },
                 { done: false, text: "REST Data Sources & External Web APIs" },
                 { done: false, text: "Role-based authentication & session state" }
             ],
@@ -322,14 +319,14 @@ const CAREER_OS_DATA = {
             name: "REST APIs",
             categoryId: "backend",
             categoryName: "APIs & Backend",
-            current: 55,
+            current: 65,
             target: 85,
             priority: "P0",
             status: "In Progress",
             checklist: [
-                { done: true, text: "HTTP methods (GET, POST, PUT, DELETE, PATCH)" },
-                { done: true, text: "JSON payloads, headers, query parameters" },
-                { done: true, text: "HTTPS security, API tokens & OAuth2 bearer tokens" },
+                { done: false, text: "HTTP methods (GET, POST, PUT, DELETE, PATCH)" },
+                { done: false, text: "JSON payloads, headers, query parameters" },
+                { done: false, text: "HTTPS security, API tokens & OAuth2 bearer tokens" },
                 { done: false, text: "Webhooks & asynchronous event handling" },
                 { done: false, text: "API rate limiting, retries & exponential backoff" }
             ],

@@ -194,28 +194,31 @@
         // LOCAL FALLBACK STORAGE HELPERS
         // ----------------------------------------------------
         getLocalProgress() {
+            let current = {};
             try {
                 const raw = localStorage.getItem(LOCAL_PROGRESS_KEY);
-                if (raw) return JSON.parse(raw);
+                if (raw) current = JSON.parse(raw) || {};
             } catch (e) {}
 
-            // Seed initial state from SEED_TOPICS
-            const initial = {};
+            // Merge with SEED_TOPICS to ensure all 25 skills and 430 topics exist
+            // while strictly preserving any existing user modifications
             if (window.SEED_TOPICS) {
                 Object.keys(window.SEED_TOPICS).forEach(skillId => {
                     window.SEED_TOPICS[skillId].forEach((topic, idx) => {
                         const key = `${skillId}_${idx}`;
-                        initial[key] = {
-                            topic_id: key,
-                            skill_id: skillId,
-                            title: topic.title,
-                            completed: !!topic.completed,
-                            completed_at: topic.completed ? new Date().toISOString() : null
-                        };
+                        if (current[key] === undefined) {
+                            current[key] = {
+                                topic_id: key,
+                                skill_id: skillId,
+                                title: topic.title,
+                                completed: !!topic.completed,
+                                completed_at: topic.completed ? (topic.completed_at || new Date().toISOString()) : null
+                            };
+                        }
                     });
                 });
             }
-            return initial;
+            return current;
         }
 
         setLocalProgress(progress) {
@@ -229,30 +232,7 @@
                 const raw = localStorage.getItem(LOCAL_SESSIONS_KEY);
                 if (raw) return JSON.parse(raw);
             } catch (e) {}
-
-            // Initial seed session for today (matching current local calendar date)
-            const todayStr = formatLocalYMD(new Date());
-            const initial = [
-                {
-                    id: 'sess-today-1',
-                    date: todayStr,
-                    duration_minutes: 60,
-                    skill_id: 'python',
-                    topic_title: 'REST APIs & requests',
-                    activity_type: 'Coding',
-                    notes: 'Learned requests and JSON APIs, handling response codes and custom headers.'
-                },
-                {
-                    id: 'sess-today-2',
-                    date: todayStr,
-                    duration_minutes: 35,
-                    skill_id: 'fastapi',
-                    topic_title: 'Request Validation with Pydantic',
-                    activity_type: 'Learning',
-                    notes: 'Constructed Pydantic v2 schemas for request validation.'
-                }
-            ];
-            return initial;
+            return [];
         }
 
         setLocalSessions(sessions) {
@@ -332,7 +312,7 @@
                 const topicsWithState = topicList.map((t, idx) => {
                     const key = `${skill.id}_${idx}`;
                     const prog = progress[key];
-                    const isCompleted = prog ? prog.completed : !!t.completed;
+                    const isCompleted = prog !== undefined ? !!prog.completed : !!t.completed;
                     return {
                         id: key,
                         skill_id: skill.id,
@@ -340,9 +320,10 @@
                         description: t.description,
                         difficulty: t.difficulty,
                         sequence: t.sequence,
-                        required: t.required,
+                        priority: t.priority || skill.priority,
+                        required: t.required !== undefined ? t.required : true,
                         completed: isCompleted,
-                        completed_at: prog ? prog.completed_at : null
+                        completed_at: prog ? prog.completed_at : (t.completed ? (t.completed_at || new Date().toISOString()) : null)
                     };
                 });
 
@@ -660,8 +641,8 @@
             });
 
             return {
-                currentStreak: Math.max(currentStreak, 1),
-                longestStreak: Math.max(longestStreak, currentStreak, 7)
+                currentStreak: currentStreak,
+                longestStreak: longestStreak
             };
         }
 
