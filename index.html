@@ -701,7 +701,7 @@
                             <span class="cos-kicker">SKILLS ASSESSMENT & GAP ANALYSIS</span>
                             <h3>Comprehensive Skill Matrix</h3>
                             <p class="cos-sub-desc">
-                                Initial self-assessment across 11 technical & professional categories. Click any card to inspect its learning checklist and projects.
+                                Evidence-based skill levels across 11 technical & professional categories. Click any card to inspect its learning checklist and projects.
                             </p>
                         </div>
                         <div class="matrix-search-box">
@@ -1057,20 +1057,20 @@
                 <!-- Dual Progress & Clear Distinction Section -->
                 <div class="modal-distinction-strip">
                     <div class="dist-box">
-                        <span class="dist-label">CURRENT SELF-ASSESSMENT</span>
-                        <span class="dist-val" id="modalCurVal">40%</span>
-                        <span class="dist-sub">Self-evaluated confidence level</span>
+                        <span class="dist-label">CURRENT SKILL LEVEL</span>
+                        <span class="dist-val" id="modalCurVal">0%</span>
+                        <span class="dist-sub" id="modalEvidenceBreakdown">Evidence-based calculation</span>
                     </div>
                     <div class="dist-box">
                         <span class="dist-label">TOPIC COMPLETION PROGRESS</span>
-                        <span class="dist-val" style="color: #4ade80;" id="modalTopicProgVal">8 / 20 topics (40%)</span>
+                        <span class="dist-val" style="color: #4ade80;" id="modalTopicProgVal">0 / 28 topics (0%)</span>
                         <span class="dist-sub">Calculated from verified checklist</span>
                     </div>
                 </div>
 
                 <div class="modal-progress-section">
                     <div class="m-prog-labels">
-                        <span>Calculated Topic Progress: <strong id="modalTopicProgPct">40%</strong></span>
+                        <span>Current Skill Level: <strong id="modalTopicProgPct">0%</strong></span>
                         <span>Target Mastery: <strong id="modalTgtVal">85%</strong></span>
                     </div>
                     <div class="modal-progress-track">
@@ -3275,15 +3275,16 @@
             const barGap = document.getElementById('focusBarGap');
             const prioEl = document.getElementById('focusPrioBadge');
 
-            const delta = Math.max(0, f.target_level - f.current_level);
+            const currentScore = f.calculated_level !== undefined ? f.calculated_level : (f.current_level || 0);
+            const delta = Math.max(0, f.target_level - currentScore);
 
             if (titleEl) titleEl.textContent = f.skill;
-            if (curValEl) curValEl.textContent = `${f.current_level}%`;
+            if (curValEl) curValEl.textContent = `${currentScore}%`;
             if (tgtValEl) tgtValEl.textContent = `${f.target_level}%`;
             if (gapValEl) gapValEl.textContent = `+${delta}%`;
-            if (barCur) barCur.style.width = `${f.current_level}%`;
+            if (barCur) barCur.style.width = `${currentScore}%`;
             if (barGap) {
-                barGap.style.left = `${f.current_level}%`;
+                barGap.style.left = `${currentScore}%`;
                 barGap.style.width = `${delta}%`;
             }
             if (prioEl) prioEl.textContent = `🔴 ${f.priority}`;
@@ -3301,11 +3302,11 @@
                     </div>
                     <div style="padding: 1.25rem 0;">
                         <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-family: var(--font-mono); font-size: 0.85rem;">
-                            <span>Self-Assessment: <strong>${f.current_level}%</strong></span>
+                            <span>Current Skill Level: <strong>${currentScore}%</strong></span>
                             <span style="color: #4ade80;">Topic Progress: <strong>${f.topic_progress_pct}%</strong> (${f.completed_topics}/${f.total_topics})</span>
                         </div>
                         <div class="w-goal-track">
-                            <div class="w-goal-fill" style="width: ${f.topic_progress_pct}%;"></div>
+                            <div class="w-goal-fill" style="width: ${currentScore}%;"></div>
                         </div>
                         <div style="margin-top: 1rem;">
                             <span class="today-topics-label">NEXT RECOMMENDED TOPICS:</span>
@@ -3327,10 +3328,10 @@
             const skills = await window.careerOsEngine.getSkillsWithProgress();
             if (!skills || skills.length === 0) return;
 
-            const totalCurrent = skills.reduce((acc, s) => acc + (s.current_level || 0), 0);
+            const totalCurrent = skills.reduce((acc, s) => acc + (s.calculated_level !== undefined ? s.calculated_level : (s.current_level || 0)), 0);
             const avgCurrent = Math.round(totalCurrent / skills.length);
 
-            const coreMastery = skills.filter(s => (s.current_level || 0) >= 70).length;
+            const coreMastery = skills.filter(s => (s.calculated_level !== undefined ? s.calculated_level : (s.current_level || 0)) >= 70).length;
             const activeSprints = skills.filter(s => s.priority && (s.priority.includes('P0') || s.priority.includes('P1'))).length;
 
             const avgEl = document.getElementById('anaAvgCurrent');
@@ -3410,7 +3411,8 @@
             }
 
             container.innerHTML = filtered.map(s => {
-                const delta = Math.max(0, (s.target_level || 85) - (s.current_level || 0));
+                const calcLevel = s.calculated_level !== undefined ? s.calculated_level : (s.current_level || 0);
+                const delta = Math.max(0, (s.target_level || 85) - calcLevel);
                 const prioObj = (CAREER_OS_DATA.priorities && CAREER_OS_DATA.priorities[s.priority]) 
                     ? CAREER_OS_DATA.priorities[s.priority] 
                     : { label: s.priority || 'P1 - High', badgeClass: 'prio-p1', emoji: '🟠' };
@@ -3432,15 +3434,15 @@
                         </div>
 
                         <div class="skill-card-stats-row">
-                            <span class="s-stat-cur">Self-Rating: <strong>${s.current_level}%</strong></span>
+                            <span class="s-stat-cur">Current Skill Level: <strong>${calcLevel}%</strong></span>
                             <span class="s-stat-gap">Topic Progress: <strong>${topicProgPct}%</strong></span>
                             <span class="s-stat-tgt">Target: <strong>${s.target_level || 85}%</strong></span>
                         </div>
 
                         <div class="skill-card-progress">
                             <div class="skill-track-bg">
-                                <div class="skill-bar-cur" style="width: ${topicProgPct}%;"></div>
-                                <div class="skill-bar-gap" style="left: ${topicProgPct}%; width: ${Math.max(0, (s.target_level || 85) - topicProgPct)}%;"></div>
+                                <div class="skill-bar-cur" style="width: ${calcLevel}%;"></div>
+                                <div class="skill-bar-gap" style="left: ${calcLevel}%; width: ${Math.max(0, (s.target_level || 85) - calcLevel)}%;"></div>
                             </div>
                         </div>
 
@@ -3800,7 +3802,8 @@
             const modal = document.getElementById('cosSkillModal');
             if (!modal) return;
 
-            const delta = Math.max(0, (skill.target_level || 85) - (skill.current_level || 0));
+            const calcLevel = skill.calculated_level !== undefined ? skill.calculated_level : (skill.current_level || 0);
+            const delta = Math.max(0, (skill.target_level || 85) - calcLevel);
             const prioObj = (CAREER_OS_DATA.priorities && CAREER_OS_DATA.priorities[skill.priority])
                 ? CAREER_OS_DATA.priorities[skill.priority]
                 : { label: skill.priority, badgeClass: 'prio-p1', emoji: '🟠' };
@@ -3830,16 +3833,21 @@
             if (statusEl) statusEl.textContent = 'Active Sprint';
             if (gapEl) gapEl.textContent = `+${delta}% Target Gap`;
 
-            // Explicitly separate Self-Assessment from Topic Progress
-            if (curEl) curEl.textContent = `${skill.current_level}% Confidence`;
+            // Evidence-Based Current Skill Level vs Topic Progress
+            if (curEl) curEl.textContent = `${calcLevel}%`;
             if (tgtEl) tgtEl.textContent = `${skill.target_level || 85}%`;
             if (topicProgValEl) topicProgValEl.textContent = `${skill.completed_topics} / ${skill.total_topics} topics (${skill.topic_progress_pct}%)`;
-            if (topicProgPctEl) topicProgPctEl.textContent = `${skill.topic_progress_pct}%`;
+            if (topicProgPctEl) topicProgPctEl.textContent = `${calcLevel}%`;
 
-            if (barCur) barCur.style.width = `${skill.topic_progress_pct}%`;
+            if (barCur) barCur.style.width = `${calcLevel}%`;
             if (barGap) {
-                barGap.style.left = `${skill.topic_progress_pct}%`;
-                barGap.style.width = `${Math.max(0, (skill.target_level || 85) - skill.topic_progress_pct)}%`;
+                barGap.style.left = `${calcLevel}%`;
+                barGap.style.width = `${Math.max(0, (skill.target_level || 85) - calcLevel)}%`;
+            }
+
+            const modalDistSub = document.getElementById('modalEvidenceBreakdown');
+            if (modalDistSub) {
+                modalDistSub.textContent = `Topics (${skill.topic_mastery_pct || 0}% × 50%) • Assessment (${skill.assessment_score_pct || 0}% × 20%) • Projects (${skill.project_evidence_pct || 0}% × 30%)`;
             }
 
             // Render interactive checkboxes for all topics!
@@ -4245,7 +4253,8 @@
                 name: name,
                 category: cat,
                 priority: prio,
-                current_level: 10,
+                current_level: 0,
+                calculated_level: 0,
                 target_level: tgt,
                 active: true,
                 topics: [

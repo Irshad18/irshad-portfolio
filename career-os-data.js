@@ -80,9 +80,9 @@ const CAREER_OS_DATA = {
         skillId: "python",
         skillName: "Python",
         icon: "🐍",
-        currentLevel: 40,
+        currentLevel: 0,
         targetLevel: 85,
-        gap: 45,
+        gap: 85,
         priority: "P0 — Critical",
         why: "Large skill gap + high career relevance + foundational prerequisite for FastAPI microservices, RAG architectures, and AI agent engineering.",
         nextSteps: [

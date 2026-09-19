@@ -14,6 +14,7 @@
     const LOCAL_SESSIONS_KEY = 'career_os_local_sessions_v2';
     const LOCAL_GOAL_KEY = 'career_os_local_goal_v2';
     const LOCAL_PROJECTS_KEY = 'career_os_local_projects_v2';
+    const LOCAL_ASSESSMENTS_KEY = 'career_os_local_assessments_v2';
 
     // Timezone-safe local calendar date formatter (YYYY-MM-DD)
     function formatLocalYMD(d) {
@@ -242,9 +243,96 @@
         }
 
         // ----------------------------------------------------
+        // ASSESSMENT EVIDENCE MANAGEMENT
+        // ----------------------------------------------------
+        getSkillAssessments() {
+            try {
+                const raw = localStorage.getItem(LOCAL_ASSESSMENTS_KEY);
+                if (raw) return JSON.parse(raw);
+            } catch (e) {}
+            return {};
+        }
+
+        setSkillAssessment(skillId, scorePct, metadata = {}) {
+            const all = this.getSkillAssessments();
+            all[skillId] = {
+                score: Math.min(100, Math.max(0, Math.round(scorePct))),
+                date: new Date().toISOString(),
+                ...metadata
+            };
+            try {
+                localStorage.setItem(LOCAL_ASSESSMENTS_KEY, JSON.stringify(all));
+            } catch (e) {}
+            this.notifyChange('progress');
+            return all[skillId];
+        }
+
+        clearSkillAssessments() {
+            try {
+                localStorage.removeItem(LOCAL_ASSESSMENTS_KEY);
+            } catch (e) {}
+            this.notifyChange('progress');
+        }
+
+        // ----------------------------------------------------
+        // CALCULATION ENGINE: EVIDENCE-BASED CURRENT SKILL LEVEL
+        // ----------------------------------------------------
+        // Strict Fixed Weights:
+        // Topic Mastery    = 50% (0.50)
+        // Assessment       = 20% (0.20)
+        // Project Evidence = 30% (0.30)
+        //
+        // No dynamic redistribution: missing evidence contributes 0.
+        // Learning minutes NEVER contribute to Current Skill Level.
+        calculateSkillLevel(topicMasteryPct, assessmentPct, projectEvidencePct) {
+            const t = (typeof topicMasteryPct === 'number' && !isNaN(topicMasteryPct)) ? topicMasteryPct : 0;
+            const a = (typeof assessmentPct === 'number' && !isNaN(assessmentPct)) ? assessmentPct : 0;
+            const p = (typeof projectEvidencePct === 'number' && !isNaN(projectEvidencePct)) ? projectEvidencePct : 0;
+
+            const tContrib = t * 0.50;
+            const aContrib = a * 0.20;
+            const pContrib = p * 0.30;
+
+            return Math.round(tContrib + aContrib + pContrib);
+        }
+
+        async getProjectEvidenceMap() {
+            let projects = [];
+            try {
+                projects = await this.getProjectsWithTasks();
+            } catch (e) {
+                projects = window.SEED_PROJECTS || [];
+            }
+
+            const skillProjectMap = {};
+            (projects || []).forEach(p => {
+                const pSkills = p.primary_skills || 
+                    (window.SEED_PROJECTS && window.SEED_PROJECTS.find(sp => sp.id === p.id)?.primary_skills) || [];
+                const tasks = p.tasks || [];
+                const total = tasks.length;
+                const completed = tasks.filter(t => t.completed).length;
+
+                pSkills.forEach(skillId => {
+                    if (!skillProjectMap[skillId]) {
+                        skillProjectMap[skillId] = { total: 0, completed: 0 };
+                    }
+                    skillProjectMap[skillId].total += total;
+                    skillProjectMap[skillId].completed += completed;
+                });
+            });
+
+            return skillProjectMap;
+        }
+
+        // ----------------------------------------------------
         // DATA ACCESS: SKILLS & AUTOMATIC TOPIC PROGRESS
         // ----------------------------------------------------
         async getSkillsWithProgress() {
+            const [projectsMap, assessments] = await Promise.all([
+                this.getProjectEvidenceMap(),
+                Promise.resolve(this.getSkillAssessments())
+            ]);
+
             if (this.client) {
                 try {
                     const { data: skills, error: err1 } = await this.client
@@ -273,7 +361,7 @@
                         progressMap.set(p.topic_id, p);
                     });
 
-                    // Build aggregated skills
+                    // Build aggregated skills with evidence-based Current Skill Level
                     return skills.map(skill => {
                         const skillTopics = topics.filter(t => t.skill_id === skill.id);
                         const totalTopics = skillTopics.length;
@@ -282,7 +370,22 @@
                             return p && p.completed;
                         }).length;
 
-                        const topicProgressPct = totalTopics > 0 ? Math.round((completedTopics / totalTopics) * 100) : 0;
+                        // Signal 1: Topic Mastery (50%)
+                        const topicMasteryPct = totalTopics > 0 ? (completedTopics / totalTopics) * 100 : 0;
+
+                        // Signal 2: Assessment Score (20%)
+                        const assessmentEntry = assessments[skill.id];
+                        const assessmentPct = (assessmentEntry && typeof assessmentEntry.score === 'number')
+                            ? Math.min(100, Math.max(0, assessmentEntry.score))
+                            : 0;
+
+                        // Signal 3: Project Evidence (30%)
+                        const projData = projectsMap[skill.id] || { total: 0, completed: 0 };
+                        const projectEvidencePct = projData.total > 0 ? (projData.completed / projData.total) * 100 : 0;
+
+                        // EVIDENCE-BASED CURRENT SKILL LEVEL
+                        const calculatedLevel = this.calculateSkillLevel(topicMasteryPct, assessmentPct, projectEvidencePct);
+                        const skillGap = Math.max(0, (skill.target_level || 85) - calculatedLevel);
 
                         return {
                             ...skill,
@@ -296,8 +399,13 @@
                             }),
                             total_topics: totalTopics,
                             completed_topics: completedTopics,
-                            topic_progress_pct: topicProgressPct,
-                            skill_gap: Math.max(0, (skill.target_level || 85) - (skill.current_level || 0))
+                            topic_mastery_pct: Math.round(topicMasteryPct),
+                            topic_progress_pct: Math.round(topicMasteryPct),
+                            assessment_score_pct: Math.round(assessmentPct),
+                            project_evidence_pct: Math.round(projectEvidencePct),
+                            current_level: calculatedLevel,
+                            calculated_level: calculatedLevel,
+                            skill_gap: skillGap
                         };
                     });
                 } catch (err) {
@@ -329,15 +437,34 @@
 
                 const totalTopics = topicsWithState.length;
                 const completedTopics = topicsWithState.filter(t => t.completed).length;
-                const topicProgressPct = totalTopics > 0 ? Math.round((completedTopics / totalTopics) * 100) : 0;
+                const topicMasteryPct = totalTopics > 0 ? (completedTopics / totalTopics) * 100 : 0;
+
+                // Signal 2: Assessment Score (20%)
+                const assessmentEntry = assessments[skill.id];
+                const assessmentPct = (assessmentEntry && typeof assessmentEntry.score === 'number')
+                    ? Math.min(100, Math.max(0, assessmentEntry.score))
+                    : 0;
+
+                // Signal 3: Project Evidence (30%)
+                const projData = projectsMap[skill.id] || { total: 0, completed: 0 };
+                const projectEvidencePct = projData.total > 0 ? (projData.completed / projData.total) * 100 : 0;
+
+                // EVIDENCE-BASED CURRENT SKILL LEVEL
+                const calculatedLevel = this.calculateSkillLevel(topicMasteryPct, assessmentPct, projectEvidencePct);
+                const skillGap = Math.max(0, (skill.target_level || 85) - calculatedLevel);
 
                 return {
                     ...skill,
                     topics: topicsWithState,
                     total_topics: totalTopics,
                     completed_topics: completedTopics,
-                    topic_progress_pct: topicProgressPct,
-                    skill_gap: Math.max(0, (skill.target_level || 85) - (skill.current_level || 0))
+                    topic_mastery_pct: Math.round(topicMasteryPct),
+                    topic_progress_pct: Math.round(topicMasteryPct),
+                    assessment_score_pct: Math.round(assessmentPct),
+                    project_evidence_pct: Math.round(projectEvidencePct),
+                    current_level: calculatedLevel,
+                    calculated_level: calculatedLevel,
+                    skill_gap: skillGap
                 };
             });
 
@@ -708,12 +835,16 @@
                     skill: currentFocusSkill ? currentFocusSkill.name : 'Python',
                     category: currentFocusSkill ? currentFocusSkill.category : 'Programming',
                     priority: currentFocusSkill ? currentFocusSkill.priority : 'P0 - Critical',
-                    current_level: currentFocusSkill ? currentFocusSkill.current_level : 40,
+                    current_level: currentFocusSkill ? (currentFocusSkill.calculated_level !== undefined ? currentFocusSkill.calculated_level : currentFocusSkill.current_level) : 0,
+                    calculated_level: currentFocusSkill ? (currentFocusSkill.calculated_level !== undefined ? currentFocusSkill.calculated_level : currentFocusSkill.current_level) : 0,
                     target_level: currentFocusSkill ? currentFocusSkill.target_level : 85,
-                    completed_topics: currentFocusSkill ? currentFocusSkill.completed_topics : 8,
-                    total_topics: currentFocusSkill ? currentFocusSkill.total_topics : 20,
-                    topic_progress_pct: currentFocusSkill ? currentFocusSkill.topic_progress_pct : 40,
-                    next_topics: incompleteTopics.length > 0 ? incompleteTopics : ['Object-Oriented Programming', 'REST APIs', 'FastAPI']
+                    completed_topics: currentFocusSkill ? currentFocusSkill.completed_topics : 0,
+                    total_topics: currentFocusSkill ? currentFocusSkill.total_topics : 28,
+                    topic_progress_pct: currentFocusSkill ? currentFocusSkill.topic_progress_pct : 0,
+                    topic_mastery_pct: currentFocusSkill ? currentFocusSkill.topic_mastery_pct : 0,
+                    assessment_score_pct: currentFocusSkill ? currentFocusSkill.assessment_score_pct : 0,
+                    project_evidence_pct: currentFocusSkill ? currentFocusSkill.project_evidence_pct : 0,
+                    next_topics: incompleteTopics.length > 0 ? incompleteTopics : ['Python Fundamentals', 'Variables & Data Types', 'Control Flow']
                 }
             };
         }

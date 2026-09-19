@@ -13,7 +13,7 @@ const SEED_SKILLS = [
         "category": "Automation",
         "description": "Enterprise robotic process automation, REFramework state machines, Orchestrator queues, Document Understanding, and agentic workflows.",
         "priority": "P0 - Critical",
-        "current_level": 85,
+        "current_level": 0,
         "target_level": 95,
         "active": true
     },
@@ -23,7 +23,7 @@ const SEED_SKILLS = [
         "category": "Automation",
         "description": "Microsoft cloud and desktop automation flows, connectors, Dataverse integration, and approvals.",
         "priority": "P2 - Medium",
-        "current_level": 25,
+        "current_level": 0,
         "target_level": 60,
         "active": true
     },
@@ -33,7 +33,7 @@ const SEED_SKILLS = [
         "category": "Programming",
         "description": "Core language for backend automation, API development, AI engineering, and data pipelines.",
         "priority": "P0 - Critical",
-        "current_level": 40,
+        "current_level": 0,
         "target_level": 85,
         "active": true
     },
@@ -43,7 +43,7 @@ const SEED_SKILLS = [
         "category": "Databases",
         "description": "Relational database querying, multi-table joins, analytic window functions, query plans, and schema design.",
         "priority": "P0 - Critical",
-        "current_level": 70,
+        "current_level": 0,
         "target_level": 90,
         "active": true
     },
@@ -53,7 +53,7 @@ const SEED_SKILLS = [
         "category": "Databases",
         "description": "Advanced relational database, JSONB document storage, extensions, full text search, and pgvector embeddings.",
         "priority": "P1 - High",
-        "current_level": 35,
+        "current_level": 0,
         "target_level": 80,
         "active": true
     },
@@ -63,7 +63,7 @@ const SEED_SKILLS = [
         "category": "Oracle Ecosystem",
         "description": "Enterprise Oracle SQL dialect, analytic functions, query execution plans, indexes, and optimizer hints.",
         "priority": "P1 - High",
-        "current_level": 60,
+        "current_level": 0,
         "target_level": 85,
         "active": true
     },
@@ -73,7 +73,7 @@ const SEED_SKILLS = [
         "category": "Oracle Ecosystem",
         "description": "Procedural database programming in Oracle, packages, stored procedures, functions, cursors, and bulk processing.",
         "priority": "P1 - High",
-        "current_level": 60,
+        "current_level": 0,
         "target_level": 80,
         "active": true
     },
@@ -83,7 +83,7 @@ const SEED_SKILLS = [
         "category": "Oracle Ecosystem",
         "description": "Low-code enterprise web applications on Oracle database, Interactive Grids, ORDS REST Data Sources, and AI capabilities.",
         "priority": "P1 - High",
-        "current_level": 45,
+        "current_level": 0,
         "target_level": 80,
         "active": true
     },
@@ -93,7 +93,7 @@ const SEED_SKILLS = [
         "category": "APIs & Backend",
         "description": "HTTP/HTTPS communication, status codes, authentication, pagination, rate limiting, and webhook integrations.",
         "priority": "P0 - Critical",
-        "current_level": 65,
+        "current_level": 0,
         "target_level": 90,
         "active": true
     },
@@ -103,7 +103,7 @@ const SEED_SKILLS = [
         "category": "APIs & Backend",
         "description": "High-performance async Python web framework, Pydantic validation, dependency injection, and automatic OpenAPI docs.",
         "priority": "P0 - Critical",
-        "current_level": 25,
+        "current_level": 0,
         "target_level": 85,
         "active": true
     },
@@ -113,7 +113,7 @@ const SEED_SKILLS = [
         "category": "Generative AI",
         "description": "Core architecture, tokens, context windows, sampling parameters, system prompts, and model boundaries.",
         "priority": "P0 - Critical",
-        "current_level": 30,
+        "current_level": 0,
         "target_level": 85,
         "active": true
     },
@@ -123,7 +123,7 @@ const SEED_SKILLS = [
         "category": "Generative AI",
         "description": "Systematic prompting patterns, few-shot exemplars, structured schemas, chaining, and evaluation.",
         "priority": "P0 - Critical",
-        "current_level": 35,
+        "current_level": 0,
         "target_level": 85,
         "active": true
     },
@@ -133,7 +133,7 @@ const SEED_SKILLS = [
         "category": "Generative AI",
         "description": "Integration with OpenAI, Anthropic, and Gemini APIs, streaming tokens, function calling, and cost governance.",
         "priority": "P0 - Critical",
-        "current_level": 25,
+        "current_level": 0,
         "target_level": 85,
         "active": true
     },
@@ -143,7 +143,7 @@ const SEED_SKILLS = [
         "category": "Generative AI",
         "description": "Running open-weights models locally via Ollama, model quantization (GGUF), zero-cloud inference, and data privacy.",
         "priority": "P1 - High",
-        "current_level": 20,
+        "current_level": 0,
         "target_level": 80,
         "active": true
     },
@@ -153,7 +153,7 @@ const SEED_SKILLS = [
         "category": "RAG",
         "description": "Retrieval-Augmented Generation: document parsing, chunking, vector indexing, hybrid search, and evaluation.",
         "priority": "P0 - Critical",
-        "current_level": 15,
+        "current_level": 0,
         "target_level": 85,
         "active": true
     },
@@ -163,7 +163,7 @@ const SEED_SKILLS = [
         "category": "RAG",
         "description": "High-dimensional vector storage, distance metrics, ChromaDB, and pgvector index tuning.",
         "priority": "P1 - High",
-        "current_level": 15,
+        "current_level": 0,
         "target_level": 80,
         "active": true
     },
@@ -173,7 +173,7 @@ const SEED_SKILLS = [
         "category": "AI Agents",
         "description": "Autonomous reasoning, tool execution, multi-agent workflows, state/memory management, and human-in-the-loop guardrails.",
         "priority": "P0 - Critical",
-        "current_level": 10,
+        "current_level": 0,
         "target_level": 85,
         "active": true
     },
@@ -183,7 +183,7 @@ const SEED_SKILLS = [
         "category": "AI Agents",
         "description": "Standardized open protocol connecting AI agents to external tools, data sources, and servers.",
         "priority": "P1 - High",
-        "current_level": 15,
+        "current_level": 0,
         "target_level": 80,
         "active": true
     },
@@ -193,7 +193,7 @@ const SEED_SKILLS = [
         "category": "Software Engineering",
         "description": "Version control, branching workflows, pull requests, releases, and automated CI/CD with GitHub Actions.",
         "priority": "P1 - High",
-        "current_level": 70,
+        "current_level": 0,
         "target_level": 85,
         "active": true
     },
@@ -203,7 +203,7 @@ const SEED_SKILLS = [
         "category": "Software Engineering",
         "description": "Unit testing, integration testing, API validation with pytest, mocking, test fixtures, and coverage.",
         "priority": "P1 - High",
-        "current_level": 20,
+        "current_level": 0,
         "target_level": 80,
         "active": true
     },
@@ -213,7 +213,7 @@ const SEED_SKILLS = [
         "category": "Software Engineering",
         "description": "Client-server architecture, database sharding, caching, queues, microservices, async processing, and reliability.",
         "priority": "P1 - High",
-        "current_level": 20,
+        "current_level": 0,
         "target_level": 80,
         "active": true
     },
@@ -223,7 +223,7 @@ const SEED_SKILLS = [
         "category": "DevOps & Cloud",
         "description": "Containerization of Python scripts, FastAPI microservices, PostgreSQL, and multi-container Docker Compose.",
         "priority": "P1 - High",
-        "current_level": 30,
+        "current_level": 0,
         "target_level": 75,
         "active": true
     },
@@ -233,7 +233,7 @@ const SEED_SKILLS = [
         "category": "DevOps & Cloud",
         "description": "Cloud computing fundamentals, compute, object storage, IAM, secrets management, and managed databases.",
         "priority": "P1 - High",
-        "current_level": 25,
+        "current_level": 0,
         "target_level": 75,
         "active": true
     },
@@ -243,7 +243,7 @@ const SEED_SKILLS = [
         "category": "Data Science",
         "description": "Applied statistics, pandas data transformation, exploratory analysis, regression, classification, and machine learning.",
         "priority": "P2 - Medium",
-        "current_level": 20,
+        "current_level": 0,
         "target_level": 75,
         "active": true
     },
@@ -253,7 +253,7 @@ const SEED_SKILLS = [
         "category": "AI Security",
         "description": "Prompt injection defenses, PII anonymization, agent permission sandboxing, guardrails, and human-in-the-loop governance.",
         "priority": "P1 - High",
-        "current_level": 20,
+        "current_level": 0,
         "target_level": 80,
         "active": true
     }
