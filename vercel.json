@@ -1,0 +1,9 @@
+{
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/career-os", "destination": "/index.html" },
+    { "source": "/career-os/dashboard", "destination": "/index.html" },
+    { "source": "/career-os/manage", "destination": "/index.html" },
+    { "source": "/(.*)", "destination": "/$1" }
+  ]
+}

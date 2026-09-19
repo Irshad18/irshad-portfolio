@@ -12,6 +12,10 @@
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
     <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="seed-topics-data.js"></script>
+    <script src="supabase-client.js"></script>
+    <script src="career-os-data.js"></script>
 </head>
 
 <body>
@@ -26,7 +30,7 @@
                 <a href="#about" class="nav-link active">HOME</a>
                 <a href="#experience" class="nav-link">EXPERIENCE</a>
                 <a href="#skills" class="nav-link">SKILLS</a>
-                <a href="#presentation" class="nav-link">TOWNHALL</a>
+                <a href="#career-os" class="nav-link nav-career-os">CAREER OS</a>
                 <a href="#certifications" class="nav-link">CERTIFICATIONS</a>
                 <a href="#blog" class="nav-link">BLOG</a>
                 <a href="#mentorship" class="nav-link">1:1 SESSIONS</a>
@@ -396,6 +400,875 @@
         </div>
     </section>
 
+    <!-- ============================================
+         CAREER OS: Living Self-Development Dashboard
+         ============================================ -->
+    <section id="career-os" class="career-os-section">
+        <div class="container">
+            <!-- Terminal System Console Bar -->
+            <div class="cos-terminal-header">
+                <div class="cos-terminal-left">
+                    <div class="cos-terminal-dots">
+                        <span class="cos-dot dot-red"></span>
+                        <span class="cos-dot dot-yellow"></span>
+                        <span class="cos-dot dot-green"></span>
+                    </div>
+                    <span class="cos-terminal-title"><span class="cos-prompt-sym">$</span> career_os --profile=mohd-irshad --mode=continuous-growth</span>
+                </div>
+                <div class="cos-terminal-right">
+                    <div class="cos-system-status" id="cosSystemStatus">
+                        <span class="cos-status-pulse"></span>
+                        <span class="cos-status-text" id="cosStatusText">SYSTEM: LOCAL REACTIVE</span>
+                    </div>
+                    <div class="cos-auth-controls" id="cosAuthControls">
+                        <button class="btn-cos-auth" id="cosAuthBtn" onclick="openCareerOsAuthModal()" type="button">
+                            <span>🔐 Author Login</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Career OS View Routing Navigation Bar -->
+            <div class="cos-view-router-bar">
+                <div class="cos-router-pills">
+                    <button class="cos-route-btn active" id="cosRouteOverview" onclick="switchCosRoute('overview')" type="button">
+                        <span class="r-icon">🗺️</span>
+                        <span class="r-name">Overview</span>
+                        <span class="r-path">/career-os</span>
+                    </button>
+                    <button class="cos-route-btn" id="cosRouteDashboard" onclick="switchCosRoute('dashboard')" type="button">
+                        <span class="r-icon">📊</span>
+                        <span class="r-name">Personal Dashboard</span>
+                        <span class="r-path">/career-os/dashboard</span>
+                        <span class="r-badge-lock" id="dashLockBadge">🔒 Private</span>
+                    </button>
+                    <button class="cos-route-btn" id="cosRouteManage" onclick="switchCosRoute('manage')" type="button">
+                        <span class="r-icon">⚙️</span>
+                        <span class="r-name">Management</span>
+                        <span class="r-path">/career-os/manage</span>
+                        <span class="r-badge-lock" id="manageLockBadge">🔒 Private</span>
+                    </button>
+                </div>
+                <div class="cos-router-actions">
+                    <button class="btn-quick-log btn-log-today-prominent" id="btnCosLogToday" onclick="openLogSessionModal()" type="button">
+                        <span>+ LOG TODAY'S LEARNING</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Section Main Title & Introduction -->
+            <div class="cos-main-header">
+                <span class="badge badge-dark">🚀 SELF-DEVELOPMENT DASHBOARD</span>
+                <h2>MY CAREER OS</h2>
+                <p class="section-subtitle">
+                    A living career operating system documenting where I am, the skills I have, what I am building, and my trajectory toward becoming an <strong>AI Automation Engineer</strong>.
+                </p>
+
+                <!-- 4-Pillar Mental Architecture Switcher -->
+                <div class="cos-framework-nav">
+                    <a href="#cos-roadmap" class="cos-f-pill">
+                        <span class="f-icon">🗺️</span>
+                        <div class="f-text">
+                            <strong>ROADMAP</strong>
+                            <span>What to learn</span>
+                        </div>
+                    </a>
+                    <a href="#cos-skills" class="cos-f-pill">
+                        <span class="f-icon">⚡</span>
+                        <div class="f-text">
+                            <strong>SKILLS</strong>
+                            <span>How good I am</span>
+                        </div>
+                    </a>
+                    <a href="#cos-activity" class="cos-f-pill">
+                        <span class="f-icon">🛠️</span>
+                        <div class="f-text">
+                            <strong>ACTIVITY</strong>
+                            <span>What I did • 🔥 7d streak</span>
+                        </div>
+                    </a>
+                    <a href="#cos-analytics" class="cos-f-pill">
+                        <span class="f-icon">📈</span>
+                        <div class="f-text">
+                            <strong>ANALYTICS</strong>
+                            <span>Am I improving?</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- ============================================
+                 CAREER OS SUBVIEW 1: PUBLIC OVERVIEW (/career-os)
+                 ============================================ -->
+            <div class="cos-subview-panel active" id="cosOverviewPanel">
+
+            <!-- ============================================
+                 MODULE 1: WHAT SHOULD I WORK ON NOW? (CURRENT FOCUS)
+                 ============================================ -->
+            <div class="cos-current-focus-card" id="cos-current-focus">
+                <div class="focus-header-bar">
+                    <div class="focus-title-group">
+                        <span class="focus-badge"><span class="mini-pulse"></span> CURRENT FOCUS</span>
+                        <h3>What Should I Work On Now?</h3>
+                    </div>
+                    <div class="focus-header-right">
+                        <a href="#cosTodayCard" class="focus-today-badge">
+                            <span class="f-streak-flame">🔥</span>
+                            <span>7 Day Streak</span>
+                            <span class="f-today-time">• 1h 35m Today</span>
+                        </a>
+                        <span class="priority-pill prio-p0" id="focusPrioBadge">🔴 P0 — Critical Priority</span>
+                    </div>
+                </div>
+
+                <div class="focus-body-grid">
+                    <div class="focus-left">
+                        <div class="focus-hero-skill">
+                            <span class="focus-skill-icon">🐍</span>
+                            <div class="focus-skill-details">
+                                <h4 id="focusSkillTitle">Python</h4>
+                                <div class="focus-meta-row">
+                                    <span class="focus-stat">Current: <strong id="focusCurVal">40%</strong></span>
+                                    <span class="focus-arrow">➔</span>
+                                    <span class="focus-stat">Target: <strong id="focusTgtVal" class="text-amber">85%</strong></span>
+                                    <span class="focus-gap-pill">Skill Gap: <strong id="focusGapVal">45%</strong></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Visual Progress Track -->
+                        <div class="focus-track-wrapper">
+                            <div class="focus-progress-track">
+                                <div class="focus-bar-current" id="focusBarCurrent" style="width: 40%;"></div>
+                                <div class="focus-bar-gap" id="focusBarGap" style="left: 40%; width: 45%;"></div>
+                            </div>
+                            <div class="focus-track-legend">
+                                <span><span class="legend-dot dot-green-solid"></span> Current Mastery (40%)</span>
+                                <span><span class="legend-dot dot-amber-stripe"></span> Target Expansion (+45%)</span>
+                            </div>
+                        </div>
+
+                        <div class="focus-why-box">
+                            <span class="why-label">WHY THIS NOW:</span>
+                            <p id="focusWhyText">
+                                Large skill gap (45%) combined with high career criticality (P0). Python is the essential prerequisite for FastAPI microservices, RAG retrieval architectures, and autonomous AI agents.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="focus-right">
+                        <div class="focus-steps-header">
+                            <span class="steps-label">IMMEDIATE LEARNING SPRINTS:</span>
+                            <span class="steps-project-tag">Linked: Python Automation Toolkit</span>
+                        </div>
+                        <ul class="focus-steps-list" id="focusStepsList">
+                            <li><span class="step-chk">✓</span> Fundamentals & Data Structures (Done)</li>
+                            <li><span class="step-chk chk-current">➔</span> <strong>1. Object-Oriented Programming (OOP) & Classes</strong> (Active)</li>
+                            <li><span class="step-chk chk-pending">○</span> 2. REST APIs & HTTP Client Libraries (requests / httpx)</li>
+                            <li><span class="step-chk chk-pending">○</span> 3. Asynchronous Programming (asyncio)</li>
+                            <li><span class="step-chk chk-pending">○</span> 4. FastAPI Microservices & Schema Validation</li>
+                            <li><span class="step-chk chk-pending">○</span> 5. Build Python Automation Toolkit & Pytest Suite</li>
+                        </ul>
+
+                        <div class="focus-actions-row">
+                            <button class="btn-focus-inspect" onclick="openSkillModal('python')" type="button">
+                                <span>Inspect Python Roadmap</span>
+                                <span class="arrow-circle-sm">↗</span>
+                            </button>
+                            <a href="https://github.com/irshadkohli" target="_blank" class="btn-focus-gh">
+                                <span>GitHub Repository</span>
+                                <span>↗</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================
+                 MODULE 2: CAREER DIRECTION & TRAJECTORY STEPPER
+                 ============================================ -->
+            <div class="cos-direction-wrapper" id="cos-roadmap">
+                <div class="cos-sub-header">
+                    <span class="cos-kicker">CAREER TRAJECTORY</span>
+                    <h3>Target Career Direction: RPA to AI Automation</h3>
+                    <p class="cos-sub-desc">
+                        Application Solutions Developer @ Oracle India • 4+ Years Experience • 20+ Automation Projects Delivered Across Supply Chain, Order Management, Finance & Customer Service.
+                    </p>
+                </div>
+
+                <div class="cos-direction-stepper">
+                    <div class="direction-step-box step-current">
+                        <div class="step-badge-row">
+                            <span class="dir-num">01</span>
+                            <span class="dir-status status-active">Current Role</span>
+                        </div>
+                        <h4>RPA Developer</h4>
+                        <p>UiPath Studio, REFramework, Orchestrator, SQL, and 24x7 mission-critical bot operations at Oracle India.</p>
+                        <div class="dir-footer-tag">Enterprise Foundation</div>
+                    </div>
+
+                    <div class="direction-conduit">
+                        <span class="conduit-arrow-sym">➔</span>
+                    </div>
+
+                    <div class="direction-step-box">
+                        <div class="step-badge-row">
+                            <span class="dir-num">02</span>
+                            <span class="dir-status status-bridge">Active Bridge</span>
+                        </div>
+                        <h4>Automation Engineer</h4>
+                        <p>Full-spectrum engineering: REST APIs, Python scripting, Oracle APEX, database pipelines, and headless tasks.</p>
+                        <div class="dir-footer-tag">System Integrations</div>
+                    </div>
+
+                    <div class="direction-conduit">
+                        <span class="conduit-arrow-sym">➔</span>
+                    </div>
+
+                    <div class="direction-step-box step-target">
+                        <div class="step-badge-row">
+                            <span class="dir-num dir-num-target">03</span>
+                            <span class="dir-status status-target">Core Target</span>
+                        </div>
+                        <h4 class="title-target">AI Automation Engineer</h4>
+                        <p>Autonomous AI agents, RAG vector retrieval, FastAPI backend microservices, and LLM-driven process automation.</p>
+                        <div class="dir-footer-tag tag-target-gold">Target Career Direction</div>
+                    </div>
+
+                    <div class="direction-conduit">
+                        <span class="conduit-arrow-sym">➔</span>
+                    </div>
+
+                    <div class="direction-step-box step-horizon">
+                        <div class="step-badge-row">
+                            <span class="dir-num dir-num-horizon">04</span>
+                            <span class="dir-status status-horizon">Horizon Vision</span>
+                        </div>
+                        <h4>Intelligent Automation / AI</h4>
+                        <p>Self-healing cognitive automation systems, multi-agent enterprise swarms, and large-scale AI process governance.</p>
+                        <div class="dir-footer-tag">Long-Term Synthesis</div>
+                    </div>
+                </div>
+
+                <div class="cos-disclaimer-bar">
+                    <span class="disc-icon">ℹ️</span>
+                    <span class="disc-text"><strong>Note:</strong> This progression represents my proactive personal development direction and target, not a guaranteed career outcome.</span>
+                </div>
+            </div>
+
+            <!-- ============================================
+                 MODULE 3: PROGRESS TRACKING & ANALYTICS
+                 ============================================ -->
+            <div class="cos-analytics-strip" id="cos-analytics">
+                <div class="cos-analytic-card">
+                    <div class="ana-val" id="anaAvgCurrent">34%</div>
+                    <div class="ana-label">Overall Skill Readiness</div>
+                    <div class="ana-sub">Target: <strong>79% Avg</strong> Across 35 Skills</div>
+                </div>
+
+                <div class="cos-ana-divider"></div>
+
+                <div class="cos-analytic-card">
+                    <div class="ana-val text-green" id="anaCoreCount">9</div>
+                    <div class="ana-label">Core Mastery Skills</div>
+                    <div class="ana-sub">UiPath, Production Support, PDD/SDD</div>
+                </div>
+
+                <div class="cos-ana-divider"></div>
+
+                <div class="cos-analytic-card">
+                    <div class="ana-val text-amber" id="anaActiveCount">18</div>
+                    <div class="ana-label">Skills In Active Sprints</div>
+                    <div class="ana-sub">Python, FastAPI, RAG, SQL, Agents</div>
+                </div>
+
+                <div class="cos-ana-divider"></div>
+
+                <div class="cos-analytic-card">
+                    <div class="ana-val text-blue" id="anaProjectsCount">5</div>
+                    <div class="ana-label">Roadmap Projects</div>
+                    <div class="ana-sub">Build → Learn → Prove Portfolio</div>
+                </div>
+            </div>
+
+            <!-- ============================================
+                 MODULE 4: 11-CATEGORY SKILL MATRIX (HOW GOOD I AM)
+                 ============================================ -->
+            <div class="cos-skill-matrix-section" id="cos-skills">
+                <div class="cos-sub-header">
+                    <div class="matrix-header-flex">
+                        <div>
+                            <span class="cos-kicker">SKILLS ASSESSMENT & GAP ANALYSIS</span>
+                            <h3>Comprehensive Skill Matrix</h3>
+                            <p class="cos-sub-desc">
+                                Initial self-assessment across 11 technical & professional categories. Click any card to inspect its learning checklist and projects.
+                            </p>
+                        </div>
+                        <div class="matrix-search-box">
+                            <span class="search-icon">🔍</span>
+                            <input type="text" id="cosSkillSearchInput" placeholder="Search any skill (e.g. Python, RAG, SQL)..." aria-label="Search skills">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category Filters (11 Categories) -->
+                <div class="cos-category-tabs-scroll">
+                    <div class="cos-cat-tabs" id="cosCategoryTabs">
+                        <!-- Rendered dynamically from CAREER_OS_DATA.categories -->
+                    </div>
+                </div>
+
+                <!-- Priority Filters (P0 - P3) -->
+                <div class="cos-prio-filters-bar">
+                    <span class="prio-filter-label">Filter by Priority:</span>
+                    <button class="prio-filter-btn active" data-prio="all" type="button">All Priorities</button>
+                    <button class="prio-filter-btn btn-p0" data-prio="P0" type="button">🔴 P0 — Critical</button>
+                    <button class="prio-filter-btn btn-p1" data-prio="P1" type="button">🟠 P1 — High</button>
+                    <button class="prio-filter-btn btn-p2" data-prio="P2" type="button">🟡 P2 — Medium</button>
+                    <button class="prio-filter-btn btn-p3" data-prio="P3" type="button">⚪ P3 — Supporting</button>
+                </div>
+
+                <!-- Skills Cards Grid -->
+                <div class="cos-skills-grid" id="cosSkillsGrid">
+                    <!-- Populated dynamically by JavaScript -->
+                </div>
+            </div>
+
+            <!-- ============================================
+                 MODULE 5: 6-PHASE CAREER ROADMAP (WHAT TO LEARN)
+                 ============================================ -->
+            <div class="cos-roadmap-phases-section" id="cos-roadmap-phases">
+                <div class="cos-sub-header">
+                    <span class="cos-kicker">STRUCTURED LEARNING ROADMAP</span>
+                    <h3>6-Phase Evolution Architecture</h3>
+                    <p class="cos-sub-desc">
+                        A structured curriculum taking enterprise automation from fundamental programming to production intelligent agent swarms.
+                    </p>
+                </div>
+
+                <div class="cos-phases-grid" id="cosPhasesGrid">
+                    <!-- Populated dynamically from CAREER_OS_DATA.roadmap -->
+                </div>
+            </div>
+
+            <!-- ============================================
+                 MODULE 6: ACTIVITY — WHAT I DID
+                 Part A: Today's Daily Cadence & Learning Streak
+                 Part B: "Build → Learn → Prove" Project Roadmap
+                 ============================================ -->
+            <div class="cos-projects-section" id="cos-activity">
+                <div class="cos-sub-header">
+                    <span class="cos-kicker">ACTIVITY: WHAT I DID</span>
+                    <h3>Daily Execution & Practical Portfolio Proof</h3>
+                    <p class="cos-sub-desc">
+                        Documenting consistent daily learning sessions, topics mastered, and tangible engineering projects.
+                    </p>
+                </div>
+
+                <!-- Today's Daily Activity & Streak Card -->
+                <div class="cos-today-card" id="cosTodayCard">
+                    <!-- Populated dynamically from CAREER_OS_DATA.todayActivity -->
+                </div>
+
+                <div class="project-header-row" style="margin-top: 3.5rem; margin-bottom: 1.5rem;">
+                    <div>
+                        <span class="cos-kicker">PRACTICAL PORTFOLIO PROOF</span>
+                        <h4 class="proj-section-title">Build → Learn → Prove: Project Roadmap</h4>
+                        <p class="cos-sub-desc">
+                            "I do not want to learn skills only through courses. Each important skill should be connected to a practical project."
+                        </p>
+                    </div>
+                </div>
+
+                <div class="cos-projects-cards-list" id="cosProjectsList">
+                    <!-- Populated dynamically from CAREER_OS_DATA.projects -->
+                </div>
+            </div>
+            </div> <!-- /cosOverviewPanel -->
+
+            <!-- ============================================
+                 CAREER OS SUBVIEW 2: PRIVATE PERSONAL DASHBOARD (/career-os/dashboard)
+                 ============================================ -->
+            <div class="cos-subview-panel" id="cosDashboardPanel" style="display: none;">
+                <div class="cos-dashboard-header-banner">
+                    <div>
+                        <h3 class="cos-dash-title">📊 Personal Learning & Progress Dashboard</h3>
+                        <p class="cos-dash-subtitle">Real-time telemetry tracking focused study sessions, verified topic completions, and streak consistency.</p>
+                    </div>
+                    <button class="btn-quick-log btn-log-today-prominent" onclick="openLogSessionModal()" type="button">
+                        <span>+ LOG TODAY'S LEARNING</span>
+                    </button>
+                </div>
+
+                <!-- Row 1: Today Dashboard & Recommended Focus -->
+                <div class="weekly-dashboard-grid">
+                    <!-- Today Dashboard Card -->
+                    <div class="cos-today-card" id="dashTodayCard" style="margin-bottom: 0;">
+                        <!-- Rendered dynamically -->
+                    </div>
+
+                    <!-- Recommended Focus Card -->
+                    <div class="cos-current-focus-card" id="dashFocusCard">
+                        <!-- Rendered dynamically -->
+                    </div>
+                </div>
+
+                <!-- Row 2: Weekly Dashboard & Visual Bar Chart -->
+                <div class="weekly-dashboard-grid">
+                    <!-- Weekly Learning Goal Card -->
+                    <div class="weekly-goal-card" id="dashWeeklyGoalCard">
+                        <div class="w-goal-header">
+                            <h4 class="w-goal-title">Weekly Learning Goal</h4>
+                            <button class="btn-edit-goal" onclick="openGoalModal()" type="button">Edit Target ✎</button>
+                        </div>
+                        <div class="w-goal-progress-num">
+                            <span class="w-goal-actual" id="wGoalActual">8h 45m</span>
+                            <span class="w-goal-target" id="wGoalTarget">/ 10h</span>
+                            <span class="w-goal-pct" id="wGoalPct">87.5%</span>
+                        </div>
+                        <div class="w-goal-track">
+                            <div class="w-goal-fill" id="wGoalFill" style="width: 87.5%;"></div>
+                        </div>
+                        <div class="w-goal-submetrics">
+                            <div class="w-subm-box">
+                                <span class="w-subm-val" id="wTopicsDoneCount">6 Topics</span>
+                                <span class="w-subm-lbl">Topics Completed</span>
+                            </div>
+                            <div class="w-subm-box">
+                                <span class="w-subm-val" id="wStreakDays">7 Days</span>
+                                <span class="w-subm-lbl">Current Streak</span>
+                            </div>
+                        </div>
+                        <div class="w-goal-tags-row">
+                            <div class="w-tag-group">
+                                <span class="w-tag-title">Skills Worked On:</span>
+                                <div class="w-pills-wrap" id="wSkillsWorkedPills">
+                                    <span class="w-pill">Python</span>
+                                    <span class="w-pill">SQL</span>
+                                    <span class="w-pill">FastAPI</span>
+                                </div>
+                            </div>
+                            <div class="w-tag-group">
+                                <span class="w-tag-title">Projects Worked On:</span>
+                                <div class="w-pills-wrap" id="wProjectsWorkedPills">
+                                    <span class="w-pill">Python Automation Toolkit</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Daily Learning Activity Bar Chart Card -->
+                    <div class="daily-chart-card">
+                        <div class="chart-header-row">
+                            <h4 class="chart-title">Daily Learning Activity</h4>
+                            <div class="chart-days-filter">
+                                <button class="chart-day-btn active" id="btnChart7d" onclick="filterDailyChart(7)" type="button">7 Days</button>
+                                <button class="chart-day-btn" id="btnChart30d" onclick="filterDailyChart(30)" type="button">30 Days</button>
+                                <button class="chart-day-btn" id="btnChart90d" onclick="filterDailyChart(90)" type="button">90 Days</button>
+                            </div>
+                        </div>
+                        <div class="daily-bar-chart-wrap" id="dailyBarChartContainer">
+                            <!-- Populated dynamically with bar columns -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Row 3: Weekly Review & Next Week Focus -->
+                <div class="weekly-review-grid">
+                    <div class="weekly-review-card">
+                        <div class="w-rev-title">📋 THIS WEEK REVIEW</div>
+                        <ul class="w-rev-bullets" id="thisWeekReviewList">
+                            <li><span class="chk-sym">✓</span> <strong>Total Learning:</strong> <span id="revTime">8h 45m</span> focused deep work logged</li>
+                            <li><span class="chk-sym">✓</span> <strong>Topics Mastered:</strong> <span id="revTopics">Python OOP & FastAPI validation</span></li>
+                            <li><span class="chk-sym">✓</span> <strong>Skills Touched:</strong> Python, FastAPI, REST APIs, SQL</li>
+                            <li><span class="chk-sym">✓</span> <strong>Projects Advanced:</strong> Python Automation Toolkit & RPA Control Tower</li>
+                            <li><span class="chk-sym">✓</span> <strong>Active Streak:</strong> 7 consecutive days</li>
+                        </ul>
+                    </div>
+
+                    <div class="weekly-review-card">
+                        <div class="w-rev-title">🎯 NEXT WEEK FOCUS</div>
+                        <p class="cos-sub-desc" style="margin-bottom: 0.85rem;">
+                            Select the high-leverage skill to anchor next week's learning sprints:
+                        </p>
+                        <div class="next-focus-box">
+                            <select id="nextFocusSelect" class="next-focus-select" onchange="handleSaveNextFocus()">
+                                <option value="python">Python: Advanced Concurrency & AsyncIO</option>
+                                <option value="fastapi" selected>FastAPI: Dependency Injection & Database Sessions</option>
+                                <option value="rag">RAG: pgvector Embeddings & Hybrid Search</option>
+                                <option value="ai_agents">AI Agents: ReAct Tools & Evaluation</option>
+                                <option value="oracle_apex">Oracle APEX: Interactive Grids & REST Data Sources</option>
+                            </select>
+                            <span id="nextFocusStatusText" style="font-family: var(--font-mono); font-size: 0.72rem; color: #4ade80;">Saved to personal roadmap</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Row 4: RECENT ACTIVITY (Grouped by Date with Filters) -->
+                <div class="recent-sessions-card" id="cosRecentActivityCard">
+                    <div class="recent-act-header-row">
+                        <div>
+                            <h4 class="chart-title">RECENT ACTIVITY</h4>
+                            <span class="recent-act-subtitle">Personal learning & coding timeline</span>
+                        </div>
+                        <button class="btn-today-log btn-add-learning-highlight" onclick="openLogSessionModal()" type="button">
+                            <span>+ Log Learning</span>
+                        </button>
+                    </div>
+
+                    <!-- Activity Type Filter Pills (Requirement 14) -->
+                    <div class="recent-filters-bar">
+                        <span class="recent-filter-label">Filter:</span>
+                        <button class="recent-filter-pill active" data-filter="all" onclick="filterRecentActivity('all')" type="button">All</button>
+                        <button class="recent-filter-pill" data-filter="Learning" onclick="filterRecentActivity('Learning')" type="button">Learning</button>
+                        <button class="recent-filter-pill" data-filter="Coding" onclick="filterRecentActivity('Coding')" type="button">Coding</button>
+                        <button class="recent-filter-pill" data-filter="Project" onclick="filterRecentActivity('Project')" type="button">Projects</button>
+                        <button class="recent-filter-pill" data-filter="Revision" onclick="filterRecentActivity('Revision')" type="button">Revision</button>
+                    </div>
+
+                    <!-- Grouped Recent Activity Stream -->
+                    <div class="recent-activity-stream" id="cosRecentActivityStream">
+                        <!-- Populated dynamically with Today, Yesterday, and past dates -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================
+                 CAREER OS SUBVIEW 3: PRIVATE MANAGEMENT AREA (/career-os/manage)
+                 ============================================ -->
+            <div class="cos-subview-panel" id="cosManagePanel" style="display: none;">
+                <div class="cos-dashboard-header-banner">
+                    <div>
+                        <h3 class="cos-dash-title">⚙️ Career OS Management & Supabase Cloud Sync</h3>
+                        <p class="cos-dash-subtitle">Manage skill catalog, add learning topics, configure projects, and synchronize your Supabase PostgreSQL cloud database.</p>
+                    </div>
+                    <div class="cos-auth-controls">
+                        <span id="manageAuthUserLabel" style="font-family: var(--font-mono); font-size: 0.8rem; color: #4ade80;">Authenticated as Author</span>
+                    </div>
+                </div>
+
+                <div class="manage-dashboard">
+                    <!-- Supabase Connection & One-Click Seed Panel -->
+                    <div class="manage-panel-card">
+                        <div class="w-goal-header">
+                            <h4 class="w-goal-title">☁️ Supabase Cloud Database Configuration</h4>
+                            <span class="today-status-chip" id="manageDbStatusChip">
+                                <span class="today-live-pulse"></span>
+                                <span id="manageDbStatusText">CONNECTED</span>
+                            </span>
+                        </div>
+                        <p class="cos-sub-desc" style="margin-bottom: 1.25rem;">
+                            All Career OS data persists across browser restarts, devices, and deployments. Connect your Supabase project using your public Project URL and Anon Key.
+                        </p>
+                        <form id="supabaseConfigForm" onsubmit="handleSaveSupabaseConfig(event)">
+                            <div class="manage-form-grid">
+                                <div class="log-field-group">
+                                    <label class="log-label" for="cfgSupabaseUrl">Supabase Project URL</label>
+                                    <input type="text" id="cfgSupabaseUrl" class="manage-input" placeholder="https://xyzcompany.supabase.co">
+                                </div>
+                                <div class="log-field-group">
+                                    <label class="log-label" for="cfgSupabaseAnonKey">Supabase Public Anon Key</label>
+                                    <input type="password" id="cfgSupabaseAnonKey" class="manage-input" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...">
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                                <button type="submit" class="btn-save-next-focus">Save Cloud Configuration</button>
+                                <button type="button" class="btn-seed-db" onclick="handleSeedDatabaseClick()">🌱 Seed Database with 100+ Topics & Projects</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Skills & Topics Quick Manager -->
+                    <div class="manage-panel-card">
+                        <div class="w-goal-header">
+                            <h4 class="w-goal-title">➕ Add New Skill to Matrix</h4>
+                        </div>
+                        <form id="addSkillForm" onsubmit="handleAddSkillSubmit(event)">
+                            <div class="manage-form-grid">
+                                <div class="log-field-group">
+                                    <label class="log-label" for="newSkillName">Skill Name</label>
+                                    <input type="text" id="newSkillName" class="manage-input" placeholder="e.g. LangChain / LangGraph" required>
+                                </div>
+                                <div class="log-field-group">
+                                    <label class="log-label" for="newSkillCategory">Category</label>
+                                    <select id="newSkillCategory" class="log-select" required>
+                                        <option value="Programming">Programming</option>
+                                        <option value="Databases">Databases</option>
+                                        <option value="Oracle Ecosystem">Oracle Ecosystem</option>
+                                        <option value="APIs & Backend">APIs & Backend</option>
+                                        <option value="Generative AI">Generative AI</option>
+                                        <option value="AI Engineering" selected>AI Engineering</option>
+                                        <option value="DevOps & Cloud">DevOps & Cloud</option>
+                                        <option value="Automation">Automation</option>
+                                    </select>
+                                </div>
+                                <div class="log-field-group">
+                                    <label class="log-label" for="newSkillPriority">Priority</label>
+                                    <select id="newSkillPriority" class="log-select" required>
+                                        <option value="P0 - Critical" selected>P0 - Critical</option>
+                                        <option value="P1 - High">P1 - High</option>
+                                        <option value="P2 - Medium">P2 - Medium</option>
+                                        <option value="P3 - Supporting">P3 - Supporting</option>
+                                    </select>
+                                </div>
+                                <div class="log-field-group">
+                                    <label class="log-label" for="newSkillTargetLevel">Target Level (%)</label>
+                                    <input type="number" id="newSkillTargetLevel" class="manage-input" min="10" max="100" value="85" required>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn-save-next-focus">+ Add Skill</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         INTERACTIVE SKILL DETAIL MODAL
+         ============================================ -->
+    <div class="cos-modal-backdrop" id="cosSkillModal" style="display: none;" onclick="closeSkillModalOnBackdrop(event)">
+        <div class="cos-modal-dialog">
+            <div class="cos-modal-header">
+                <div class="modal-title-wrap">
+                    <span class="modal-category-tag" id="modalCategory">Category</span>
+                    <h3 id="modalSkillName">Skill Name</h3>
+                </div>
+                <button class="cos-modal-close" onclick="closeSkillModal()" type="button" aria-label="Close modal">✕</button>
+            </div>
+
+            <div class="cos-modal-body">
+                <!-- Status & Priority Strip -->
+                <div class="modal-meta-strip">
+                    <div class="m-meta-item">
+                        <span class="m-lbl">Priority</span>
+                        <span class="priority-pill" id="modalPriority">P0 — Critical</span>
+                    </div>
+                    <div class="m-meta-item">
+                        <span class="m-lbl">Status</span>
+                        <span class="modal-status-badge" id="modalStatus">In Progress</span>
+                    </div>
+                    <div class="m-meta-item">
+                        <span class="m-lbl">Skill Gap</span>
+                        <span class="modal-gap-val" id="modalGapVal">45%</span>
+                    </div>
+                </div>
+
+                <!-- Dual Progress & Clear Distinction Section -->
+                <div class="modal-distinction-strip">
+                    <div class="dist-box">
+                        <span class="dist-label">CURRENT SELF-ASSESSMENT</span>
+                        <span class="dist-val" id="modalCurVal">40%</span>
+                        <span class="dist-sub">Self-evaluated confidence level</span>
+                    </div>
+                    <div class="dist-box">
+                        <span class="dist-label">TOPIC COMPLETION PROGRESS</span>
+                        <span class="dist-val" style="color: #4ade80;" id="modalTopicProgVal">8 / 20 topics (40%)</span>
+                        <span class="dist-sub">Calculated from verified checklist</span>
+                    </div>
+                </div>
+
+                <div class="modal-progress-section">
+                    <div class="m-prog-labels">
+                        <span>Calculated Topic Progress: <strong id="modalTopicProgPct">40%</strong></span>
+                        <span>Target Mastery: <strong id="modalTgtVal">85%</strong></span>
+                    </div>
+                    <div class="modal-progress-track">
+                        <div class="modal-bar-current" id="modalBarCurrent" style="width: 40%;"></div>
+                        <div class="modal-bar-gap" id="modalBarGap" style="left: 40%; width: 45%;"></div>
+                    </div>
+                </div>
+
+                <!-- What I Need To Learn Checklist -->
+                <div class="modal-section">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.65rem;">
+                        <h4 class="modal-sec-title" style="margin: 0;">What I Need To Learn</h4>
+                        <span style="font-family: var(--font-mono); font-size: 0.72rem; color: rgba(255, 255, 255, 0.55);">Click checkboxes to toggle completion</span>
+                    </div>
+                    <div class="modal-checklist" id="modalChecklist">
+                        <!-- Rendered dynamically with interactive checkboxes -->
+                    </div>
+                </div>
+
+                <!-- Connected Projects -->
+                <div class="modal-section">
+                    <h4 class="modal-sec-title">Connected Practical Projects</h4>
+                    <div class="modal-projects-list" id="modalProjectsList">
+                        <!-- Rendered dynamically -->
+                    </div>
+                </div>
+
+                <!-- Next Action -->
+                <div class="modal-next-action-box">
+                    <span class="m-act-label">NEXT ACTION</span>
+                    <p id="modalNextAction">Complete Python OOP + API module</p>
+                </div>
+            </div>
+
+            <div class="cos-modal-footer">
+                <a href="https://github.com/irshadkohli" target="_blank" class="btn-modal-gh" id="modalGithubLink">
+                    <span>View GitHub Repository</span>
+                    <span>↗</span>
+                </a>
+                <button class="btn-modal-update" onclick="handleLogForCurrentSkill()" type="button">
+                    <span>+ Log Learning</span>
+                    <span>✎</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================
+         LOG TODAY'S LEARNING MODAL (EXACT SPECIFICATION)
+         ============================================ -->
+    <div class="cos-modal-backdrop" id="cosLogSessionModal" style="display: none;" onclick="closeLogModalOnBackdrop(event)">
+        <div class="cos-modal-dialog cos-log-dialog">
+            <div class="cos-modal-header cos-log-modal-header">
+                <div class="modal-title-wrap">
+                    <span class="modal-category-tag">⏱ DAILY CADENCE</span>
+                    <h3 class="log-modal-title" id="logModalTitle">LOG TODAY'S LEARNING</h3>
+                </div>
+                <button class="cos-modal-close" onclick="closeLogSessionModal()" type="button" aria-label="Close modal">✕</button>
+            </div>
+
+            <form id="cosLogSessionForm" onsubmit="handleSaveLearningSession(event)">
+                <input type="hidden" id="logSessionIdInput" value="">
+                <div class="cos-modal-body cos-log-body">
+                    <div class="log-field-group">
+                        <label class="log-label" for="logDateInput">Date</label>
+                        <div class="log-date-wrapper">
+                            <input type="date" id="logDateInput" class="log-date-input" required onchange="onLogDateChange()">
+                            <span class="log-date-display" id="logDateDisplay">19 September 2026</span>
+                        </div>
+                        <span class="log-field-hint">Defaults to today. Click calendar to log for past/future date.</span>
+                    </div>
+
+                    <div class="log-field-group">
+                        <label class="log-label" for="logSkillSelect">Skill</label>
+                        <div class="log-select-wrap">
+                            <select id="logSkillSelect" class="log-select" onchange="onLogSkillChange()" required>
+                                <!-- Populated dynamically -->
+                            </select>
+                            <span class="log-select-arrow">▼</span>
+                        </div>
+                    </div>
+
+                    <div class="log-field-group">
+                        <label class="log-label" for="logTopicSelect">Topic</label>
+                        <div class="log-select-wrap">
+                            <select id="logTopicSelect" class="log-select" required>
+                                <!-- Populated dynamically -->
+                            </select>
+                            <span class="log-select-arrow">▼</span>
+                        </div>
+                    </div>
+
+                    <div class="log-field-group">
+                        <label class="log-label" for="logDurationInput">Time Spent</label>
+                        <div class="log-duration-row">
+                            <input type="number" id="logDurationInput" class="log-input-num" min="5" max="720" step="5" value="60" required>
+                            <span class="log-unit-text">minutes</span>
+                        </div>
+                    </div>
+
+                    <div class="log-field-group">
+                        <label class="log-label" for="logActivitySelect">Activity</label>
+                        <div class="log-select-wrap">
+                            <select id="logActivitySelect" class="log-select" required>
+                                <option value="Coding" selected>Coding</option>
+                                <option value="Learning">Learning</option>
+                                <option value="Project">Project</option>
+                                <option value="Revision">Revision</option>
+                                <option value="Interview Preparation">Interview Preparation</option>
+                                <option value="Reading">Reading</option>
+                            </select>
+                            <span class="log-select-arrow">▼</span>
+                        </div>
+                    </div>
+
+                    <div class="log-field-group">
+                        <label class="log-label" for="logNotesInput">Notes (Optional)</label>
+                        <div class="log-textarea-box">
+                            <textarea id="logNotesInput" class="log-textarea" rows="3" placeholder="What did you learn or build today? (Optional)"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cos-modal-footer cos-log-footer">
+                    <button type="submit" class="btn-save-session" id="btnSaveSession">
+                        <span>SAVE SESSION</span>
+                        <span>✔</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ============================================
+         CAREER OS AUTHOR AUTHENTICATION MODAL
+         ============================================ -->
+    <div class="cos-modal-backdrop" id="cosAuthModal" style="display: none;" onclick="closeAuthModalOnBackdrop(event)">
+        <div class="cos-modal-dialog cos-auth-dialog" style="max-width: 480px;">
+            <div class="cos-modal-header">
+                <div class="modal-title-wrap">
+                    <span class="modal-category-tag">🔐 PRIVATE ACCESS</span>
+                    <h3 style="margin: 0; color: var(--white); font-family: var(--font-mono);">Author Authentication</h3>
+                </div>
+                <button class="cos-modal-close" onclick="closeCareerOsAuthModal()" type="button">✕</button>
+            </div>
+            <form id="cosAuthForm" onsubmit="handleCareerOsAuthSubmit(event)">
+                <div class="cos-modal-body" style="padding: 1.5rem 0;">
+                    <p style="font-size: 0.85rem; color: rgba(255, 255, 255, 0.7); margin-bottom: 1.25rem;">
+                        Sign in as Mohd Irshad to synchronize topic checklists, log learning sessions, and manage your private dashboard.
+                    </p>
+                    <div class="log-field-group" style="margin-bottom: 1rem;">
+                        <label class="log-label" for="cosAuthEmail">Email Address</label>
+                        <input type="email" id="cosAuthEmail" class="manage-input" placeholder="irshad@example.com" value="irshad@example.com" required>
+                    </div>
+                    <div class="log-field-group" style="margin-bottom: 1rem;">
+                        <label class="log-label" for="cosAuthPassword">Password or Author PIN (Default: 1818)</label>
+                        <input type="password" id="cosAuthPassword" class="manage-input" placeholder="Enter password or PIN 1818" required>
+                    </div>
+                    <div id="cosAuthErrorMsg" style="display: none; padding: 0.5rem 0.75rem; background: rgba(248, 113, 113, 0.15); border: 1px solid rgba(248, 113, 113, 0.3); border-radius: 4px; color: #f87171; font-size: 0.78rem;"></div>
+                </div>
+                <div class="cos-modal-footer">
+                    <button type="button" class="btn-modal-cancel" onclick="closeCareerOsAuthModal()" style="background: transparent; border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; padding: 0.5rem 1rem; border-radius: var(--radius-pill); cursor: pointer;">Cancel</button>
+                    <button type="submit" class="btn-save-session" style="width: auto; padding: 0.5rem 1.5rem;">Sign In</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ============================================
+         UPDATE WEEKLY GOAL MODAL
+         ============================================ -->
+    <div class="cos-modal-backdrop" id="cosGoalModal" style="display: none;" onclick="closeGoalModalOnBackdrop(event)">
+        <div class="cos-modal-dialog cos-goal-dialog" style="max-width: 440px;">
+            <div class="cos-modal-header">
+                <div class="modal-title-wrap">
+                    <span class="modal-category-tag">🎯 TARGET CADENCE</span>
+                    <h3 style="margin: 0; color: var(--white); font-family: var(--font-mono);">Set Weekly Learning Goal</h3>
+                </div>
+                <button class="cos-modal-close" onclick="closeGoalModal()" type="button">✕</button>
+            </div>
+            <form id="cosGoalForm" onsubmit="handleSaveWeeklyGoal(event)">
+                <div class="cos-modal-body" style="padding: 1.5rem 0;">
+                    <div class="log-field-group">
+                        <label class="log-label" for="weeklyTargetHoursInput">Weekly Target (Hours)</label>
+                        <div class="log-duration-row">
+                            <input type="number" id="weeklyTargetHoursInput" class="log-input-num" min="1" max="80" step="0.5" value="10" required>
+                            <span class="log-unit-text">hours per week</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="cos-modal-footer">
+                    <button type="button" class="btn-modal-cancel" onclick="closeGoalModal()" style="background: transparent; border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; padding: 0.5rem 1rem; border-radius: var(--radius-pill); cursor: pointer;">Cancel</button>
+                    <button type="submit" class="btn-save-session" style="width: auto; padding: 0.5rem 1.5rem;">Update Target</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Education & Specialization -->
     <section class="edu-section" id="education">
         <div class="container">
@@ -677,6 +1550,17 @@
                         <p class="cert-desc">Comprehensive Python programming course covering OOP, data structures, automation scripting, and web scraping.</p>
                     </div>
                     <div class="cert-badge-tag">Completed</div>
+                </div>
+                <div class="cert-card">
+                    <div class="cert-logo">
+                        <span style="font-size: 2.2rem; line-height: 1;">🏛️</span>
+                    </div>
+                    <div class="cert-info">
+                        <h3>Executive PG in Data Science & AI</h3>
+                        <p class="cert-issuer">IIT Roorkee & Intellipaat</p>
+                        <p class="cert-desc">Advanced executive postgraduate program covering Machine Learning, Deep Learning, NLP, Generative AI, and RAG architectures.</p>
+                    </div>
+                    <div class="cert-badge-tag">Ongoing</div>
                 </div>
             </div>
         </div>
@@ -2089,11 +2973,1296 @@
             document.getElementById('presentation')?.scrollIntoView({ behavior: 'smooth' });
         });
 
+        // ============================================
+        // CAREER OS 2.0: PERSISTENT CONTROLLER & ROUTER
+        // ============================================
+        let cosActiveCategory = 'all';
+        let cosActivePriority = 'all';
+        let cosSearchQuery = '';
+        let cosCurrentRoute = 'overview';
+        let cosCurrentChartDays = 7;
+        let cosSelectedSkillForLog = null;
+
+        async function initCareerOsDashboard() {
+            console.log('🚀 Initializing Career OS 2.0 Persistent Engine...');
+
+            // Hook engine change events
+            if (window.careerOsEngine) {
+                window.careerOsEngine.onChange((event) => {
+                    console.log('🔔 Career OS Engine event:', event);
+                    refreshAllCosData();
+                });
+            }
+
+            // Setup router listeners
+            window.addEventListener('popstate', handleCosBrowserNavigation);
+            window.addEventListener('hashchange', handleCosBrowserNavigation);
+
+            // Determine initial route
+            handleCosBrowserNavigation();
+
+            // Render all initial components
+            await refreshAllCosData();
+            setupCosFilters();
+            updateCosAuthUI();
+            initSupabaseConfigForm();
+        }
+
+        function handleCosBrowserNavigation() {
+            const path = window.location.pathname.toLowerCase();
+            const hash = window.location.hash.toLowerCase();
+
+            if (path.includes('/dashboard') || hash.includes('/dashboard')) {
+                switchCosRoute('dashboard', false);
+            } else if (path.includes('/manage') || hash.includes('/manage')) {
+                switchCosRoute('manage', false);
+            } else if (path.includes('/career-os') || hash.includes('#career-os')) {
+                switchCosRoute('overview', false);
+            }
+        }
+
+        function switchCosRoute(route, updateHistory = true) {
+            cosCurrentRoute = route;
+
+            const overviewPanel = document.getElementById('cosOverviewPanel');
+            const dashboardPanel = document.getElementById('cosDashboardPanel');
+            const managePanel = document.getElementById('cosManagePanel');
+
+            const btnOverview = document.getElementById('cosRouteOverview');
+            const btnDashboard = document.getElementById('cosRouteDashboard');
+            const btnManage = document.getElementById('cosRouteManage');
+
+            if (btnOverview) btnOverview.classList.toggle('active', route === 'overview');
+            if (btnDashboard) btnDashboard.classList.toggle('active', route === 'dashboard');
+            if (btnManage) btnManage.classList.toggle('active', route === 'manage');
+
+            if (overviewPanel) overviewPanel.style.display = (route === 'overview') ? 'block' : 'none';
+            if (dashboardPanel) dashboardPanel.style.display = (route === 'dashboard') ? 'block' : 'none';
+            if (managePanel) managePanel.style.display = (route === 'manage') ? 'block' : 'none';
+
+            if (updateHistory) {
+                const targetHash = `#career-os/${route}`;
+                const targetPath = `/career-os/${route}`;
+                try {
+                    window.history.pushState({ cosRoute: route }, '', targetPath);
+                } catch (e) {
+                    window.location.hash = targetHash;
+                }
+            }
+
+            // Scroll smoothly to Career OS section if not in view
+            const cosSec = document.getElementById('career-os');
+            if (cosSec && route !== 'overview') {
+                cosSec.scrollIntoView({ behavior: 'smooth' });
+            }
+
+            refreshAllCosData();
+        }
+
+        async function refreshAllCosData() {
+            await renderCosTodayActivity();
+            await renderCosCurrentFocus();
+            await renderCosAnalytics();
+            renderCosCategoryTabs();
+            await renderCosSkills();
+            renderCosRoadmapPhases();
+            await renderCosProjects();
+            await renderCosDashboardSubviews();
+            updateCosAuthUI();
+        }
+
+        function updateCosAuthUI() {
+            const isAuth = window.careerOsEngine && window.careerOsEngine.isAuthenticated();
+            const authControls = document.getElementById('cosAuthControls');
+            const statusText = document.getElementById('cosStatusText');
+            const dashLock = document.getElementById('dashLockBadge');
+            const manageLock = document.getElementById('manageLockBadge');
+            const manageUserLabel = document.getElementById('manageAuthUserLabel');
+
+            if (statusText && window.careerOsEngine) {
+                if (window.careerOsEngine.isConnected) {
+                    statusText.textContent = 'SYSTEM: SUPABASE CLOUD ACTIVE';
+                    statusText.style.color = '#4ade80';
+                } else {
+                    statusText.textContent = 'SYSTEM: LOCAL REACTIVE MODE';
+                    statusText.style.color = 'var(--amber)';
+                }
+            }
+
+            if (authControls) {
+                if (isAuth) {
+                    const user = window.careerOsEngine.currentUser;
+                    const email = (user && user.email) ? user.email.split('@')[0] : 'Irshad';
+                    authControls.innerHTML = `
+                        <button class="btn-cos-user" onclick="switchCosRoute('manage')" type="button" title="Signed in as Author">
+                            <span>👤 ${escapeHtml(email)}</span>
+                        </button>
+                        <button class="btn-cos-auth" onclick="handleCareerOsSignOut()" type="button" style="padding: 0.35rem 0.6rem;" title="Sign out">
+                            <span>🚪</span>
+                        </button>
+                    `;
+                    if (dashLock) dashLock.style.display = 'none';
+                    if (manageLock) manageLock.style.display = 'none';
+                    if (manageUserLabel) manageUserLabel.textContent = `Authenticated as ${user ? user.email : 'Author'}`;
+                } else {
+                    authControls.innerHTML = `
+                        <button class="btn-cos-auth" id="cosAuthBtn" onclick="openCareerOsAuthModal()" type="button">
+                            <span>🔐 Author Login</span>
+                        </button>
+                    `;
+                    if (dashLock) dashLock.style.display = 'inline-block';
+                    if (manageLock) manageLock.style.display = 'inline-block';
+                    if (manageUserLabel) manageUserLabel.textContent = 'Offline Demo Access';
+                }
+            }
+        }
+
+        // ----------------------------------------------------
+        // TODAY DASHBOARD CARD RENDERER (SECTIONS 4, 5, 6)
+        // ----------------------------------------------------
+        async function renderCosTodayActivity() {
+            if (!window.careerOsEngine) return;
+            const d = await window.careerOsEngine.getTodayMetrics();
+
+            // Generate ASCII block indicator: e.g. 80% = 16 filled blocks out of 20
+            const totalBlocks = 20;
+            const filledBlocks = Math.round((d.goalPercent / 100) * totalBlocks);
+            const emptyBlocks = Math.max(0, totalBlocks - filledBlocks);
+            const asciiBar = '█'.repeat(Math.min(totalBlocks, filledBlocks)) + '░'.repeat(emptyBlocks);
+
+            const html = `
+                <div class="today-card-inner">
+                    <!-- ============================================
+                         SECTION 4: TODAY'S PROGRESS
+                         ============================================ -->
+                    <div class="today-section-block">
+                        <div class="today-header-row">
+                            <div class="today-title-wrap">
+                                <span class="today-badge-icon">📅</span>
+                                <h4 class="today-card-title">TODAY — ${escapeHtml(d.date)}</h4>
+                            </div>
+                            <div class="today-status-chip">
+                                <span class="today-live-pulse"></span>
+                                <span>${(d.sessions && d.sessions.length > 0) ? 'ACTIVE TODAY' : 'READY TO LOG'}</span>
+                            </div>
+                        </div>
+
+                        <!-- 4-Metric Highlight Strip -->
+                        <div class="today-stats-grid">
+                            <div class="today-stat-box">
+                                <div class="today-stat-sym">⏱</div>
+                                <div class="today-stat-content">
+                                    <span class="today-stat-num">${escapeHtml(d.timeSpent)}</span>
+                                    <span class="today-stat-lbl">Total Learning Time</span>
+                                </div>
+                            </div>
+
+                            <div class="today-stat-box">
+                                <div class="today-stat-sym text-green">✓</div>
+                                <div class="today-stat-content">
+                                    <span class="today-stat-num">${d.topicsCount} Topics</span>
+                                    <span class="today-stat-lbl">Topics Worked On</span>
+                                </div>
+                            </div>
+
+                            <div class="today-stat-box">
+                                <div class="today-stat-sym text-blue">⚡</div>
+                                <div class="today-stat-content">
+                                    <span class="today-stat-num">${d.skillsCount} Skills</span>
+                                    <span class="today-stat-lbl">Skills Worked On</span>
+                                </div>
+                            </div>
+
+                            <div class="today-stat-box today-stat-streak">
+                                <div class="today-stat-sym text-amber">🔥</div>
+                                <div class="today-stat-content">
+                                    <span class="today-stat-num text-amber">${d.streakDays} Day Streak</span>
+                                    <span class="today-stat-lbl">Longest: ${d.longestStreak} Days</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Daily Goal Progress Section -->
+                        <div class="today-goal-block">
+                            <div class="today-goal-meta">
+                                <div class="goal-lbl-wrap">
+                                    <span class="goal-lbl">Daily Goal</span>
+                                    <span class="goal-ascii-code">${asciiBar}</span>
+                                </div>
+                                <div class="goal-nums">
+                                    <strong class="goal-pct-val">${d.goalPercent}%</strong>
+                                    <span class="goal-hours-sub">${escapeHtml(d.goalCurrent)} / ${escapeHtml(d.goalTarget)}</span>
+                                </div>
+                            </div>
+
+                            <div class="today-goal-track">
+                                <div class="today-goal-fill" style="width: ${Math.min(100, d.goalPercent)}%;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ============================================
+                         SECTION 5: TODAY'S ACTIVITY & SECTION 6: ADD LEARNING
+                         ============================================ -->
+                    <div class="today-activity-section">
+                        <div class="today-activity-header">
+                            <div>
+                                <h5 class="today-activity-title">TODAY'S ACTIVITY</h5>
+                                <span class="today-activity-subtitle">${(d.sessions || []).length} session${(d.sessions || []).length === 1 ? '' : 's'} recorded today</span>
+                            </div>
+                            <!-- SECTION 6: Inside Today's Activity add: + Add Learning -->
+                            <button class="btn-today-log btn-add-learning-highlight" onclick="openLogSessionModal()" type="button">
+                                <span>+ Add Learning</span>
+                            </button>
+                        </div>
+
+                        <div class="today-sessions-list">
+                            ${(d.sessions && d.sessions.length > 0) ? d.sessions.map(s => {
+                                const skillName = (s.skills && s.skills.name) || (window.SEED_SKILLS && window.SEED_SKILLS.find(sk => sk.id === s.skill_id)?.name) || s.skill_id || 'Python';
+                                const actType = s.activity_type || 'Coding';
+                                const actClass = 'act-' + actType.toLowerCase().replace(/[^a-z0-9]/g, '-');
+                                return `
+                                    <div class="today-session-item" id="today-sess-${s.id}">
+                                        <div class="sess-main-info">
+                                            <div class="sess-badge-row">
+                                                <span class="sess-skill-tag">${escapeHtml(skillName)}</span>
+                                                <span class="sess-act-badge ${actClass}">${escapeHtml(actType)}</span>
+                                                <span class="sess-time-tag">⏱ ${s.duration_minutes} min</span>
+                                            </div>
+                                            <h6 class="sess-topic-name">${escapeHtml(s.topic_title || 'Core Practice')}</h6>
+                                            ${s.notes ? `<p class="sess-notes-text">📝 ${escapeHtml(s.notes)}</p>` : ''}
+                                        </div>
+                                        <div class="sess-actions">
+                                            <button class="btn-sess-action btn-sess-edit" onclick="openEditSessionModal('${s.id}')" title="Edit Session" type="button">
+                                                <span>✎ Edit</span>
+                                            </button>
+                                            <button class="btn-sess-action btn-sess-del" onclick="handleDeleteSession('${s.id}')" title="Delete Session" type="button">
+                                                <span>✕ Delete</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('') : `
+                                <div class="today-empty-state">
+                                    <p class="today-empty-msg">No sessions logged today yet. Record what you worked on:</p>
+                                    <button class="btn-today-log btn-add-learning-highlight" onclick="openLogSessionModal()" type="button" style="margin-top: 0.5rem;">
+                                        <span>+ Add Learning</span>
+                                    </button>
+                                </div>
+                            `}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            const c1 = document.getElementById('cosTodayCard');
+            const c2 = document.getElementById('dashTodayCard');
+            if (c1) c1.innerHTML = html;
+            if (c2) c2.innerHTML = html;
+        }
+
+        async function renderCosCurrentFocus() {
+            if (!window.careerOsEngine) return;
+            const metrics = await window.careerOsEngine.getTodayMetrics();
+            const f = metrics.currentFocus;
+            if (!f) return;
+
+            const titleEl = document.getElementById('focusSkillTitle');
+            const curValEl = document.getElementById('focusCurrentVal');
+            const tgtValEl = document.getElementById('focusTargetVal');
+            const gapValEl = document.getElementById('focusGapVal');
+            const barCur = document.getElementById('focusBarCurrent');
+            const barGap = document.getElementById('focusBarGap');
+            const prioEl = document.getElementById('focusPrioBadge');
+
+            const delta = Math.max(0, f.target_level - f.current_level);
+
+            if (titleEl) titleEl.textContent = f.skill;
+            if (curValEl) curValEl.textContent = `${f.current_level}%`;
+            if (tgtValEl) tgtValEl.textContent = `${f.target_level}%`;
+            if (gapValEl) gapValEl.textContent = `+${delta}%`;
+            if (barCur) barCur.style.width = `${f.current_level}%`;
+            if (barGap) {
+                barGap.style.left = `${f.current_level}%`;
+                barGap.style.width = `${delta}%`;
+            }
+            if (prioEl) prioEl.textContent = `🔴 ${f.priority}`;
+
+            // Also render in dashboard focus card
+            const dashFocusCard = document.getElementById('dashFocusCard');
+            if (dashFocusCard) {
+                dashFocusCard.innerHTML = `
+                    <div class="focus-header-bar">
+                        <div class="focus-title-group">
+                            <span class="focus-badge"><span class="mini-pulse"></span> RECOMMENDED FOCUS</span>
+                            <h3>${escapeHtml(f.skill)}</h3>
+                        </div>
+                        <span class="priority-pill prio-p0">🔴 ${escapeHtml(f.priority)}</span>
+                    </div>
+                    <div style="padding: 1.25rem 0;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-family: var(--font-mono); font-size: 0.85rem;">
+                            <span>Self-Assessment: <strong>${f.current_level}%</strong></span>
+                            <span style="color: #4ade80;">Topic Progress: <strong>${f.topic_progress_pct}%</strong> (${f.completed_topics}/${f.total_topics})</span>
+                        </div>
+                        <div class="w-goal-track">
+                            <div class="w-goal-fill" style="width: ${f.topic_progress_pct}%;"></div>
+                        </div>
+                        <div style="margin-top: 1rem;">
+                            <span class="today-topics-label">NEXT RECOMMENDED TOPICS:</span>
+                            <div class="today-topics-pills" style="margin-top: 0.5rem;">
+                                ${(f.next_topics || []).map(t => `<span class="today-topic-pill">➔ ${escapeHtml(t)}</span>`).join('')}
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 1rem;">
+                        <span style="font-size: 0.75rem; color: rgba(255, 255, 255, 0.5); font-family: var(--font-mono);">Data-driven algorithm: Priority + Gap + Next Topics</span>
+                        <button class="btn-today-log" onclick="openSkillModal('${f.skill.toLowerCase()}')" type="button">Inspect Checklist ➔</button>
+                    </div>
+                `;
+            }
+        }
+
+        async function renderCosAnalytics() {
+            if (!window.careerOsEngine) return;
+            const skills = await window.careerOsEngine.getSkillsWithProgress();
+            if (!skills || skills.length === 0) return;
+
+            const totalCurrent = skills.reduce((acc, s) => acc + (s.current_level || 0), 0);
+            const avgCurrent = Math.round(totalCurrent / skills.length);
+
+            const coreMastery = skills.filter(s => (s.current_level || 0) >= 70).length;
+            const activeSprints = skills.filter(s => s.priority && (s.priority.includes('P0') || s.priority.includes('P1'))).length;
+
+            const avgEl = document.getElementById('anaAvgCurrent');
+            const coreEl = document.getElementById('anaCoreCount');
+            const activeEl = document.getElementById('anaActiveCount');
+            const projEl = document.getElementById('anaProjectsCount');
+
+            if (avgEl) avgEl.textContent = `${avgCurrent}%`;
+            if (coreEl) coreEl.textContent = coreMastery;
+            if (activeEl) activeEl.textContent = activeSprints;
+            if (projEl) projEl.textContent = '5';
+        }
+
+        function renderCosCategoryTabs() {
+            const container = document.getElementById('cosCategoryTabs');
+            if (!container || !CAREER_OS_DATA.categories) return;
+
+            container.innerHTML = CAREER_OS_DATA.categories.map(cat => {
+                const isActive = (cat.id === cosActiveCategory) ? 'active' : '';
+                return `
+                    <button class="cos-cat-btn ${isActive}" data-cat="${cat.id}" onclick="filterCosByCategory('${cat.id}')">
+                        ${escapeHtml(cat.name)}
+                    </button>
+                `;
+            }).join('');
+        }
+
+        function filterCosByCategory(catId) {
+            cosActiveCategory = catId;
+            const container = document.getElementById('cosCategoryTabs');
+            if (container) {
+                container.querySelectorAll('.cos-cat-btn').forEach(b => {
+                    b.classList.toggle('active', b.dataset.cat === catId);
+                });
+            }
+            renderCosSkills();
+        }
+
+        async function renderCosSkills() {
+            const container = document.getElementById('cosSkillsGrid');
+            if (!container || !window.careerOsEngine) return;
+
+            const allSkills = await window.careerOsEngine.getSkillsWithProgress();
+
+            const filtered = allSkills.filter(s => {
+                if (cosActiveCategory !== 'all') {
+                    const matchCatId = (s.category || '').toLowerCase().replace(/[^a-z]/g, '');
+                    const filterCatId = cosActiveCategory.toLowerCase().replace(/[^a-z]/g, '');
+                    if (!matchCatId.includes(filterCatId) && !filterCatId.includes(matchCatId)) {
+                        return false;
+                    }
+                }
+                if (cosActivePriority !== 'all') {
+                    if (!s.priority || !s.priority.includes(cosActivePriority)) {
+                        return false;
+                    }
+                }
+                const q = cosSearchQuery.trim().toLowerCase();
+                if (q) {
+                    const matchName = (s.name || '').toLowerCase().includes(q);
+                    const matchCat = (s.category || '').toLowerCase().includes(q);
+                    if (!matchName && !matchCat) return false;
+                }
+                return true;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="cos-empty-skills">
+                        <div class="empty-icon">🔍</div>
+                        <h4>No matching skills found</h4>
+                        <p>Try changing the category, priority filter, or search keywords.</p>
+                        <button class="btn-secondary" onclick="resetCosFilters()" style="margin-top: 1rem;">Reset Filters</button>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filtered.map(s => {
+                const delta = Math.max(0, (s.target_level || 85) - (s.current_level || 0));
+                const prioObj = (CAREER_OS_DATA.priorities && CAREER_OS_DATA.priorities[s.priority]) 
+                    ? CAREER_OS_DATA.priorities[s.priority] 
+                    : { label: s.priority || 'P1 - High', badgeClass: 'prio-p1', emoji: '🟠' };
+
+                const topicProgPct = s.topic_progress_pct || 0;
+                const doneCount = s.completed_topics || 0;
+                const totalCount = s.total_topics || 0;
+
+                return `
+                    <div class="cos-skill-card ${s.id === 'python' ? 'card-featured' : ''}" onclick="openSkillModal('${s.id}')">
+                        <div class="skill-card-top">
+                            <span class="skill-cat-tag">${escapeHtml(s.category)}</span>
+                            <span class="priority-pill ${prioObj.badgeClass}">${prioObj.emoji} ${escapeHtml(s.priority)}</span>
+                        </div>
+
+                        <div class="skill-card-title-row">
+                            <h4 class="skill-card-name">${escapeHtml(s.name)}</h4>
+                            <span class="skill-inspect-arrow">↗</span>
+                        </div>
+
+                        <div class="skill-card-stats-row">
+                            <span class="s-stat-cur">Self-Rating: <strong>${s.current_level}%</strong></span>
+                            <span class="s-stat-gap">Topic Progress: <strong>${topicProgPct}%</strong></span>
+                            <span class="s-stat-tgt">Target: <strong>${s.target_level || 85}%</strong></span>
+                        </div>
+
+                        <div class="skill-card-progress">
+                            <div class="skill-track-bg">
+                                <div class="skill-bar-cur" style="width: ${topicProgPct}%;"></div>
+                                <div class="skill-bar-gap" style="left: ${topicProgPct}%; width: ${Math.max(0, (s.target_level || 85) - topicProgPct)}%;"></div>
+                            </div>
+                        </div>
+
+                        <div class="skill-card-footer">
+                            <div class="skill-chk-summary">
+                                <span class="chk-icon">📋</span>
+                                <span>${doneCount}/${totalCount} Topics Mastered</span>
+                            </div>
+                            <span class="skill-open-label">Inspect Checklist ➔</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function resetCosFilters() {
+            cosActiveCategory = 'all';
+            cosActivePriority = 'all';
+            cosSearchQuery = '';
+            const searchInput = document.getElementById('cosSkillSearchInput');
+            if (searchInput) searchInput.value = '';
+
+            const catContainer = document.getElementById('cosCategoryTabs');
+            if (catContainer) {
+                catContainer.querySelectorAll('.cos-cat-btn').forEach(b => {
+                    b.classList.toggle('active', b.dataset.cat === 'all');
+                });
+            }
+
+            document.querySelectorAll('.prio-filter-btn').forEach(b => {
+                b.classList.toggle('active', b.dataset.prio === 'all');
+            });
+
+            renderCosSkills();
+        }
+
+        function setupCosFilters() {
+            const searchInput = document.getElementById('cosSkillSearchInput');
+            if (searchInput) {
+                searchInput.addEventListener('input', (e) => {
+                    cosSearchQuery = e.target.value;
+                    renderCosSkills();
+                });
+            }
+
+            document.querySelectorAll('.prio-filter-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.prio-filter-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    cosActivePriority = btn.dataset.prio;
+                    renderCosSkills();
+                });
+            });
+        }
+
+        function renderCosRoadmapPhases() {
+            const container = document.getElementById('cosPhasesGrid');
+            if (!container || !CAREER_OS_DATA.roadmap) return;
+
+            container.innerHTML = CAREER_OS_DATA.roadmap.map(phase => {
+                return `
+                    <div class="phase-card">
+                        <div class="phase-card-header">
+                            <div class="phase-num-pill">PHASE ${phase.phase}</div>
+                            <span class="phase-status-pill ${phase.badgeClass}">${escapeHtml(phase.badge)}</span>
+                        </div>
+                        <h4 class="phase-title">${escapeHtml(phase.title.replace(/^PHASE \d+ — /, ''))}</h4>
+                        <p class="phase-desc">${escapeHtml(phase.description)}</p>
+                        <div class="phase-skills-chips">
+                            ${phase.skills.map(s => `<span class="p-skill-pill">${escapeHtml(s)}</span>`).join('')}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function renderCosProjects() {
+            const container = document.getElementById('cosProjectsList');
+            if (!container || !window.careerOsEngine) return;
+
+            const projects = await window.careerOsEngine.getProjectsWithTasks();
+
+            container.innerHTML = projects.map(proj => {
+                const isCap = proj.id === 'proj_capstone';
+                return `
+                    <div class="cos-project-card-full ${isCap ? 'proj-capstone-card' : ''}">
+                        ${isCap ? `
+                            <div class="capstone-ribbon-bar">
+                                <span class="cap-star">⭐</span>
+                                <strong>CAPSTONE PROJECT — FLAGSHIP SYNTHESIS</strong>
+                                <span class="cap-badge-tag">RPA + AGENTIC AI</span>
+                            </div>
+                        ` : ''}
+                        
+                        <div class="proj-top-meta">
+                            <div class="proj-num-wrap">
+                                <span class="p-num">${proj.id.replace('proj_', '').toUpperCase()}</span>
+                                <span class="p-status-tag ${isCap ? 'status-capstone' : 'status-inprog'}">${escapeHtml(proj.status)}</span>
+                            </div>
+                            <div class="proj-progress-metric">
+                                <span class="p-prog-lbl">Calculated from Tasks:</span>
+                                <strong class="p-prog-val">${proj.progress}%</strong>
+                            </div>
+                        </div>
+
+                        <div class="proj-info-main">
+                            <h4 class="proj-card-title">${escapeHtml(proj.name)}</h4>
+                            <p class="proj-body-desc">${escapeHtml(proj.description)}</p>
+                        </div>
+
+                        <!-- Project Tasks Checklist with Checkboxes -->
+                        <div class="proj-highlights-block">
+                            <span class="hl-head">PRACTICAL IMPLEMENTATION TASKS:</span>
+                            <div style="display: flex; flex-direction: column; gap: 0.4rem; margin-top: 0.5rem;">
+                                ${(proj.tasks || []).map((t, idx) => `
+                                    <label class="proj-task-row ${t.completed ? 'task-done' : ''}">
+                                        <input type="checkbox" class="cos-chk-input" ${t.completed ? 'checked' : ''} onchange="handleToggleProjectTask('${proj.id}', ${idx}, this.checked)">
+                                        <span class="proj-task-text">${escapeHtml(t.title)}</span>
+                                    </label>
+                                `).join('')}
+                            </div>
+                        </div>
+
+                        <div class="proj-card-bottom">
+                            <div class="proj-bottom-track">
+                                <div class="proj-fill-bar ${isCap ? 'bar-capstone' : ''}" style="width: ${proj.progress}%;"></div>
+                            </div>
+                            <div class="proj-actions">
+                                <a href="${proj.github_url || 'https://github.com/irshadkohli'}" target="_blank" class="btn-proj-gh">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                                    </svg>
+                                    <span>View Repository</span>
+                                    <span>↗</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function handleToggleProjectTask(projId, taskIdx, isCompleted) {
+            if (!window.careerOsEngine) return;
+            await window.careerOsEngine.toggleProjectTask(projId, taskIdx, isCompleted);
+            renderCosProjects();
+        }
+
+        // ----------------------------------------------------
+        // DASHBOARD SUBVIEW: WEEKLY GOAL, BAR CHART & SESSIONS
+        // ----------------------------------------------------
+        async function renderCosDashboardSubviews() {
+            if (!window.careerOsEngine) return;
+            const wData = await window.careerOsEngine.getWeeklyMetrics(cosCurrentChartDays);
+
+            // Weekly goal values
+            const actualEl = document.getElementById('wGoalActual');
+            const tgtEl = document.getElementById('wGoalTarget');
+            const pctEl = document.getElementById('wGoalPct');
+            const fillEl = document.getElementById('wGoalFill');
+            const topDoneEl = document.getElementById('wTopicsDoneCount');
+            const streakEl = document.getElementById('wStreakDays');
+            const skillsPillsEl = document.getElementById('wSkillsWorkedPills');
+            const projPillsEl = document.getElementById('wProjectsWorkedPills');
+            const revTimeEl = document.getElementById('revTime');
+
+            if (actualEl) actualEl.textContent = wData.actualFormatted;
+            if (tgtEl) tgtEl.textContent = `/ ${wData.targetFormatted}`;
+            if (pctEl) pctEl.textContent = `${wData.completionPct}%`;
+            if (fillEl) fillEl.style.width = `${Math.min(100, wData.completionPct)}%`;
+            if (topDoneEl) topDoneEl.textContent = `${wData.topicsCompletedCount} Topics`;
+            if (streakEl) streakEl.textContent = `${wData.currentStreak} Days`;
+            if (revTimeEl) revTimeEl.textContent = wData.actualFormatted;
+
+            if (skillsPillsEl && wData.skillsWorkedOn) {
+                skillsPillsEl.innerHTML = wData.skillsWorkedOn.map(s => `<span class="w-pill">${escapeHtml(s)}</span>`).join('');
+            }
+            if (projPillsEl && wData.projectsWorkedOn) {
+                projPillsEl.innerHTML = wData.projectsWorkedOn.map(p => `<span class="w-pill">${escapeHtml(p)}</span>`).join('');
+            }
+
+            // Render Daily Bar Chart
+            renderDailyBarChart(wData.dailyData);
+
+            // Render Recent Sessions Stream
+            await renderRecentSessionsList();
+        }
+
+        function filterDailyChart(days) {
+            cosCurrentChartDays = days;
+            ['btnChart7d', 'btnChart30d', 'btnChart90d'].forEach(id => {
+                const b = document.getElementById(id);
+                if (b) b.classList.toggle('active', id === `btnChart${days}d`);
+            });
+            renderCosDashboardSubviews();
+        }
+
+        function renderDailyBarChart(dailyData) {
+            const container = document.getElementById('dailyBarChartContainer');
+            if (!container || !dailyData) return;
+
+            const maxMins = Math.max(...dailyData.map(d => d.minutes), 60);
+            const todayStr = window.formatLocalYMD ? window.formatLocalYMD() : new Date().toISOString().split('T')[0];
+
+            container.innerHTML = dailyData.map(d => {
+                const heightPct = Math.min(100, Math.max(4, Math.round((d.minutes / maxMins) * 100)));
+                const isToday = d.date === todayStr;
+                const hours = Math.floor(d.minutes / 60);
+                const mins = d.minutes % 60;
+                const timeStr = hours > 0 ? `${hours}h ${mins}m` : `${mins}m`;
+
+                return `
+                    <div class="chart-bar-col ${isToday ? 'today-col' : ''}">
+                        <div class="chart-bar-tooltip">
+                            <strong>${escapeHtml(d.label)} (${escapeHtml(d.date)})</strong><br>
+                            ${timeStr} (${d.sessions} sessions)
+                        </div>
+                        <div class="chart-bar-pill" style="height: ${heightPct}%;"></div>
+                        <span class="chart-col-label">${escapeHtml(d.label)}</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        let cosRecentFilter = 'all';
+
+        function filterRecentActivity(type) {
+            cosRecentFilter = type;
+            document.querySelectorAll('.recent-filter-pill').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.filter === type);
+            });
+            renderRecentSessionsList();
+        }
+
+        async function renderRecentSessionsList() {
+            const container = document.getElementById('cosRecentActivityStream');
+            const tbody = document.getElementById('cosRecentSessionsBody');
+            if (!window.careerOsEngine) return;
+
+            const allSessions = await window.careerOsEngine.getLearningSessions(50);
+
+            // Filter sessions by activity type if needed
+            const sessions = cosRecentFilter === 'all'
+                ? allSessions
+                : allSessions.filter(s => (s.activity_type || '').toLowerCase() === cosRecentFilter.toLowerCase());
+
+            const todayYMD = window.formatLocalYMD ? window.formatLocalYMD() : new Date().toISOString().split('T')[0];
+            const yesterdayDate = new Date();
+            yesterdayDate.setDate(yesterdayDate.getDate() - 1);
+            const yesterdayYMD = window.formatLocalYMD ? window.formatLocalYMD(yesterdayDate) : yesterdayDate.toISOString().split('T')[0];
+
+            // Group by date
+            const groups = new Map();
+            sessions.forEach(s => {
+                const dateKey = s.date || todayYMD;
+                if (!groups.has(dateKey)) {
+                    groups.set(dateKey, []);
+                }
+                groups.get(dateKey).push(s);
+            });
+
+            if (container) {
+                if (sessions.length === 0) {
+                    container.innerHTML = `
+                        <div class="today-empty-state" style="padding: 2rem; text-align: center;">
+                            <p style="color: rgba(255,255,255,0.6);">No activity found for filter "${escapeHtml(cosRecentFilter)}".</p>
+                            <button class="btn-today-log btn-add-learning-highlight" onclick="openLogSessionModal()" type="button" style="margin-top: 0.5rem;">+ Log Learning</button>
+                        </div>
+                    `;
+                } else {
+                    let streamHtml = '';
+                    for (const [dateKey, items] of groups.entries()) {
+                        let dateLabel = dateKey;
+                        if (dateKey === todayYMD) {
+                            dateLabel = 'Today';
+                        } else if (dateKey === yesterdayYMD) {
+                            dateLabel = 'Yesterday';
+                        } else {
+                            try {
+                                const parts = dateKey.split('-');
+                                const d = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+                                dateLabel = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                            } catch (e) {
+                                dateLabel = dateKey;
+                            }
+                        }
+
+                        streamHtml += `
+                            <div class="recent-date-group">
+                                <div class="recent-date-header">${escapeHtml(dateLabel)}</div>
+                                <div class="recent-date-items">
+                                    ${items.map(s => {
+                                        const skillName = (s.skills && s.skills.name) || (window.SEED_SKILLS && window.SEED_SKILLS.find(sk => sk.id === s.skill_id)?.name) || s.skill_id || 'Python';
+                                        const actType = s.activity_type || 'Learning';
+                                        const actClass = 'act-' + actType.toLowerCase().replace(/[^a-z0-9]/g, '-');
+                                        return `
+                                            <div class="recent-session-row">
+                                                <div class="recent-session-line">
+                                                    <span class="recent-skill-strong">${escapeHtml(skillName)}</span>
+                                                    <span class="recent-sep">—</span>
+                                                    <span class="recent-topic-text">${escapeHtml(s.topic_title || 'Core Practice')}</span>
+                                                    <span class="recent-sep">—</span>
+                                                    <span class="recent-duration-text">${s.duration_minutes}m</span>
+                                                    <span class="sess-act-badge ${actClass}">${escapeHtml(actType)}</span>
+                                                </div>
+                                                ${s.notes ? `<div class="recent-notes-snippet">📝 ${escapeHtml(s.notes)}</div>` : ''}
+                                                <div class="recent-row-actions">
+                                                    <button class="btn-sess-action-sm btn-sess-edit" onclick="openEditSessionModal('${s.id}')" title="Edit Session" type="button">✎ Edit</button>
+                                                    <button class="btn-sess-action-sm btn-sess-del" onclick="handleDeleteSession('${s.id}')" title="Delete Session" type="button">✕ Delete</button>
+                                                </div>
+                                            </div>
+                                        `;
+                                    }).join('')}
+                                </div>
+                            </div>
+                        `;
+                    }
+                    container.innerHTML = streamHtml;
+                }
+            }
+
+            // Sync legacy table body if element present in DOM
+            if (tbody) {
+                if (sessions.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: rgba(255, 255, 255, 0.5); padding: 2rem;">No sessions found.</td></tr>`;
+                } else {
+                    tbody.innerHTML = sessions.map(s => {
+                        const skillName = (s.skills && s.skills.name) || (window.SEED_SKILLS && window.SEED_SKILLS.find(sk => sk.id === s.skill_id)?.name) || s.skill_id || 'Python';
+                        const actType = s.activity_type || 'Learning';
+                        const actClass = 'act-' + actType.toLowerCase().replace(/[^a-z0-9]/g, '-');
+                        return `
+                            <tr>
+                                <td style="font-family: var(--font-mono); font-size: 0.75rem;">${escapeHtml(s.date)}</td>
+                                <td><strong style="color: var(--white);">${escapeHtml(skillName)}</strong></td>
+                                <td style="color: rgba(255, 255, 255, 0.9);">${escapeHtml(s.topic_title || 'Core Practice')}</td>
+                                <td style="font-family: var(--font-mono); color: #4ade80;">${s.duration_minutes} mins</td>
+                                <td><span class="sess-act-badge ${actClass}">${escapeHtml(actType)}</span></td>
+                                <td style="font-size: 0.8rem; color: rgba(255, 255, 255, 0.6);">${escapeHtml(s.notes || '—')}</td>
+                            </tr>
+                        `;
+                    }).join('');
+                }
+            }
+        }
+
+        // ----------------------------------------------------
+        // SKILL DETAIL MODAL WITH INTERACTIVE TOPIC CHECKBOXES
+        // ----------------------------------------------------
+        async function openSkillModal(skillId) {
+            if (!window.careerOsEngine) return;
+            cosSelectedSkillForLog = skillId;
+
+            const skills = await window.careerOsEngine.getSkillsWithProgress();
+            const skill = skills.find(s => s.id === skillId || s.id.toLowerCase() === skillId.toLowerCase());
+            if (!skill) return;
+
+            const modal = document.getElementById('cosSkillModal');
+            if (!modal) return;
+
+            const delta = Math.max(0, (skill.target_level || 85) - (skill.current_level || 0));
+            const prioObj = (CAREER_OS_DATA.priorities && CAREER_OS_DATA.priorities[skill.priority])
+                ? CAREER_OS_DATA.priorities[skill.priority]
+                : { label: skill.priority, badgeClass: 'prio-p1', emoji: '🟠' };
+
+            const catEl = document.getElementById('modalCategory');
+            const nameEl = document.getElementById('modalSkillName');
+            const prioEl = document.getElementById('modalPriority');
+            const statusEl = document.getElementById('modalStatus');
+            const gapEl = document.getElementById('modalGapVal');
+            const curEl = document.getElementById('modalCurVal');
+            const tgtEl = document.getElementById('modalTgtVal');
+            const topicProgValEl = document.getElementById('modalTopicProgVal');
+            const topicProgPctEl = document.getElementById('modalTopicProgPct');
+            const barCur = document.getElementById('modalBarCurrent');
+            const barGap = document.getElementById('modalBarGap');
+            const chkEl = document.getElementById('modalChecklist');
+            const projEl = document.getElementById('modalProjectsList');
+            const nextEl = document.getElementById('modalNextAction');
+            const ghEl = document.getElementById('modalGithubLink');
+
+            if (catEl) catEl.textContent = skill.category;
+            if (nameEl) nameEl.textContent = skill.name;
+            if (prioEl) {
+                prioEl.className = `priority-pill ${prioObj.badgeClass}`;
+                prioEl.innerHTML = `${prioObj.emoji} ${prioObj.label}`;
+            }
+            if (statusEl) statusEl.textContent = 'Active Sprint';
+            if (gapEl) gapEl.textContent = `+${delta}% Target Gap`;
+
+            // Explicitly separate Self-Assessment from Topic Progress
+            if (curEl) curEl.textContent = `${skill.current_level}% Confidence`;
+            if (tgtEl) tgtEl.textContent = `${skill.target_level || 85}%`;
+            if (topicProgValEl) topicProgValEl.textContent = `${skill.completed_topics} / ${skill.total_topics} topics (${skill.topic_progress_pct}%)`;
+            if (topicProgPctEl) topicProgPctEl.textContent = `${skill.topic_progress_pct}%`;
+
+            if (barCur) barCur.style.width = `${skill.topic_progress_pct}%`;
+            if (barGap) {
+                barGap.style.left = `${skill.topic_progress_pct}%`;
+                barGap.style.width = `${Math.max(0, (skill.target_level || 85) - skill.topic_progress_pct)}%`;
+            }
+
+            // Render interactive checkboxes for all topics!
+            if (chkEl) {
+                chkEl.innerHTML = (skill.topics || []).map(t => {
+                    const diffClass = `diff-${t.difficulty || 'Beginner'}`;
+                    return `
+                        <div class="topic-check-item ${t.completed ? 'completed' : ''}">
+                            <input type="checkbox" class="cos-chk-input" ${t.completed ? 'checked' : ''} onchange="handleToggleTopicCheck('${t.id}', '${skill.id}', this.checked)">
+                            <div class="topic-text-content">
+                                <div class="topic-header-line">
+                                    <span class="topic-title-text">${escapeHtml(t.title)}</span>
+                                    <span class="topic-diff-tag ${diffClass}">${escapeHtml(t.difficulty || 'Beginner')}</span>
+                                </div>
+                                <span class="topic-desc-text">${escapeHtml(t.description || '')}</span>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            if (projEl) {
+                projEl.innerHTML = `
+                    <div class="m-proj-tag">
+                        <span class="m-proj-bullet">🛠️</span>
+                        <span>Connected Project: Python Automation Toolkit</span>
+                    </div>
+                `;
+            }
+
+            if (nextEl) {
+                const nextInc = (skill.topics || []).find(t => !t.completed);
+                nextEl.textContent = nextInc ? `Next Focus: Master "${nextInc.title}"` : 'All roadmap topics completed for this skill!';
+            }
+
+            if (ghEl) ghEl.href = 'https://github.com/irshadkohli';
+
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        async function handleToggleTopicCheck(topicId, skillId, isCompleted) {
+            if (!window.careerOsEngine) return;
+            await window.careerOsEngine.toggleTopicCompletion(topicId, isCompleted);
+            // Re-open skill modal to refresh dynamic progress bar
+            await openSkillModal(skillId);
+            await renderCosSkills();
+            await renderCosTodayActivity();
+            await renderCosCurrentFocus();
+            await renderCosAnalytics();
+        }
+
+        function closeSkillModal() {
+            const modal = document.getElementById('cosSkillModal');
+            if (modal) modal.style.display = 'none';
+            document.body.style.overflow = '';
+        }
+
+        function closeSkillModalOnBackdrop(e) {
+            if (e.target.id === 'cosSkillModal') closeSkillModal();
+        }
+
+        function handleLogForCurrentSkill() {
+            closeSkillModal();
+            openLogSessionModal(cosSelectedSkillForLog);
+        }
+
+        // ----------------------------------------------------
+        // LOG TODAY'S LEARNING MODAL CONTROLLER (SECTIONS 1, 5, 6)
+        // ----------------------------------------------------
+        function openLogSessionModal(prefillSkillId = null, editSession = null) {
+            const modal = document.getElementById('cosLogSessionModal');
+            if (!modal) return;
+
+            const modalTitle = document.getElementById('logModalTitle');
+            const sessIdInput = document.getElementById('logSessionIdInput');
+            const dateDisplay = document.getElementById('logDateDisplay');
+            const dateInput = document.getElementById('logDateInput');
+            const skillSelect = document.getElementById('logSkillSelect');
+            const topicSelect = document.getElementById('logTopicSelect');
+            const durationInput = document.getElementById('logDurationInput');
+            const activitySelect = document.getElementById('logActivitySelect');
+            const notesInput = document.getElementById('logNotesInput');
+            const saveBtn = document.getElementById('btnSaveSession');
+
+            // Populate skills list first
+            if (skillSelect) {
+                const skills = window.SEED_SKILLS || [];
+                const activeSkillId = editSession ? editSession.skill_id : (prefillSkillId || (skills[0] && skills[0].id));
+                skillSelect.innerHTML = skills.map(s => `
+                    <option value="${s.id}" ${s.id === activeSkillId ? 'selected' : ''}>${escapeHtml(s.name)}</option>
+                `).join('');
+                onLogSkillChange();
+            }
+
+            if (editSession) {
+                if (sessIdInput) sessIdInput.value = editSession.id;
+                if (modalTitle) modalTitle.textContent = "EDIT LEARNING SESSION";
+                if (dateInput) dateInput.value = editSession.date;
+                if (topicSelect && editSession.topic_title) {
+                    topicSelect.value = editSession.topic_title;
+                }
+                if (durationInput) durationInput.value = editSession.duration_minutes || 60;
+                if (activitySelect) activitySelect.value = editSession.activity_type || 'Coding';
+                if (notesInput) notesInput.value = editSession.notes || '';
+                if (saveBtn) saveBtn.innerHTML = `<span>UPDATE SESSION</span><span>✔</span>`;
+            } else {
+                if (sessIdInput) sessIdInput.value = '';
+                if (modalTitle) modalTitle.textContent = "LOG TODAY'S LEARNING";
+                const todayYMD = window.formatLocalYMD ? window.formatLocalYMD() : new Date().toISOString().split('T')[0];
+                if (dateInput) dateInput.value = todayYMD;
+                if (durationInput) durationInput.value = 60;
+                if (activitySelect) activitySelect.value = 'Coding';
+                if (notesInput) notesInput.value = '';
+                if (saveBtn) saveBtn.innerHTML = `<span>SAVE SESSION</span><span>✔</span>`;
+            }
+
+            onLogDateChange();
+
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function onLogDateChange() {
+            const dateInput = document.getElementById('logDateInput');
+            const dateDisplay = document.getElementById('logDateDisplay');
+            if (dateInput && dateDisplay && dateInput.value) {
+                const parts = dateInput.value.split('-');
+                if (parts.length === 3) {
+                    const d = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+                    dateDisplay.textContent = d.toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' });
+                }
+            }
+        }
+
+        async function openEditSessionModal(sessionId) {
+            if (!window.careerOsEngine) return;
+            const sessions = await window.careerOsEngine.getLearningSessions(100);
+            const sess = sessions.find(s => s.id === sessionId);
+            if (sess) {
+                openLogSessionModal(sess.skill_id, sess);
+            }
+        }
+
+        async function handleDeleteSession(sessionId) {
+            if (!window.careerOsEngine) return;
+            if (confirm('Are you sure you want to delete this learning session?')) {
+                await window.careerOsEngine.deleteLearningSession(sessionId);
+                await refreshAllCosData();
+            }
+        }
+
+        function onLogSkillChange() {
+            const skillSelect = document.getElementById('logSkillSelect');
+            const topicSelect = document.getElementById('logTopicSelect');
+            if (!skillSelect || !topicSelect) return;
+
+            const skillId = skillSelect.value;
+            const topicList = (window.SEED_TOPICS && window.SEED_TOPICS[skillId]) || [];
+
+            if (topicList.length > 0) {
+                topicSelect.innerHTML = topicList.map(t => `
+                    <option value="${escapeHtml(t.title)}">${escapeHtml(t.title)} (${escapeHtml(t.difficulty || 'General')})</option>
+                `).join('');
+            } else {
+                topicSelect.innerHTML = `
+                    <option value="General Practice">General Practice & Sprints</option>
+                    <option value="Architecture & System Design">Architecture & System Design</option>
+                `;
+            }
+        }
+
+        async function handleSaveLearningSession(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btnSaveSession');
+            if (btn) btn.disabled = true;
+
+            const sessionId = document.getElementById('logSessionIdInput')?.value;
+            const skillId = document.getElementById('logSkillSelect')?.value;
+            const topicTitle = document.getElementById('logTopicSelect')?.value;
+            const date = document.getElementById('logDateInput')?.value || (window.formatLocalYMD ? window.formatLocalYMD() : new Date().toISOString().split('T')[0]);
+            const duration = parseInt(document.getElementById('logDurationInput')?.value, 10) || 60;
+            const activityType = document.getElementById('logActivitySelect')?.value || 'Coding';
+            const notes = document.getElementById('logNotesInput')?.value || '';
+
+            try {
+                if (window.careerOsEngine) {
+                    if (sessionId) {
+                        await window.careerOsEngine.updateLearningSession(sessionId, {
+                            skillId,
+                            topicTitle,
+                            date,
+                            durationMinutes: duration,
+                            activityType,
+                            notes
+                        });
+                    } else {
+                        await window.careerOsEngine.logLearningSession({
+                            skillId,
+                            topicTitle,
+                            date,
+                            durationMinutes: duration,
+                            activityType,
+                            notes
+                        });
+                    }
+                }
+                closeLogSessionModal();
+                await refreshAllCosData();
+            } catch (err) {
+                console.error('Save session error:', err);
+                alert('Error saving session. Please try again.');
+            } finally {
+                if (btn) btn.disabled = false;
+            }
+        }
+
+        function closeLogSessionModal() {
+            const modal = document.getElementById('cosLogSessionModal');
+            if (modal) modal.style.display = 'none';
+            document.body.style.overflow = '';
+        }
+
+        function closeLogModalOnBackdrop(e) {
+            if (e.target.id === 'cosLogSessionModal') closeLogSessionModal();
+        }
+
+        // ----------------------------------------------------
+        // AUTHENTICATION MODAL CONTROLLER
+        // ----------------------------------------------------
+        function openCareerOsAuthModal() {
+            const modal = document.getElementById('cosAuthModal');
+            if (modal) modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeCareerOsAuthModal() {
+            const modal = document.getElementById('cosAuthModal');
+            if (modal) modal.style.display = 'none';
+            document.body.style.overflow = '';
+        }
+
+        function closeAuthModalOnBackdrop(e) {
+            if (e.target.id === 'cosAuthModal') closeCareerOsAuthModal();
+        }
+
+        async function handleCareerOsAuthSubmit(e) {
+            e.preventDefault();
+            const email = document.getElementById('cosAuthEmail')?.value;
+            const password = document.getElementById('cosAuthPassword')?.value;
+            const errEl = document.getElementById('cosAuthErrorMsg');
+
+            if (errEl) errEl.style.display = 'none';
+
+            try {
+                if (window.careerOsEngine) {
+                    await window.careerOsEngine.signIn(email, password);
+                }
+                closeCareerOsAuthModal();
+                updateCosAuthUI();
+                alert('🔐 Signed in successfully as Author!');
+            } catch (err) {
+                if (errEl) {
+                    errEl.textContent = err.message || 'Authentication failed. Please check credentials or use default PIN 1818.';
+                    errEl.style.display = 'block';
+                }
+            }
+        }
+
+        async function handleCareerOsSignOut() {
+            if (window.careerOsEngine) {
+                await window.careerOsEngine.signOut();
+            }
+            updateCosAuthUI();
+            alert('Signed out.');
+        }
+
+        // ----------------------------------------------------
+        // GOAL & NEXT FOCUS CONTROLLERS
+        // ----------------------------------------------------
+        function openGoalModal() {
+            const modal = document.getElementById('cosGoalModal');
+            if (!modal) return;
+            const input = document.getElementById('weeklyTargetHoursInput');
+            if (input && window.careerOsEngine) {
+                input.value = window.careerOsEngine.getWeeklyGoal();
+            }
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeGoalModal() {
+            const modal = document.getElementById('cosGoalModal');
+            if (modal) modal.style.display = 'none';
+            document.body.style.overflow = '';
+        }
+
+        function closeGoalModalOnBackdrop(e) {
+            if (e.target.id === 'cosGoalModal') closeGoalModal();
+        }
+
+        async function handleSaveWeeklyGoal(e) {
+            e.preventDefault();
+            const hours = parseFloat(document.getElementById('weeklyTargetHoursInput')?.value) || 10;
+            if (window.careerOsEngine) {
+                window.careerOsEngine.setWeeklyGoal(hours);
+            }
+            closeGoalModal();
+            await renderCosDashboardSubviews();
+        }
+
+        function handleSaveNextFocus() {
+            const sel = document.getElementById('nextFocusSelect');
+            const status = document.getElementById('nextFocusStatusText');
+            if (status && sel) {
+                status.textContent = `Saved: ${sel.options[sel.selectedIndex].text}`;
+                status.style.color = '#4ade80';
+            }
+        }
+
+        // ----------------------------------------------------
+        // SUPABASE CONFIGURATION & SEED DATABASE
+        // ----------------------------------------------------
+        function initSupabaseConfigForm() {
+            if (!window.careerOsEngine) return;
+            const urlInput = document.getElementById('cfgSupabaseUrl');
+            const keyInput = document.getElementById('cfgSupabaseAnonKey');
+            const statusText = document.getElementById('manageDbStatusText');
+            const statusChip = document.getElementById('manageDbStatusChip');
+
+            if (urlInput) urlInput.value = window.careerOsEngine.config.supabaseUrl || '';
+            if (keyInput) keyInput.value = window.careerOsEngine.config.supabaseAnonKey || '';
+
+            if (statusText && statusChip) {
+                if (window.careerOsEngine.isConnected) {
+                    statusText.textContent = 'CONNECTED TO SUPABASE';
+                    statusChip.style.background = 'rgba(39, 201, 63, 0.15)';
+                    statusChip.style.color = '#4ade80';
+                } else {
+                    statusText.textContent = 'OFFLINE REACTIVE DEMO';
+                    statusChip.style.background = 'rgba(232, 160, 32, 0.15)';
+                    statusChip.style.color = 'var(--amber)';
+                }
+            }
+        }
+
+        function handleSaveSupabaseConfig(e) {
+            e.preventDefault();
+            const url = document.getElementById('cfgSupabaseUrl')?.value;
+            const key = document.getElementById('cfgSupabaseAnonKey')?.value;
+
+            if (window.careerOsEngine) {
+                window.careerOsEngine.saveConfig(url, key);
+                initSupabaseConfigForm();
+                updateCosAuthUI();
+                alert('☁️ Supabase cloud credentials updated and saved!');
+            }
+        }
+
+        async function handleSeedDatabaseClick() {
+            if (!window.careerOsEngine) return;
+            if (!window.careerOsEngine.isConnected) {
+                alert('⚡ Please connect your Supabase Project URL and Public Anon Key above before seeding the cloud database.');
+                return;
+            }
+            if (!window.careerOsEngine.isAuthenticated()) {
+                openCareerOsAuthModal();
+                return;
+            }
+
+            if (confirm('🌱 This will seed your Supabase PostgreSQL database with all 100+ topics, skills, and projects from seed-topics-data.js. Continue?')) {
+                try {
+                    await window.careerOsEngine.seedSupabaseDatabase();
+                    alert('✅ Supabase database successfully seeded with all 100+ topics, skills, and projects!');
+                    refreshAllCosData();
+                } catch (err) {
+                    alert('Seeding error: ' + err.message);
+                }
+            }
+        }
+
+        function handleAddSkillSubmit(e) {
+            e.preventDefault();
+            const name = document.getElementById('newSkillName')?.value;
+            const cat = document.getElementById('newSkillCategory')?.value;
+            const prio = document.getElementById('newSkillPriority')?.value;
+            const tgt = parseInt(document.getElementById('newSkillTargetLevel')?.value, 10) || 85;
+
+            const newSkill = {
+                id: name.toLowerCase().replace(/[^a-z0-9]/g, '_'),
+                name: name,
+                category: cat,
+                priority: prio,
+                current_level: 10,
+                target_level: tgt,
+                active: true,
+                topics: [
+                    { id: name.toLowerCase() + '_1', title: 'Fundamentals & Setup', difficulty: 'Beginner', completed: false }
+                ],
+                total_topics: 1,
+                completed_topics: 0,
+                topic_progress_pct: 0
+            };
+
+            if (window.SEED_SKILLS) {
+                window.SEED_SKILLS.push(newSkill);
+            }
+
+            renderCosSkills();
+            alert(`✅ Added new skill "${name}" to Career OS!`);
+            document.getElementById('addSkillForm')?.reset();
+        }
+
+        function handleUpdateProgressClick() {
+            openLogSessionModal();
+        }
+
         // Initial setup
         document.getElementById('openNewPostModalBtn')?.addEventListener('click', openCreatePostModal);
         renderBlogCards();
         renderTownhallSection();
         updateAuthorUI();
+        initCareerOsDashboard();
     </script>
 </body>
 
